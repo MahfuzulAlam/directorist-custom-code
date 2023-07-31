@@ -1,20 +1,20 @@
 <?php
 
 /** 
- * @package  Directorist - TikTok Social Link
+ * @package  Directorist - Custom Code
  */
 
 /**
- * Plugin Name:       Directorist - TikTok Social Link
+ * Plugin Name:       Directorist - Custom Code
  * Plugin URI:        https://wpwax.com
- * Description:       TokTok social link for direcorist
+ * Description:       Best way to implement custom code for directorist plugin
  * Version:           1.0.0
  * Requires at least: 5.2
  * Author:            wpWax
  * Author URI:        https://wpwax.com
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       directorist-tiktok-social
+ * Text Domain:       directorist-custom-code
  * Domain Path:       /languages
  */
 
@@ -27,9 +27,9 @@ if (!defined('ABSPATH')) {
     exit;                      // Exit if accessed
 }
 
-if (!class_exists('Directorist_TikTok_Social')) {
+if (!class_exists('Directorist_Custom_Code')) {
 
-    final class Directorist_TikTok_Social
+    final class Directorist_Custom_Code
     {
         /**
          * Instance
@@ -41,12 +41,22 @@ if (!class_exists('Directorist_TikTok_Social')) {
          */
         public static function instance()
         {
-            if (!isset(self::$instance) && !(self::$instance instanceof Directorist_TikTok_Social)) {
-                self::$instance = new Directorist_TikTok_Social;
-                self::$instance->define_constant();
-                add_filter('directorist_template', array(self::$instance, 'directorist_template'), 10, 2);
+            if (!isset(self::$instance) && !(self::$instance instanceof Directorist_Custom_Code)) {
+                self::$instance = new Directorist_Custom_Code;
+                self::$instance->init();
             }
             return self::$instance;
+        }
+
+        /**
+         * Init
+         */
+        public function init()
+        {
+            $this->define_constant();
+            $this->includes();
+            $this->enqueues();
+            $this->hooks();
         }
 
         /**
@@ -54,15 +64,51 @@ if (!class_exists('Directorist_TikTok_Social')) {
          */
         public function define_constant()
         {
-            define('TIKTOK_URI', plugin_dir_url(__FILE__));
+            define('DIRECTORIST_CUSTOM_CODE_URI', plugin_dir_url(__FILE__));
+            define('DIRECTORIST_CUSTOM_CODE_DIR', plugin_dir_path(__FILE__));
         }
 
         /**
-         * Base Directory
+         * Included Files
          */
-        public function base_dir()
+        public function includes()
         {
-            return plugin_dir_path(__FILE__);
+            include_once(DIRECTORIST_CUSTOM_CODE_DIR . '/inc/functions.php');
+        }
+
+        /**
+         * Enqueues
+         */
+        public function enqueues()
+        {
+            add_action('wp_enqueue_scripts', array($this, 'enqueue_styles'));
+            add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
+        }
+
+        /**
+         * Hooks
+         */
+        public function hooks()
+        {
+            add_filter('directorist_template', array($this, 'directorist_template'), 10, 2);
+        }
+
+        /**
+         *  Enqueue JS file
+         */
+        public function enqueue_scripts()
+        {
+            // Replace 'your-plugin-name' with the actual name of your plugin's folder.
+            wp_enqueue_script('directorist-custom-script', DIRECTORIST_CUSTOM_CODE_URI . 'assets/js/main.js', array('jquery'), '1.0', true);
+        }
+
+        /**
+         *  Enqueue CSS file
+         */
+        public function enqueue_styles()
+        {
+            // Replace 'your-plugin-name' with the actual name of your plugin's folder.
+            wp_enqueue_style('directorist-custom-style', DIRECTORIST_CUSTOM_CODE_URI . 'assets/css/main.css', array(), '1.0');
         }
 
         /**
@@ -70,7 +116,7 @@ if (!class_exists('Directorist_TikTok_Social')) {
          */
         public function template_exists($template_file)
         {
-            $file = $this->base_dir() . '/templates/' . $template_file . '.php';
+            $file = DIRECTORIST_CUSTOM_CODE_DIR . '/templates/' . $template_file . '.php';
 
             if (file_exists($file)) {
                 return true;
@@ -91,7 +137,7 @@ if (!class_exists('Directorist_TikTok_Social')) {
 
             if (isset($args['form'])) $listing_form = $args['form'];
 
-            $file = $this->base_dir() . '/templates/' . $template_file . '.php';
+            $file = DIRECTORIST_CUSTOM_CODE_DIR . '/templates/' . $template_file . '.php';
 
             if ($this->template_exists($template_file)) {
                 include $file;
@@ -131,12 +177,12 @@ if (!class_exists('Directorist_TikTok_Social')) {
         }
     }
 
-    function Directorist_TikTok_Social()
+    function Directorist_Custom_Code()
     {
-        return Directorist_TikTok_Social::instance();
+        return Directorist_Custom_Code::instance();
     }
 
     if (directorist_is_plugin_active('directorist/directorist-base.php')) {
-        Directorist_TikTok_Social(); // get the plugin running
+        Directorist_Custom_Code(); // get the plugin running
     }
 }
