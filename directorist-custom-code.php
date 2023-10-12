@@ -186,3 +186,6 @@ if (!class_exists('Directorist_Custom_Code')) {
         Directorist_Custom_Code(); // get the plugin running
     }
 }
+
+
+?>
