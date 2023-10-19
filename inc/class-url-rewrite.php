@@ -21,6 +21,10 @@ Class Directorist_Location_Url_Rewrite {
         add_filter( 'term_link', [$this, 'term_link'], 20, 3 );
         add_filter( 'atbdp_single_location', [$this, 'atbdp_single_location'], 20, 4 );
 
+        // Location Page Title
+        add_filter( 'wpwax_theme_page_title', [$this, 'location_page_title'] );
+        add_filter( 'wp_title', [$this, 'location_page_title'], 20, 1 );
+
         add_shortcode( 'directorist_custom_location_archive', [$this, 'directorist_custom_location_archive'] );
     }
 
@@ -107,6 +111,47 @@ Class Directorist_Location_Url_Rewrite {
         $parents = get_term_parents_list( $term->term_id, ATBDP_LOCATION, ['inclusive' => false, 'format' => 'slug', 'link' => false] );
         $link = get_permalink( get_page_by_path( 'location' ) ) . $parents . $term->slug;
         return $link;
+    }
+
+    /**
+     * location_page_title
+     *
+     * Location Page Title
+     *
+     * @param  mixed $title
+     * @return void
+     */
+    public function location_page_title( $title ) {
+        $pagename = get_query_var( 'pagename', '' );
+
+        if ( $pagename === 'location' ):
+
+            $state = get_query_var( 'state', '' );
+            $city = get_query_var( 'city', '' );
+
+            $location_slug = '';
+
+            if ( !empty( $city ) ) {
+                $location_slug = $city;
+            }
+
+            if ( !empty( $state ) ) {
+                $location_slug = $state;
+            }
+
+            if ( !empty( $location_slug ) ):
+                $location = get_term_by( 'slug', $location_slug, ATBDP_LOCATION );
+
+                if ( $location && !empty( $location->name ) ) {
+                    $title = $location->name;
+                    remove_action( 'wp_head', '_wp_render_title_tag', 1 );
+                }
+
+            endif;
+
+        endif;
+
+        return $title;
     }
 
 }

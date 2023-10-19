@@ -1,11 +1,11 @@
 <?php
 
 /** 
- * @package  Directorist - Custom Code
+ * @package  Directorist - Rewrite Location Url
  */
 
 /**
- * Plugin Name:       Directorist - Custom Code
+ * Plugin Name:       Directorist - Rewrite Location Url
  * Plugin URI:        https://wpwax.com
  * Description:       Best way to implement custom code for directorist plugin
  * Version:           1.0.0
@@ -14,7 +14,7 @@
  * Author URI:        https://wpwax.com
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       directorist-custom-code
+ * Text Domain:       directorist-rewrite-location-url
  * Domain Path:       /languages
  */
 
@@ -27,9 +27,9 @@ if (!defined('ABSPATH')) {
     exit;                      // Exit if accessed
 }
 
-if (!class_exists('Directorist_Custom_Code')) {
+if (!class_exists('Directorist_Rewrite_Location_Url')) {
 
-    final class Directorist_Custom_Code
+    final class Directorist_Rewrite_Location_Url
     {
         /**
          * Instance
@@ -41,8 +41,8 @@ if (!class_exists('Directorist_Custom_Code')) {
          */
         public static function instance()
         {
-            if (!isset(self::$instance) && !(self::$instance instanceof Directorist_Custom_Code)) {
-                self::$instance = new Directorist_Custom_Code;
+            if (!isset(self::$instance) && !(self::$instance instanceof Directorist_Rewrite_Location_Url)) {
+                self::$instance = new Directorist_Rewrite_Location_Url;
                 self::$instance->init();
             }
             return self::$instance;
@@ -178,13 +178,13 @@ if (!class_exists('Directorist_Custom_Code')) {
         }
     }
 
-    function Directorist_Custom_Code()
+    function Directorist_Rewrite_Location_Url()
     {
-        return Directorist_Custom_Code::instance();
+        return Directorist_Rewrite_Location_Url::instance();
     }
 
     if (directorist_is_plugin_active('directorist/directorist-base.php')) {
-        Directorist_Custom_Code(); // get the plugin running
+        Directorist_Rewrite_Location_Url(); // get the plugin running
     }
 }
 
