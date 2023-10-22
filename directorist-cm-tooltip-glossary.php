@@ -1,20 +1,20 @@
 <?php
 
 /** 
- * @package  Directorist - Custom Code
+ * @package  Directorist - CM Tooltip Glossary
  */
 
 /**
- * Plugin Name:       Directorist - Custom Code
+ * Plugin Name:       Directorist - CM Tooltip Glossary
  * Plugin URI:        https://wpwax.com
- * Description:       Best way to implement custom code for directorist plugin
+ * Description:       Intregration of CM Tooltip Glossary with the Directorist plugin
  * Version:           1.0.0
  * Requires at least: 5.2
  * Author:            wpWax
  * Author URI:        https://wpwax.com
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       directorist-custom-code
+ * Text Domain:       directorist-cm-tooltip-glossary
  * Domain Path:       /languages
  */
 
@@ -27,9 +27,9 @@ if (!defined('ABSPATH')) {
     exit;                      // Exit if accessed
 }
 
-if (!class_exists('Directorist_Custom_Code')) {
+if (!class_exists('Directorist_CM_Tooltip_Glossary')) {
 
-    final class Directorist_Custom_Code
+    final class Directorist_CM_Tooltip_Glossary
     {
         /**
          * Instance
@@ -41,8 +41,8 @@ if (!class_exists('Directorist_Custom_Code')) {
          */
         public static function instance()
         {
-            if (!isset(self::$instance) && !(self::$instance instanceof Directorist_Custom_Code)) {
-                self::$instance = new Directorist_Custom_Code;
+            if (!isset(self::$instance) && !(self::$instance instanceof Directorist_CM_Tooltip_Glossary)) {
+                self::$instance = new Directorist_CM_Tooltip_Glossary;
                 self::$instance->init();
             }
             return self::$instance;
@@ -64,8 +64,8 @@ if (!class_exists('Directorist_Custom_Code')) {
          */
         public function define_constant()
         {
-            define('DIRECTORIST_CUSTOM_CODE_URI', plugin_dir_url(__FILE__));
-            define('DIRECTORIST_CUSTOM_CODE_DIR', plugin_dir_path(__FILE__));
+            define('DIRECTORIST_CM_TOOLTIP_URI', plugin_dir_url(__FILE__));
+            define('DIRECTORIST_CM_TOOLTIP_DIR', plugin_dir_path(__FILE__));
         }
 
         /**
@@ -73,7 +73,7 @@ if (!class_exists('Directorist_Custom_Code')) {
          */
         public function includes()
         {
-            include_once(DIRECTORIST_CUSTOM_CODE_DIR . '/inc/functions.php');
+            include_once(DIRECTORIST_CM_TOOLTIP_DIR . '/inc/functions.php');
         }
 
         /**
@@ -99,7 +99,7 @@ if (!class_exists('Directorist_Custom_Code')) {
         public function enqueue_scripts()
         {
             // Replace 'your-plugin-name' with the actual name of your plugin's folder.
-            wp_enqueue_script('directorist-custom-script', DIRECTORIST_CUSTOM_CODE_URI . 'assets/js/main.js', array('jquery'), '1.0', true);
+            wp_enqueue_script('directorist-custom-script', DIRECTORIST_CM_TOOLTIP_URI . 'assets/js/main.js', array('jquery'), '1.0', true);
         }
 
         /**
@@ -108,7 +108,7 @@ if (!class_exists('Directorist_Custom_Code')) {
         public function enqueue_styles()
         {
             // Replace 'your-plugin-name' with the actual name of your plugin's folder.
-            wp_enqueue_style('directorist-custom-style', DIRECTORIST_CUSTOM_CODE_URI . 'assets/css/main.css', array(), '1.0');
+            wp_enqueue_style('directorist-custom-style', DIRECTORIST_CM_TOOLTIP_URI . 'assets/css/main.css', array(), '1.0');
         }
 
         /**
@@ -116,7 +116,7 @@ if (!class_exists('Directorist_Custom_Code')) {
          */
         public function template_exists($template_file)
         {
-            $file = DIRECTORIST_CUSTOM_CODE_DIR . '/templates/' . $template_file . '.php';
+            $file = DIRECTORIST_CM_TOOLTIP_DIR . '/templates/' . $template_file . '.php';
 
             if (file_exists($file)) {
                 return true;
@@ -137,7 +137,7 @@ if (!class_exists('Directorist_Custom_Code')) {
 
             if (isset($args['form'])) $listing_form = $args['form'];
 
-            $file = DIRECTORIST_CUSTOM_CODE_DIR . '/templates/' . $template_file . '.php';
+            $file = DIRECTORIST_CM_TOOLTIP_DIR . '/templates/' . $template_file . '.php';
 
             if ($this->template_exists($template_file)) {
                 include $file;
@@ -177,13 +177,13 @@ if (!class_exists('Directorist_Custom_Code')) {
         }
     }
 
-    function Directorist_Custom_Code()
+    function Directorist_CM_Tooltip_Glossary()
     {
-        return Directorist_Custom_Code::instance();
+        return Directorist_CM_Tooltip_Glossary::instance();
     }
 
-    if (directorist_is_plugin_active('directorist/directorist-base.php')) {
-        Directorist_Custom_Code(); // get the plugin running
+    if (directorist_is_plugin_active('directorist/directorist-base.php') && directorist_is_plugin_active('enhanced-tooltipglossary/enhanced-tooltipglossary.php')) {
+        Directorist_CM_Tooltip_Glossary(); // get the plugin running
     }
 }
 
