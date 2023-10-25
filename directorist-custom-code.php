@@ -64,8 +64,13 @@ if (!class_exists('Directorist_Custom_Code')) {
          */
         public function define_constant()
         {
-            define('DIRECTORIST_CUSTOM_CODE_URI', plugin_dir_url(__FILE__));
-            define('DIRECTORIST_CUSTOM_CODE_DIR', plugin_dir_path(__FILE__));
+            if ( !defined( 'DIRECTORIST_CUSTOM_CODE_URI' ) ) {
+                define( 'DIRECTORIST_CUSTOM_CODE_URI', plugin_dir_url( __FILE__ ) );
+            }
+
+            if ( !defined( 'DIRECTORIST_CUSTOM_CODE_DIR' ) ) {
+                define( 'DIRECTORIST_CUSTOM_CODE_DIR', plugin_dir_path( __FILE__ ) );
+            }
         }
 
         /**
