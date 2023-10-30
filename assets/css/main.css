@@ -2,10 +2,15 @@
 
 .directorist-badge-affiliate-program
 {
-    background-color: rgb(69, 116, 7);
+    background-color: #47d6a5;
 }
 
 .directorist-badge-free-trial
 {
-    background-color: rgb(14, 29, 113);
+    background-color: #33ABC6;
+}
+
+.directorist-badge-coupon-code
+{
+    background-color: #57aec2;
 }
