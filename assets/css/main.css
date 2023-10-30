@@ -1,1 +1,11 @@
 /* Add you custom css here */
+
+.directorist-badge-affiliate-program
+{
+    background-color: rgb(69, 116, 7);
+}
+
+.directorist-badge-free-trial
+{
+    background-color: rgb(14, 29, 113);
+}
