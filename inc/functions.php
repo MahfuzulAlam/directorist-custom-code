@@ -63,14 +63,19 @@ add_action( 'atbdp_all_listings_badge_template', 'custom_atbdp_all_listings_badg
 
 function custom_atbdp_all_listings_badge_template( $field ) {
 
-    $free_trial = get_post_meta(get_the_ID(), '_free_trial', true);
+    switch ($field['widget_key']) {
+        case 'free_trial_badge':
 
-    if ( $field['widget_key'] == 'free_trial_badge' && $free_trial == 'yes' ):
-    ?>
-        <span class="directorist-badge directorist-info-item directorist-badge-free-trial">Free Trial</span>
-    <?php
-    endif;
+            $free_trial = get_post_meta(get_the_ID(), '_free_trial', true);
 
+            if ( $free_trial == 'yes' ):
+            ?>
+                <span class="directorist-badge directorist-info-item directorist-badge-free-trial">Free Trial</span>
+            <?php
+            endif;
+
+        break;
+    }
 }
 
 
@@ -133,13 +138,19 @@ add_action( 'atbdp_all_listings_badge_template', 'affiliate_atbdp_all_listings_b
 
 function affiliate_atbdp_all_listings_badge_template( $field ) {
 
-    $affiliate_program = get_post_meta(get_the_ID(), '_affiliate_program', true);
+    switch ($field['widget_key']) {
+        case 'affiliate_program_badge':
 
-    if ( $field['widget_key'] == 'free_trial_badge' && $affiliate_program == 'yes' ):
-    ?>
-        <span class="directorist-badge directorist-info-item directorist-badge-affiliate-program">Affiliate Program</span>
-    <?php
-    endif;
+            $affiliate_program = get_post_meta(get_the_ID(), '_affiliate_program', true);
+
+            if ( $affiliate_program == 'yes' ):
+            ?>
+                <span class="directorist-badge directorist-info-item directorist-badge-affiliate-program">Affiliate Program</span>
+            <?php
+            endif;
+
+        break;
+    } 
 
 }
 
