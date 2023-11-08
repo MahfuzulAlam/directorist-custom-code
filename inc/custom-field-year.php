@@ -6,15 +6,18 @@
  * @version 1.0
  */
 
-class Directorist_Custom_Field_Year
+class Directorist_Custom_Field_Year_Field
 {
 
     public function __construct()
     {
         add_filter('atbdp_form_custom_widgets', array($this, 'atbdp_form_advanced_widgets'));
         add_filter('atbdp_single_listing_content_widgets', array($this, 'atbdp_single_listing_content_widgets'));
+        add_filter('directorist_search_form_widgets', array($this, 'directorist_search_form_widgets'));
         add_filter('directorist_field_template', array($this, 'directorist_field_template'), 10, 2);
         add_filter('directorist_single_item_template', array($this, 'directorist_single_item_template'), 10, 2);
+        add_filter('directorist_search_field_template', array($this, 'directorist_search_field_template'), 10, 2);
+        add_filter('atbdp_listing_search_query_argument', array($this, 'atbdp_listing_search_query_argument'));
     }
 
     public function atbdp_form_advanced_widgets($widgets)
@@ -100,6 +103,40 @@ class Directorist_Custom_Field_Year
         return $widgets;
     }
 
+    public function directorist_search_form_widgets($widgets)
+    {
+        $widgets['available_widgets']['widgets']['year'] = [
+            'options' => [
+                'label' => [
+                    'type'  => 'text',
+                    'label'  => __( 'Label', 'directorist' ),
+                    'value' => 'Year',
+                ],
+                'placeholder' => [
+                    'type'  => 'text',
+                    'label'  => __( 'Placeholder', 'directorist' ),
+                    'value' => 'Year',
+                ],
+                'start_year' => [
+                    'type'  => 'number',
+                    'label' => __( 'Start Year', 'directorist' ),
+                    'value' => 1900,
+                ],
+                'end_year' => [
+                    'type'  => 'number',
+                    'label' => __( 'End Year', 'directorist' ),
+                    'value' => 2100,
+                ],
+                'required' => [
+                    'type'  => 'toggle',
+                    'label'  => __( 'Required', 'directorist' ),
+                    'value' => false,
+                ],
+            ]
+        ];
+        return $widgets;
+    }
+
     public function directorist_field_template($template, $field_data)
     {
         if ('year' === $field_data['widget_name']) {
@@ -111,10 +148,18 @@ class Directorist_Custom_Field_Year
 
     public function directorist_single_item_template($template, $field_data)
     {
-        if ('youtube-video' === $field_data['widget_name']) {
+        if ('year' === $field_data['widget_name']) {
             if (!empty($field_data['value'])) {
-                $this->get_template('single/date', $field_data);
+                $this->get_template('single/custom-fields/year', $field_data);
             }
+        }
+        return $template;
+    }
+
+    public function directorist_search_field_template($template, $field_data)
+    {
+        if ('year' === $field_data['widget_name']) {
+            $this->get_template('search-form/custom-fields/year', $field_data);
         }
         return $template;
     }
@@ -124,7 +169,7 @@ class Directorist_Custom_Field_Year
      */
     public function template_exists($template_file)
     {
-        $file = DIRECTORIST_CUSTOM_CODE_DIR . '/templates/' . $template_file . '.php';
+        $file = DIRECTORIST_CUSTOM_FIELD_YEAR_DIR . '/templates/' . $template_file . '.php';
 
         if (file_exists($file)) {
             return true;
@@ -145,12 +190,56 @@ class Directorist_Custom_Field_Year
 
         if (isset($args['form'])) $listing_form = $args['form'];
 
-        $file = DIRECTORIST_CUSTOM_CODE_DIR . '/templates/' . $template_file . '.php';
+        $file = DIRECTORIST_CUSTOM_FIELD_YEAR_DIR . '/templates/' . $template_file . '.php';
 
         if ($this->template_exists($template_file)) {
             include $file;
         }
     }
+
+    /**
+     * Seearch Query Manipulation
+     */
+    public function atbdp_listing_search_query_argument( $args )
+    {
+        // Get the query parameters from the URL
+        $queryParameters = $_GET;
+        $year_search = [];
+
+        // Define the prefix to check for
+        $prefix_from = 'year_from_';
+        $prefix_to = 'year_to_';
+
+        // Loop through the query parameters to check for keys that start with the specified prefix
+        foreach ($queryParameters as $key => $value) {
+            if (strpos($key, $prefix_from) === 0) {
+                $year_from = substr($key, strlen($prefix_from));
+                $year_search[$year_from]['from'] = $value;
+            }
+            if (strpos($key, $prefix_to) === 0) {
+                $year_to = substr($key, strlen($prefix_to));
+                $year_search[$year_to]['to'] = $value;
+            }
+        }
+
+        if($year_search and count($year_search) > 0){
+            foreach($year_search as $field_key => $search_range){
+                $from = isset( $search_range['from'] ) ? $search_range['from'] : '';
+                $to = isset( $search_range['to'] ) ? $search_range['to'] : '';
+                if( !empty( $from ) && !empty( $to ) && $to >= $from )
+                {
+                    $args[ 'meta_query' ][ $field_key ] = array(
+                        'key' => '_'.$field_key,
+                        'value' => array( $from, $to ),
+                        'type' => 'NUMERIC',
+                        'compare' => 'BETWEEN',
+                    );
+                }
+            }
+        }
+
+        return $args;
+    }
 }
 
-new Directorist_Custom_Field_Year;
+new Directorist_Custom_Field_Year_Field;

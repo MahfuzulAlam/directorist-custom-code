@@ -1,1 +1,22 @@
 /* Add you custom css here */
+
+
+.directorist-form-group.directorist-search-year{
+    display: flex;
+    flex-direction: row;
+}
+
+@media only screen and (max-width: 600px) {
+    .directorist-form-group.directorist-search-year{
+        flex-direction: column;
+    }
+    .directorist-form-group.directorist-search-year .directorist-search-year-container{
+        margin-bottom: 10px !important;
+    }
+}
+
+@media only screen and (min-width: 601px) {
+    .directorist-form-group.directorist-search-year .directorist-search-year-container{
+        margin-right: 10px !important;
+    }
+}
