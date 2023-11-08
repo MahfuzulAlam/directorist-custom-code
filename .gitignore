@@ -1,0 +1,54 @@
+# Ignore WordPress core files
+wp-config.php
+wp-content/
+wp-includes/
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore plugin-specific files
+node_modules/
+.idea/
+.vscode/
+
+# Ignore logs and temporary files
+error_log
+*.log
+*.log.*
+*.log
+*.log.1
+*.log.2
+*.log.3
+
+# Ignore node.js-related files
+package-lock.json
+
+# Ignore development-related files and folders
+/dist/
+/build/
+/assets/
+
+# Ignore your local configuration
+wp-config-local.php
+
+# Ignore any sensitive or secret files
+secrets.php
+
+# Ignore Composer dependencies (if used)
+/vendor/
+
+# Ignore any local development database files
+*.sql
+*.sql.gz
+
+# Ignore user-specific settings for various editors/IDEs
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+Thumbs.db
+.DS_Store
+
+# Ignore server-specific files
+.sftp-config.json
