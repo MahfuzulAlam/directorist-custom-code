@@ -1,13 +1,13 @@
 <?php
 
 /** 
- * @package  Directorist - Custom Code
+ * @package  Directorist - Custom User Registration Field
  */
 
 /**
- * Plugin Name:       Directorist - Custom Code
+ * Plugin Name:       Directorist - Custom User Registration Field
  * Plugin URI:        https://wpwax.com
- * Description:       Best way to implement custom code for directorist plugin
+ * Description:       Best way to add custom user registration field
  * Version:           1.0.0
  * Requires at least: 5.2
  * Author:            wpWax
@@ -27,9 +27,9 @@ if (!defined('ABSPATH')) {
     exit;                      // Exit if accessed
 }
 
-if (!class_exists('Directorist_Custom_Code')) {
+if (!class_exists('Directorist_Custom_User_Registration_Field')) {
 
-    final class Directorist_Custom_Code
+    final class Directorist_Custom_User_Registration_Field
     {
         /**
          * Instance
@@ -41,8 +41,8 @@ if (!class_exists('Directorist_Custom_Code')) {
          */
         public static function instance()
         {
-            if (!isset(self::$instance) && !(self::$instance instanceof Directorist_Custom_Code)) {
-                self::$instance = new Directorist_Custom_Code;
+            if (!isset(self::$instance) && !(self::$instance instanceof Directorist_Custom_User_Registration_Field)) {
+                self::$instance = new Directorist_Custom_User_Registration_Field;
                 self::$instance->init();
             }
             return self::$instance;
@@ -64,12 +64,12 @@ if (!class_exists('Directorist_Custom_Code')) {
          */
         public function define_constant()
         {
-            if ( !defined( 'DIRECTORIST_CUSTOM_CODE_URI' ) ) {
-                define( 'DIRECTORIST_CUSTOM_CODE_URI', plugin_dir_url( __FILE__ ) );
+            if ( !defined( 'DIRECTORIST_CUSTOM_URF_URI' ) ) {
+                define( 'DIRECTORIST_CUSTOM_URF_URI', plugin_dir_url( __FILE__ ) );
             }
 
-            if ( !defined( 'DIRECTORIST_CUSTOM_CODE_DIR' ) ) {
-                define( 'DIRECTORIST_CUSTOM_CODE_DIR', plugin_dir_path( __FILE__ ) );
+            if ( !defined( 'DIRECTORIST_CUSTOM_URF_DIR' ) ) {
+                define( 'DIRECTORIST_CUSTOM_URF_DIR', plugin_dir_path( __FILE__ ) );
             }
         }
 
@@ -78,7 +78,8 @@ if (!class_exists('Directorist_Custom_Code')) {
          */
         public function includes()
         {
-            include_once(DIRECTORIST_CUSTOM_CODE_DIR . '/inc/functions.php');
+            include_once(DIRECTORIST_CUSTOM_URF_DIR . '/inc/class-custom-registration.php');
+            include_once(DIRECTORIST_CUSTOM_URF_DIR . '/inc/functions.php');
         }
 
         /**
@@ -104,7 +105,7 @@ if (!class_exists('Directorist_Custom_Code')) {
         public function enqueue_scripts()
         {
             // Replace 'your-plugin-name' with the actual name of your plugin's folder.
-            wp_enqueue_script('directorist-custom-script', DIRECTORIST_CUSTOM_CODE_URI . 'assets/js/main.js', array('jquery'), '1.0', true);
+            wp_enqueue_script('directorist-custom-script', DIRECTORIST_CUSTOM_URF_DIR . 'assets/js/main.js', array('jquery'), '1.0', true);
         }
 
         /**
@@ -113,7 +114,7 @@ if (!class_exists('Directorist_Custom_Code')) {
         public function enqueue_styles()
         {
             // Replace 'your-plugin-name' with the actual name of your plugin's folder.
-            wp_enqueue_style('directorist-custom-style', DIRECTORIST_CUSTOM_CODE_URI . 'assets/css/main.css', array(), '1.0');
+            wp_enqueue_style('directorist-custom-style', DIRECTORIST_CUSTOM_URF_DIR . 'assets/css/main.css', array(), '1.0');
         }
 
         /**
@@ -121,7 +122,7 @@ if (!class_exists('Directorist_Custom_Code')) {
          */
         public function template_exists($template_file)
         {
-            $file = DIRECTORIST_CUSTOM_CODE_DIR . '/templates/' . $template_file . '.php';
+            $file = DIRECTORIST_CUSTOM_URF_DIR . '/templates/' . $template_file . '.php';
 
             if (file_exists($file)) {
                 return true;
@@ -142,7 +143,7 @@ if (!class_exists('Directorist_Custom_Code')) {
 
             if (isset($args['form'])) $listing_form = $args['form'];
 
-            $file = DIRECTORIST_CUSTOM_CODE_DIR . '/templates/' . $template_file . '.php';
+            $file = DIRECTORIST_CUSTOM_URF_DIR . '/templates/' . $template_file . '.php';
 
             if ($this->template_exists($template_file)) {
                 include $file;
@@ -182,13 +183,13 @@ if (!class_exists('Directorist_Custom_Code')) {
         }
     }
 
-    function Directorist_Custom_Code()
+    function Directorist_Custom_User_Registration_Field()
     {
-        return Directorist_Custom_Code::instance();
+        return Directorist_Custom_User_Registration_Field::instance();
     }
 
     if (directorist_is_plugin_active('directorist/directorist-base.php')) {
-        Directorist_Custom_Code(); // get the plugin running
+        Directorist_Custom_User_Registration_Field(); // get the plugin running
     }
 }
 
