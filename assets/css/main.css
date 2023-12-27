@@ -1,4 +1,11 @@
 /* Add you custom css here */
-.directorist-search-sub-category{
+.directorist-search-sub-category,
+.directorist-form-categories-field-main
+{
     display: none;
+}
+
+.directorist-form-sub-categories-field
+{
+    visibility: hidden;
 }
