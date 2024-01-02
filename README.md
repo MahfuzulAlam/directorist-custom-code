@@ -1,14 +1,14 @@
 # Directorist Custom Code
-## Rewrite Location URL
+## Rewrite Category URL
 
 Best way to implement custom code for directorist plugin
 
-Rewrite location URL
+Rewrite category URL
 
-1. /location/[state]/[city]
+1. /category/[main-category]/[sub-category]
 
-Please create a page named "Location" use slug "location".
+Please create a page named "Category" use slug "category".
 
-Use the following shortocode to create this page - [directorist_custom_location_archive]
+Use the following shortocode to create this page - [directorist_custom_category_archive]
 
-Then assign this page as Single Location page.
+Then assign this page as Single Category page.

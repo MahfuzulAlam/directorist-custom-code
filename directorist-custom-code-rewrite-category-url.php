@@ -1,11 +1,11 @@
 <?php
 
 /** 
- * @package  Directorist - Rewrite Location Url
+ * @package  Directorist - Rewrite Catgeory Url
  */
 
 /**
- * Plugin Name:       Directorist - Rewrite Location Url
+ * Plugin Name:       Directorist - Rewrite Catgeory Url
  * Plugin URI:        https://wpwax.com
  * Description:       Best way to implement custom code for directorist plugin
  * Version:           1.0.0
@@ -14,7 +14,7 @@
  * Author URI:        https://wpwax.com
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       directorist-rewrite-location-url
+ * Text Domain:       directorist-rewrite-category-url
  * Domain Path:       /languages
  */
 
@@ -27,9 +27,9 @@ if (!defined('ABSPATH')) {
     exit;                      // Exit if accessed
 }
 
-if (!class_exists('Directorist_Rewrite_Location_Url')) {
+if (!class_exists('Directorist_Rewrite_Category_Url')) {
 
-    final class Directorist_Rewrite_Location_Url
+    final class Directorist_Rewrite_Category_Url
     {
         /**
          * Instance
@@ -41,8 +41,8 @@ if (!class_exists('Directorist_Rewrite_Location_Url')) {
          */
         public static function instance()
         {
-            if (!isset(self::$instance) && !(self::$instance instanceof Directorist_Rewrite_Location_Url)) {
-                self::$instance = new Directorist_Rewrite_Location_Url;
+            if (!isset(self::$instance) && !(self::$instance instanceof Directorist_Rewrite_Category_Url)) {
+                self::$instance = new Directorist_Rewrite_Category_Url;
                 self::$instance->init();
             }
             return self::$instance;
@@ -178,13 +178,13 @@ if (!class_exists('Directorist_Rewrite_Location_Url')) {
         }
     }
 
-    function Directorist_Rewrite_Location_Url()
+    function Directorist_Rewrite_Category_Url()
     {
-        return Directorist_Rewrite_Location_Url::instance();
+        return Directorist_Rewrite_Category_Url::instance();
     }
 
     if (directorist_is_plugin_active('directorist/directorist-base.php')) {
-        Directorist_Rewrite_Location_Url(); // get the plugin running
+        Directorist_Rewrite_Category_Url(); // get the plugin running
     }
 }
 
