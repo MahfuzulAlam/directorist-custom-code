@@ -1,11 +1,11 @@
 <?php
 
 /** 
- * @package  Directorist - Custom Code
+ * @package  Directorist - Custom Code Firebot
  */
 
 /**
- * Plugin Name:       Directorist - Custom Code
+ * Plugin Name:       Directorist - Custom Code Firebot
  * Plugin URI:        https://wpwax.com
  * Description:       Best way to implement custom code for directorist plugin
  * Version:           1.0.0
