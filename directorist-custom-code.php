@@ -1,24 +1,24 @@
 <?php
 
 /** 
- * @package  Directorist - Custom Code
+ * @package  Directorist - Statistics
  */
 
 /**
- * Plugin Name:       Directorist - Custom Code
+ * Plugin Name:       Directorist - Statistics
  * Plugin URI:        https://wpwax.com
- * Description:       Best way to implement custom code for directorist plugin
+ * Description:       An extension to show statistics for Views and Search of Directorist Listings
  * Version:           1.0.0
  * Requires at least: 5.2
  * Author:            wpWax
  * Author URI:        https://wpwax.com
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       directorist-custom-code
+ * Text Domain:       directorist-custom-code-stats
  * Domain Path:       /languages
  */
 
-/* This is an extension for Directorist plugin. It helps using custom code and template overriding of Directorist plugin.*/
+/* This is an extension for Directorist plugin. it helps user to check the views count of the listings, categories and locations.*/
 
 /**
  * If this file is called directly, abrot!!!
@@ -53,10 +53,50 @@ if (!class_exists('Directorist_Custom_Code')) {
          */
         public function init()
         {
+            $this->activation();
+            $this->deactivation();
             $this->define_constant();
             $this->includes();
             $this->enqueues();
             $this->hooks();
+        }
+
+        /**
+         * Activation
+         */
+        public function activation()
+        {
+            /**
+             * The code that runs during plugin activation
+             */
+            register_activation_hook(__FILE__, [ $this, 'activate_directorist_statistics' ] );
+        }
+
+        /**
+         * Activation
+         */
+        public function deactivation()
+        {
+            /**
+             * The code that runs during plugin deactivation
+             */
+            register_deactivation_hook(__FILE__, [ $this, 'deactivate_directorist_statistics' ] );
+        }
+
+        /**
+         * Activate Directorist Statistics
+         */
+        public function activate_directorist_statistics()
+        {
+            include_once( DIRECTORIST_CUSTOM_CODE_DIR . '/inc/classes/activate.php' );
+        }
+
+        /**
+         * Deactivate Directorist Statistics
+         */
+        public function deactivate_directorist_statistics()
+        {
+            include_once( DIRECTORIST_CUSTOM_CODE_DIR . '/inc/classes/deactivate.php' );
         }
 
         /**
@@ -71,6 +111,26 @@ if (!class_exists('Directorist_Custom_Code')) {
             if ( !defined( 'DIRECTORIST_CUSTOM_CODE_DIR' ) ) {
                 define( 'DIRECTORIST_CUSTOM_CODE_DIR', plugin_dir_path( __FILE__ ) );
             }
+
+            if (!defined( 'DIRECTORIST_LISTING_STAT_TABLE' )){
+                define( 'DIRECTORIST_LISTING_STAT_TABLE', 'directorist_listing_stats' );
+            }
+
+            if (!defined( 'DIRECTORIST_TAXONOMY_STAT_TABLE' )){
+                define( 'DIRECTORIST_TAXONOMY_STAT_TABLE', 'directorist_taxonomy_stats' );
+            }
+
+            if (!defined( 'DIRECTORIST_SEARCH_STAT_TABLE' )){
+                define( 'DIRECTORIST_SEARCH_STAT_TABLE', 'directorist_search_stats' );
+            }
+
+            if (!defined( 'DIRECTORIST_STAT_TAXONOMY_CATEGORY' )){
+                define( 'DIRECTORIST_STAT_TAXONOMY_CATEGORY', 1 );
+            }
+
+            if (!defined( 'DIRECTORIST_STAT_TAXONOMY_LOCATION' )){
+                define( 'DIRECTORIST_STAT_TAXONOMY_LOCATION', 2 );
+            }
         }
 
         /**
@@ -79,6 +139,8 @@ if (!class_exists('Directorist_Custom_Code')) {
         public function includes()
         {
             include_once(DIRECTORIST_CUSTOM_CODE_DIR . '/inc/functions.php');
+
+            include_once(DIRECTORIST_CUSTOM_CODE_DIR . '/inc/classes/count.php');
         }
 
         /**
