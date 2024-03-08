@@ -4,7 +4,7 @@
  * Add your custom php code here
  */
 
-
+/*
  add_filter( 'rank_math/opengraph/facebook/image', function( $image ){
     if( is_page( 'author-profile' ) ):
         $author_username = get_query_var( 'author_id' );
@@ -55,3 +55,5 @@ add_filter( 'wpseo_opengraph_image', function( $image ) {
     endif;
     return $image;
 } );
+
+*/
