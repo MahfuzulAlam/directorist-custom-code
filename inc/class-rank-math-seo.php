@@ -10,13 +10,31 @@ class Directorist_Rank_Math_Metas
         add_filter( 'rank_math/opengraph/facebook/image',  [ $this, 'meta_image' ] );
         add_filter( 'rank_math/opengraph/twitter/image',  [ $this, 'meta_image' ] );
     }
+	
+	// extract_user_id
+	public function extract_user_data( $user_id = '' ) {
+		$user_id = urldecode($user_id); //decode the URL to remove encoded spaces, special characters
+
+		if ( is_string( $user_id ) && ! empty( $user_id ) ) {
+			return get_user_by( 'login', $user_id );
+		}
+
+		return false;
+	}
+
+    // check if author profile page
+    public function is_author_profile_page()
+    {
+        $page = get_directorist_option( 'author_profile_page' );
+        if( $page && is_page( $page ) ){
+            return true;
+        }
+    }
 
     public function meta_title( $title )
     {
-        if( is_page( 'author-profile' ) ):
-            $author_username = get_query_var( 'author_id' );
-            // Get user data by username
-            $user = get_user_by( 'login', $author_username );
+        if( $this->is_author_profile_page() ):
+            $user = $this->extract_user_data( get_query_var( 'author_id' ) );
     
             if ($user) {
                 return $user->data->display_name;
@@ -27,10 +45,9 @@ class Directorist_Rank_Math_Metas
 
     public function meta_description( $description )
     {
-        if( is_page( 'author-profile' ) ):
-            $author_username = get_query_var( 'author_id' );
-            // Get user data by username
-            $user = get_user_by( 'login', $author_username );
+        if( $this->is_author_profile_page() ):
+            $user = $this->extract_user_data( get_query_var( 'author_id' ) );
+    
             if ($user) {
                 $description = get_user_meta( $user->data->ID, 'description', true );
                 if( $description ) return $description;
@@ -41,10 +58,9 @@ class Directorist_Rank_Math_Metas
 
     public function meta_canonical( $description )
     {
-        if( is_page( 'author-profile' ) ):
-            $author_username = get_query_var( 'author_id' );
-            // Get user data by username
-            $user = get_user_by( 'login', $author_username );
+        if( $this->is_author_profile_page() ):
+            $user = $this->extract_user_data( get_query_var( 'author_id' ) );
+    
             if ($user) {
                 return esc_url( ATBDP_Permalink::get_user_profile_page_link( $user->data->ID ) );
             }
@@ -54,10 +70,8 @@ class Directorist_Rank_Math_Metas
 
     public function meta_image( $image )
     {
-        if( is_page( 'author-profile' ) ):
-            $author_username = get_query_var( 'author_id' );
-            // Get user data by username
-            $user = get_user_by( 'login', $author_username );
+        if( $this->is_author_profile_page() ):
+            $user = $this->extract_user_data( get_query_var( 'author_id' ) );
     
             if ($user) {
                 // Get the avatar URL
