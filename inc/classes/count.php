@@ -1,6 +1,6 @@
 <?php
 
-class Listing_View_Count
+class Directorist_Listing_View_Count
 {
     public $table_name;
     public $taxonomy_table_name;
@@ -65,12 +65,12 @@ class Listing_View_Count
 
     public function set_categories()
     {
-
+        $this->categories = get_the_terms( $this->listing, ATBDP_CATEGORY );
     }
 
     public function set_locations()
     {
-        
+        $this->locations = get_the_terms( $this->listing, ATBDP_LOCATION );
     }
 
     public function set_listing()
@@ -118,7 +118,8 @@ class Listing_View_Count
 
         // Check if the user has an entry for the current date
         $query = $wpdb->prepare(
-            "SELECT COUNT(*) FROM $this->table_name WHERE user = %d AND DATE(moment) = %s",
+            "SELECT COUNT(*) FROM $this->table_name WHERE listing = %d AND user = %d AND DATE(moment) = %s",
+            $this->listing,
             $this->user,
             $current_date
         );
@@ -142,7 +143,8 @@ class Listing_View_Count
 
         // Check if the user has an entry for the current date
         $query = $wpdb->prepare(
-            "SELECT COUNT(*) FROM $this->table_name WHERE ip_address = %s AND DATE(moment) = %s",
+            "SELECT COUNT(*) FROM $this->table_name WHERE listing = %d AND ip_address = %s AND DATE(moment) = %s",
+            $this->listing,
             $this->ip_address,
             $current_date
         );
@@ -160,8 +162,7 @@ class Listing_View_Count
     public function insert_count_to_database()
     {
         $this->insert_listing_count_to_database();
-        $this->insert_taxonomy_count_to_database();
-        
+        $this->process_taxonomy();
     }
 
     public function insert_listing_count_to_database()
@@ -191,16 +192,41 @@ class Listing_View_Count
         );
 
         //file_put_contents( __DIR__. '/data.json', json_encode( $wpdb->last_error ) );
-        
+
+        if ( !$wpdb->last_error ) {
+            $this->source = $wpdb->insert_id;
+        }
     }
 
     public function process_taxonomy ()
     {
+        $this->process_categories();
+        $this->process_locations();
+    }
 
+    public function process_categories()
+    {
+        if( $this->categories ){
+            foreach( $this->categories as $category )
+            {
+                $this->insert_taxonomy_count_to_database( DIRECTORIST_STAT_TAXONOMY_CATEGORY, $category->term_id );
+            }
+        }
+    }
+
+    public function process_locations()
+    {
+        if( $this->locations ){
+            foreach( $this->locations as $location )
+            {
+                $this->insert_taxonomy_count_to_database( DIRECTORIST_STAT_TAXONOMY_LOCATION, $location->term_id );
+            }
+        }
     }
 
     public function insert_taxonomy_count_to_database( $taxonomy = 0, $term = 0 )
     {
+        if( ! $this->source ) return;
 
         if( ! $taxonomy || ! $term ) return;
 
@@ -226,4 +252,4 @@ class Listing_View_Count
     }
 }
 
-new Listing_View_Count();
+new Directorist_Listing_View_Count();

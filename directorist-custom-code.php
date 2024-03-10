@@ -141,6 +141,8 @@ if (!class_exists('Directorist_Custom_Code')) {
             include_once(DIRECTORIST_CUSTOM_CODE_DIR . '/inc/functions.php');
 
             include_once(DIRECTORIST_CUSTOM_CODE_DIR . '/inc/classes/count.php');
+            
+            include_once(DIRECTORIST_CUSTOM_CODE_DIR . '/inc/classes/admin.php');
         }
 
         /**
