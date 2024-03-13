@@ -6,6 +6,8 @@ class Directorist_Listing_Stat_Admin
     {
         add_filter( 'atbdp_add_new_listing_column', [ $this, 'listing_admin_columns' ] );
         add_filter( 'atbdp_add_new_listing_column_content', [ $this, 'listing_admin_custom_columns' ], 10, 2 );
+
+        add_action( 'admin_menu', [ $this, 'statistics_report_admin_submenu_page' ] );
     }
 
     public function listing_admin_columns( $columns )
@@ -72,6 +74,24 @@ class Directorist_Listing_Stat_Admin
 
         return 0;
     }
+
+    public function statistics_report_admin_submenu_page()
+    {
+        add_submenu_page(
+            'edit.php?post_type=at_biz_dir',
+            __('Statistics', 'directorist-custom-code-stats'),
+            __('Statistics', 'directorist-custom-code-stats'),
+            'manage_options',
+            'directorist-statistics',
+            [ $this, 'statistics_submenu_page' ]
+        );
+    }
+
+    public function statistics_submenu_page()
+    {
+        include_once( DIRECTORIST_CUSTOM_CODE_STAT_DIR . 'inc/admin/submenu-statistics.php' );
+    }
+
 }
 
 new Directorist_Listing_Stat_Admin();

@@ -88,7 +88,7 @@ if (!class_exists('Directorist_Custom_Code')) {
          */
         public function activate_directorist_statistics()
         {
-            include_once( DIRECTORIST_CUSTOM_CODE_DIR . '/inc/classes/activate.php' );
+            include_once( DIRECTORIST_CUSTOM_CODE_STAT_DIR . '/inc/classes/activate.php' );
         }
 
         /**
@@ -96,7 +96,7 @@ if (!class_exists('Directorist_Custom_Code')) {
          */
         public function deactivate_directorist_statistics()
         {
-            include_once( DIRECTORIST_CUSTOM_CODE_DIR . '/inc/classes/deactivate.php' );
+            include_once( DIRECTORIST_CUSTOM_CODE_STAT_DIR . '/inc/classes/deactivate.php' );
         }
 
         /**
@@ -104,12 +104,12 @@ if (!class_exists('Directorist_Custom_Code')) {
          */
         public function define_constant()
         {
-            if ( !defined( 'DIRECTORIST_CUSTOM_CODE_URI' ) ) {
-                define( 'DIRECTORIST_CUSTOM_CODE_URI', plugin_dir_url( __FILE__ ) );
+            if ( !defined( 'DIRECTORIST_CUSTOM_CODE_STAT_URI' ) ) {
+                define( 'DIRECTORIST_CUSTOM_CODE_STAT_URI', plugin_dir_url( __FILE__ ) );
             }
 
-            if ( !defined( 'DIRECTORIST_CUSTOM_CODE_DIR' ) ) {
-                define( 'DIRECTORIST_CUSTOM_CODE_DIR', plugin_dir_path( __FILE__ ) );
+            if ( !defined( 'DIRECTORIST_CUSTOM_CODE_STAT_DIR' ) ) {
+                define( 'DIRECTORIST_CUSTOM_CODE_STAT_DIR', plugin_dir_path( __FILE__ ) );
             }
 
             if (!defined( 'DIRECTORIST_LISTING_STAT_TABLE' )){
@@ -138,11 +138,11 @@ if (!class_exists('Directorist_Custom_Code')) {
          */
         public function includes()
         {
-            include_once(DIRECTORIST_CUSTOM_CODE_DIR . '/inc/functions.php');
+            include_once(DIRECTORIST_CUSTOM_CODE_STAT_DIR . 'inc/functions.php');
 
-            include_once(DIRECTORIST_CUSTOM_CODE_DIR . '/inc/classes/count.php');
+            include_once(DIRECTORIST_CUSTOM_CODE_STAT_DIR . 'inc/classes/count.php');
             
-            include_once(DIRECTORIST_CUSTOM_CODE_DIR . '/inc/classes/admin.php');
+            include_once(DIRECTORIST_CUSTOM_CODE_STAT_DIR . 'inc/classes/admin.php');
         }
 
         /**
@@ -168,7 +168,7 @@ if (!class_exists('Directorist_Custom_Code')) {
         public function enqueue_scripts()
         {
             // Replace 'your-plugin-name' with the actual name of your plugin's folder.
-            wp_enqueue_script('directorist-custom-script', DIRECTORIST_CUSTOM_CODE_URI . 'assets/js/main.js', array('jquery'), '1.0', true);
+            wp_enqueue_script('directorist-custom-script', DIRECTORIST_CUSTOM_CODE_STAT_URI . 'assets/js/main.js', array('jquery'), '1.0', true);
         }
 
         /**
@@ -177,7 +177,7 @@ if (!class_exists('Directorist_Custom_Code')) {
         public function enqueue_styles()
         {
             // Replace 'your-plugin-name' with the actual name of your plugin's folder.
-            wp_enqueue_style('directorist-custom-style', DIRECTORIST_CUSTOM_CODE_URI . 'assets/css/main.css', array(), '1.0');
+            wp_enqueue_style('directorist-custom-style', DIRECTORIST_CUSTOM_CODE_STAT_URI . 'assets/css/main.css', array(), '1.0');
         }
 
         /**
@@ -185,7 +185,7 @@ if (!class_exists('Directorist_Custom_Code')) {
          */
         public function template_exists($template_file)
         {
-            $file = DIRECTORIST_CUSTOM_CODE_DIR . '/templates/' . $template_file . '.php';
+            $file = DIRECTORIST_CUSTOM_CODE_STAT_DIR . '/templates/' . $template_file . '.php';
 
             if (file_exists($file)) {
                 return true;
@@ -206,7 +206,7 @@ if (!class_exists('Directorist_Custom_Code')) {
 
             if (isset($args['form'])) $listing_form = $args['form'];
 
-            $file = DIRECTORIST_CUSTOM_CODE_DIR . '/templates/' . $template_file . '.php';
+            $file = DIRECTORIST_CUSTOM_CODE_STAT_DIR . '/templates/' . $template_file . '.php';
 
             if ($this->template_exists($template_file)) {
                 include $file;
