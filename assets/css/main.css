@@ -1,1 +1,9 @@
 /* Add you custom css here */
+
+
+.twitter-square-icon
+.directorist-icon-mask:after
+{
+    width: 13px !important;
+    height: 13px !important;
+}
