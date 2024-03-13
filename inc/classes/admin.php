@@ -89,7 +89,16 @@ class Directorist_Listing_Stat_Admin
 
     public function statistics_submenu_page()
     {
-        include_once( DIRECTORIST_CUSTOM_CODE_STAT_DIR . 'inc/admin/submenu-statistics.php' );
+        $data = [ 'total' => 2000, 'unique' => 1500 ];
+        $this->get_admin_template( 'submenu-statistics', $data );
+    }
+
+    /**
+     * Get Admin Template
+     */
+    public function get_admin_template( $template_file, $data = array() )
+    {
+        include DIRECTORIST_CUSTOM_CODE_STAT_DIR . '/templates/admin/' . $template_file . '.php';
     }
 
 }

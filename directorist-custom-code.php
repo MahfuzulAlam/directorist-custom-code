@@ -1,11 +1,11 @@
 <?php
 
 /** 
- * @package  Directorist - Statistics
+ * @package  Directorist - Custom Code - Statistics
  */
 
 /**
- * Plugin Name:       Directorist - Statistics
+ * Plugin Name:       Directorist - Custom Code - Statistics
  * Plugin URI:        https://wpwax.com
  * Description:       An extension to show statistics for Views and Search of Directorist Listings
  * Version:           1.0.0
@@ -138,11 +138,11 @@ if (!class_exists('Directorist_Custom_Code')) {
          */
         public function includes()
         {
-            include_once(DIRECTORIST_CUSTOM_CODE_STAT_DIR . 'inc/functions.php');
+            include_once(DIRECTORIST_CUSTOM_CODE_STAT_DIR . '/inc/functions.php');
 
-            include_once(DIRECTORIST_CUSTOM_CODE_STAT_DIR . 'inc/classes/count.php');
-            
-            include_once(DIRECTORIST_CUSTOM_CODE_STAT_DIR . 'inc/classes/admin.php');
+            include_once(DIRECTORIST_CUSTOM_CODE_STAT_DIR . '/inc/classes/count.php');
+
+            include_once(DIRECTORIST_CUSTOM_CODE_STAT_DIR . '/inc/classes/admin.php');
         }
 
         /**
