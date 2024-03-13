@@ -2,6 +2,9 @@
 
 class Directorist_Listing_Stat_Admin
 {
+    public $total_count = 0;
+    public $unique_count = 0;
+
     public function __construct()
     {
         add_filter( 'atbdp_add_new_listing_column', [ $this, 'listing_admin_columns' ] );
@@ -27,6 +30,46 @@ class Directorist_Listing_Stat_Admin
         if ( $column == 'listing_unique_views' )
         {
             echo $this->count_unique_listing_views( $post_id );
+        }
+    }
+
+    public function count_total_views()
+    {
+
+        global $wpdb;
+
+        // Your table name
+        $table_name = $wpdb->prefix . DIRECTORIST_LISTING_STAT_TABLE;
+
+        // Count the number of rows with the specified "listing" value
+        $query = $wpdb->prepare(
+            "SELECT COUNT(*) FROM $table_name"
+        );
+
+        $count = $wpdb->get_var($query);
+
+        if( $count > 0 ) {
+            $this->total_count = $count;
+        }
+    }
+
+    public function count_unique_views()
+    {
+        global $wpdb;
+
+        // Your table name
+        $table_name = $wpdb->prefix . DIRECTORIST_LISTING_STAT_TABLE;
+
+        // Count the number of rows with the specified "listing" value
+        $query = $wpdb->prepare(
+            "SELECT COUNT(*) FROM $table_name WHERE new = %d",
+            1
+        );
+
+        $count = $wpdb->get_var($query);
+
+        if( $count > 0 ) {
+            $this->unique_count = $count;
         }
     }
 
@@ -89,7 +132,9 @@ class Directorist_Listing_Stat_Admin
 
     public function statistics_submenu_page()
     {
-        $data = [ 'total' => 2000, 'unique' => 1500 ];
+        $this->count_total_views();
+        $this->count_unique_views();
+        $data = [ 'total' => $this->total_count, 'unique' => $this->unique_count ];
         $this->get_admin_template( 'submenu-statistics', $data );
     }
 
