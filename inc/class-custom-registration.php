@@ -103,7 +103,7 @@ class Directorist_Custom_Registration_Field
     public function wp_update_user( $user_id )
     {
         $value	=   isset( $_POST['user'][$this->field_slug] ) && !empty( $_POST['user'][$this->field_slug] ) ? ( $this->field_type == 'textarea' ? sanitize_textarea_field( trim( $_POST['user'][$this->field_slug] ) ) : sanitize_text_field( trim( $_POST['user'][$this->field_slug] ) ) ) : '';
-        if( $value ) update_user_meta( $user_id, '_'.$this->field_slug, $value );
+        update_user_meta( $user_id, '_'.$this->field_slug, $value );
     }
 
 }
