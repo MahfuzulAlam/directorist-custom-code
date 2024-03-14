@@ -7,27 +7,22 @@
 
 ?>
 <div style="margin:50px">
-    <!-- <div>
-        <h1>Directorist - Import Taxonomies</h1>
-
-        
+    <div>
         <form method='post' action='<?php echo $_SERVER['REQUEST_URI']; ?>' enctype='multipart/form-data'>
-            </br>
-            <label for="taxonomy_name">Taxonomy Name</Label></br>
-            <select name="taxonomy_name" id="taxonomy_name">
-                <option value="at_biz_dir-category" selected>Category</option>
-                <option value="at_biz_dir-location">Location</option>
+            <select name="stat_date_time" id="stat_time">
+                <option value="">Select an Option</option>
+                <option value="today" <?php selected( $_POST['stat_date_time'], 'today' ); ?>>Today</option>
+                <option value="yesterday" <?php selected( $_POST['stat_date_time'], 'yesterday' ); ?>>Yesterday</option>
+                <option value="cur_month" <?php selected( $_POST['stat_date_time'], 'cur_month' ); ?>>This Month</option>
+                <option value="prev_month" <?php selected( $_POST['stat_date_time'], 'prev_month' ); ?>>Last Month</option>
+                <option value="cur_year" <?php selected( $_POST['stat_date_time'], 'cur_year' ); ?>>This Year</option>
+                <option value="prev_year" <?php selected( $_POST['stat_date_time'], 'prev_year' ); ?>>Last Year</option>
             </select>
-            </br>
-            </br>
-            <label for="taxonomy_file">Import CSV File</Label></br>
-            <input type="file" name="taxonomy_file" id="taxonomy_file" accept=".csv">
-            </br>
-            </br>
-            <input type="submit" name="taxonomy_import" value="Import" class="button button-primary">
+            <input type="submit" name="stat_date_time_submit" value="Search" class="button button-primary">
         </form>
         
-    </div> -->
+    </div>
+    <div class="statistics-container">
     <div>
         <h1>Directorist - Statistics Overview</h1>
         </br>
@@ -70,5 +65,6 @@
             <?php endif; ?>
         </tbody>
         </table>
+    </div>
     </div>
 </div>

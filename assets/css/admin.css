@@ -6,3 +6,60 @@
 .tg th{border-color:black;border-style:solid;border-width:1px;font-family:Arial, sans-serif;font-size:20px;
   font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
 .tg .tg-0lax{text-align:left;vertical-align:top}
+
+/* Reset default margin and padding */
+.statistics-container,
+.statistics-container h1,
+.statistics-container h2,
+.statistics-container table {
+    margin: 0;
+    padding: 0;
+}
+
+/* Set font family and size */
+.statistics-container {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+}
+
+/* Center content */
+.statistics-container {
+    margin: 50px auto;
+    max-width: 800px;
+}
+
+/* Style headings */
+.statistics-container h1 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.statistics-container h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+/* Style tables */
+.statistics-container table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.statistics-container th,
+.statistics-container td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+}
+
+.statistics-container th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+/* Set table header text alignment */
+.statistics-container th {
+    text-align: left;
+}

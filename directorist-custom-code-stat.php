@@ -154,6 +154,7 @@ if (!class_exists('Directorist_Custom_Code_Stat')) {
             add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
 
             add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_styles'));
+            add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
         }
 
         /**
@@ -181,12 +182,25 @@ if (!class_exists('Directorist_Custom_Code_Stat')) {
         }
 
         /**
-         *  Enqueue Admin CSS file
+         *  Enqueue Admin JS file
          */
-        public function enqueue_admin_styles()
+        public function enqueue_admin_scripts( $hook_suffix )
         {
             if ( is_admin() ) {
-                wp_enqueue_style('directorist-custom-style', DIRECTORIST_CUSTOM_CODE_STAT_URI . 'assets/css/admin.css', array(), '1.0');
+                wp_enqueue_script('directorist-stat-moment', DIRECTORIST_CUSTOM_CODE_STAT_URI . 'assets/js/moment.min.js', array('jquery'), '1.0', true);
+                wp_enqueue_script('directorist-stat-daterangepicker', DIRECTORIST_CUSTOM_CODE_STAT_URI . 'assets/js/daterangepicker.min.js', array('jquery'), '1.0', true);
+                wp_enqueue_script('directorist-stat-admin', DIRECTORIST_CUSTOM_CODE_STAT_URI . 'assets/js/admin.js', array('jquery', 'directorist-stat-moment', 'directorist-stat-daterangepicker'), '1.0', true);
+            }
+        }
+
+        /**
+         *  Enqueue Admin CSS file
+         */
+        public function enqueue_admin_styles( $hook_suffix )
+        {
+            if ( is_admin() && $hook_suffix == 'at_biz_dir_page_directorist-statistics' ) {
+                wp_enqueue_style('directorist-stat-admin', DIRECTORIST_CUSTOM_CODE_STAT_URI . 'assets/css/admin.css', array(), '1.0');
+                wp_enqueue_style('directorist-stat-daterangepicker', DIRECTORIST_CUSTOM_CODE_STAT_URI . 'assets/css/daterangepicker.css', array(), '1.0');
             }
         }
 
