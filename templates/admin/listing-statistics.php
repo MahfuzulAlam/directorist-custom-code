@@ -12,15 +12,6 @@ if( ! $data[ 'listing_id' ] ) exit;
 <div style="margin:50px">
     <div>
         <form method='post' action='<?php echo $_SERVER['REQUEST_URI']; ?>' enctype='multipart/form-data'>
-            <select name="stat_date_time" id="stat_time">
-                <option value="">Select an Option</option>
-                <option value="today" <?php selected( $_POST['stat_date_time'], 'today' ); ?>>Today</option>
-                <option value="yesterday" <?php selected( $_POST['stat_date_time'], 'yesterday' ); ?>>Yesterday</option>
-                <option value="cur_month" <?php selected( $_POST['stat_date_time'], 'cur_month' ); ?>>This Month</option>
-                <option value="prev_month" <?php selected( $_POST['stat_date_time'], 'prev_month' ); ?>>Last Month</option>
-                <option value="cur_year" <?php selected( $_POST['stat_date_time'], 'cur_year' ); ?>>This Year</option>
-                <option value="prev_year" <?php selected( $_POST['stat_date_time'], 'prev_year' ); ?>>Last Year</option>
-            </select>
             <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
                 <span></span> <i class="fa fa-caret-down"></i>
                 <input type="hidden" name="start_date" />
