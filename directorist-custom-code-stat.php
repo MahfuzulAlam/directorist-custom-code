@@ -27,9 +27,9 @@ if (!defined('ABSPATH')) {
     exit;                      // Exit if accessed
 }
 
-if (!class_exists('Directorist_Custom_Code')) {
+if (!class_exists('Directorist_Custom_Code_Stat')) {
 
-    final class Directorist_Custom_Code
+    final class Directorist_Custom_Code_Stat
     {
         /**
          * Instance
@@ -41,8 +41,8 @@ if (!class_exists('Directorist_Custom_Code')) {
          */
         public static function instance()
         {
-            if (!isset(self::$instance) && !(self::$instance instanceof Directorist_Custom_Code)) {
-                self::$instance = new Directorist_Custom_Code;
+            if (!isset(self::$instance) && !(self::$instance instanceof Directorist_Custom_Code_Stat)) {
+                self::$instance = new Directorist_Custom_Code_Stat;
                 self::$instance->init();
             }
             return self::$instance;
@@ -152,6 +152,8 @@ if (!class_exists('Directorist_Custom_Code')) {
         {
             add_action('wp_enqueue_scripts', array($this, 'enqueue_styles'));
             add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
+
+            add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_styles'));
         }
 
         /**
@@ -167,7 +169,6 @@ if (!class_exists('Directorist_Custom_Code')) {
          */
         public function enqueue_scripts()
         {
-            // Replace 'your-plugin-name' with the actual name of your plugin's folder.
             wp_enqueue_script('directorist-custom-script', DIRECTORIST_CUSTOM_CODE_STAT_URI . 'assets/js/main.js', array('jquery'), '1.0', true);
         }
 
@@ -176,8 +177,17 @@ if (!class_exists('Directorist_Custom_Code')) {
          */
         public function enqueue_styles()
         {
-            // Replace 'your-plugin-name' with the actual name of your plugin's folder.
             wp_enqueue_style('directorist-custom-style', DIRECTORIST_CUSTOM_CODE_STAT_URI . 'assets/css/main.css', array(), '1.0');
+        }
+
+        /**
+         *  Enqueue Admin CSS file
+         */
+        public function enqueue_admin_styles()
+        {
+            if ( is_admin() ) {
+                wp_enqueue_style('directorist-custom-style', DIRECTORIST_CUSTOM_CODE_STAT_URI . 'assets/css/admin.css', array(), '1.0');
+            }
         }
 
         /**
@@ -246,13 +256,13 @@ if (!class_exists('Directorist_Custom_Code')) {
         }
     }
 
-    function Directorist_Custom_Code()
+    function Directorist_Custom_Code_Stat()
     {
-        return Directorist_Custom_Code::instance();
+        return Directorist_Custom_Code_Stat::instance();
     }
 
     if (directorist_is_plugin_active('directorist/directorist-base.php')) {
-        Directorist_Custom_Code(); // get the plugin running
+        Directorist_Custom_Code_Stat(); // get the plugin running
     }
 }
 

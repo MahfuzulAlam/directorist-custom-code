@@ -4,6 +4,7 @@ class Directorist_Listing_Stat_Admin
 {
     public $total_count = 0;
     public $unique_count = 0;
+    public $top_ten;
 
     public function __construct()
     {
@@ -118,6 +119,28 @@ class Directorist_Listing_Stat_Admin
         return 0;
     }
 
+    public function top_ten_listings()
+    {
+        global $wpdb;
+
+        $table_name = $wpdb->prefix . DIRECTORIST_LISTING_STAT_TABLE;
+
+        $query = "SELECT 
+        listing, 
+        COUNT(*) as total_count,
+        SUM(CASE WHEN new = 1 THEN 1 ELSE 0 END) as new_count
+        FROM $table_name
+        GROUP BY listing
+        ORDER BY total_count DESC
+        LIMIT 10";
+
+        $results = $wpdb->get_results( $query );
+
+        if ( $results ) {
+            $this->top_ten = $results;
+        }
+    }
+
     public function statistics_report_admin_submenu_page()
     {
         add_submenu_page(
@@ -134,7 +157,8 @@ class Directorist_Listing_Stat_Admin
     {
         $this->count_total_views();
         $this->count_unique_views();
-        $data = [ 'total' => $this->total_count, 'unique' => $this->unique_count ];
+        $this->top_ten_listings();
+        $data = [ 'total' => $this->total_count, 'unique' => $this->unique_count, 'top_ten' => $this->top_ten ];
         $this->get_admin_template( 'submenu-statistics', $data );
     }
 

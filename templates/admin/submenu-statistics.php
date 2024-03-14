@@ -35,14 +35,39 @@
         <thead>
             <tr>
                 <th class="tg-0lax">Total Visits</th>
-                <th class="tg-0lax"><?php echo $data[ 'total' ]; ?></th>
+                <td class="tg-0lax"><?php echo $data[ 'total' ]; ?></td>
             </tr>
             </thead>
             <tbody>
             <tr>
-                <td class="tg-0lax">Total Unique Visits</td>
+                <th class="tg-0lax">Total Unique Visits</th>
                 <td class="tg-0lax"><?php echo $data[ 'unique' ]; ?></td>
             </tr>
+        </tbody>
+        </table>
+    </div>
+
+    <div>
+        <h1>Top 10 listings</h1>
+        </br>
+        <table class="tg">
+        <thead>
+            <tr>
+                <th class="tg-0lax">Listing</th>
+                <th class="tg-0lax">Total Views</th>
+                <th class="tg-0lax">Unique Views</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php if( $this->top_ten ): ?>
+                <?php foreach( $this->top_ten as $listing ): ?>
+                <tr>
+                    <td class="tg-0lax"><?php echo get_the_title( $listing->listing ); ?></td>
+                    <td class="tg-0lax"><?php echo $listing->total_count; ?></td>
+                    <td class="tg-0lax"><?php echo $listing->new_count; ?></td>
+                </tr>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </tbody>
         </table>
     </div>
