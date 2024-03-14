@@ -225,86 +225,26 @@ class Directorist_Listing_Stat_Admin
     {
         if( ! $listing ) return 0;
 
-        $stat_date_time = isset( $_POST[ 'stat_date_time' ] ) && !empty( $_POST[ 'stat_date_time' ] ) ? $_POST[ 'stat_date_time' ]: '';
+        $start_date = isset( $_POST[ 'start_date' ] ) && !empty( $_POST[ 'start_date' ] ) ? $_POST[ 'start_date' ]: '';
+        $end_date = isset( $_POST[ 'end_date' ] ) && !empty( $_POST[ 'end_date' ] ) ? $_POST[ 'end_date' ]: '';
 
         global $wpdb;
 
         // Your table name
         $table_name = $wpdb->prefix . DIRECTORIST_LISTING_STAT_TABLE;
 
-        switch( $stat_date_time ){
-            case 'today';
-                $today = date( 'Y-m-d' );
-                $query = $wpdb->prepare(
-                    "SELECT COUNT(*) FROM $table_name WHERE listing = %d AND DATE(moment_gmt) = %s",
-                    $listing,
-                    $today
-                );
-            break;
-            case 'yesterday';
-                $yesterday = date('Y-m-d', strtotime('-1 day'));
-                $query = $wpdb->prepare(
-                    "SELECT COUNT(*) FROM $table_name WHERE listing = %d AND DATE(moment_gmt) = %s",
-                    $listing,
-                    $yesterday
-                );
-            break;
-            case 'cur_month';
-                $current_month = date('Y-m');
-                $query = $wpdb->prepare(
-                    "SELECT COUNT(*) FROM $table_name WHERE listing = %d AND DATE_FORMAT(moment, '%Y-%m') = %s",
-                    $listing,
-                    $current_month
-                );
-            break;
-            case 'prev_month';
-                // Calculate the starting date of the previous month
-                $first_day_of_previous_month = date('Y-m-01', strtotime('first day of previous month'));
-                // Calculate the ending date of the previous month
-                $last_day_of_previous_month = date('Y-m-t', strtotime('last day of previous month'));
-                $query = $wpdb->prepare(
-                    "SELECT COUNT(*) FROM $table_name WHERE listing = %d AND DATE(moment) >= %s AND DATE(moment) <= %s",
-                    $listing,
-                    $first_day_of_previous_month,
-                    $last_day_of_previous_month
-                );
-            break;
-            case 'cur_year';
-                // Get the current year
-                $current_year = date('Y');
-                // Construct the start date of the current year
-                $start_of_year = date('Y-01-01', strtotime($current_year));
-                // Construct the end date of the current year
-                $end_of_year = date('Y-12-31', strtotime($current_year));
-                $query = $wpdb->prepare(
-                    "SELECT COUNT(*) FROM $table_name WHERE listing = %d AND DATE(moment) >= %s AND DATE(moment) <= %s",
-                    $listing,
-                    $start_of_year,
-                    $end_of_year
-                );
-            break;
-            case 'prev_year';
-                // Get the current year
-                $current_year = date('Y');
-                // Calculate the previous year
-                $previous_year = $current_year - 1;
-                // Construct the start date of the current year
-                $start_of_year = date( 'Y-01-01', strtotime($previous_year . '-01-01') );
-                // Construct the end date of the current year
-                $end_of_year = date( 'Y-12-31', strtotime($previous_year . '-12-31') );
-                $query = $wpdb->prepare(
-                    "SELECT COUNT(*) FROM $table_name WHERE listing = %d AND DATE(moment) >= %s AND DATE(moment) <= %s",
-                    $listing,
-                    $start_of_year,
-                    $end_of_year
-                );
-            break;
-            default:
-                $query = $wpdb->prepare(
-                    "SELECT COUNT(*) FROM $table_name WHERE listing = %d",
-                    $listing
-                );
-            break;
+        if( $start_date && $end_date ){
+            $query = $wpdb->prepare(
+                "SELECT COUNT(*) FROM $table_name WHERE listing = %d AND DATE(moment) >= %s AND DATE(moment) <= %s",
+                $listing,
+                $start_date,
+                $end_date
+            );
+        }else{
+            $query = $wpdb->prepare(
+                "SELECT COUNT(*) FROM $table_name WHERE listing = %d",
+                $listing
+            );
         }
 
         $count = $wpdb->get_var($query);
@@ -563,6 +503,8 @@ class Directorist_Listing_Stat_Admin
     public function statistics_submenu_page()
     {
         $listing_id = isset( $_GET['listing_id'] ) && !empty( $_GET['listing_id'] ) ? $_GET['listing_id'] : 0;
+
+        e_var_dump( $_POST );
 
         if( $listing_id ){
             $data = [ 'total' => $this->count_total_listing_views( $listing_id ), 'unique' => $this->count_unique_listing_views( $listing_id ), 'listing_id' => $listing_id, 'listing_title' => get_the_title( $listing_id ) ];

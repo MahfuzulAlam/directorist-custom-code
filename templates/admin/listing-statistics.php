@@ -23,6 +23,8 @@ if( ! $data[ 'listing_id' ] ) exit;
             </select>
             <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
                 <span></span> <i class="fa fa-caret-down"></i>
+                <input type="hidden" name="start_date" />
+                <input type="hidden" name="end_date" />
             </div>
             <input type="submit" name="stat_date_time_submit" value="Search" class="button button-primary">
         </form>

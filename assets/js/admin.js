@@ -11,6 +11,8 @@ jQuery(document).ready(function ($) {
 
       function cb(start, end) {
           $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+          $('input[name=start_date]').val( start.format('YYYY-MM-DD') );
+          $('input[name=end_date]').val( end.format('YYYY-MM-DD') );
       }
 
       $('#reportrange').daterangepicker({
