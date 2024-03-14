@@ -155,11 +155,19 @@ class Directorist_Listing_Stat_Admin
 
     public function statistics_submenu_page()
     {
-        $this->count_total_views();
-        $this->count_unique_views();
-        $this->top_ten_listings();
-        $data = [ 'total' => $this->total_count, 'unique' => $this->unique_count, 'top_ten' => $this->top_ten ];
-        $this->get_admin_template( 'submenu-statistics', $data );
+        $listing_id = isset( $_GET['listing_id'] ) && !empty( $_GET['listing_id'] ) ? $_GET['listing_id'] : 0;
+
+        if( $listing_id ){
+            $data = [ 'total' => $this->count_total_listing_views( $listing_id ), 'unique' => $this->count_unique_listing_views( $listing_id ), 'listing_id' => $listing_id, 'listing_title' => get_the_title( $listing_id ) ];
+            $this->get_admin_template( 'listing-statistics', $data );
+        }else{
+            $this->count_total_views();
+            $this->count_unique_views();
+            $this->top_ten_listings();
+            $data = [ 'total' => $this->total_count, 'unique' => $this->unique_count, 'top_ten' => $this->top_ten ];
+            $this->get_admin_template( 'submenu-statistics', $data );
+        }
+
     }
 
     /**

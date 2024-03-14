@@ -62,7 +62,7 @@
             <?php if( $this->top_ten ): ?>
                 <?php foreach( $this->top_ten as $listing ): ?>
                 <tr>
-                    <td class="tg-0lax"><?php echo get_the_title( $listing->listing ); ?></td>
+                    <td class="tg-0lax"><a href="<?php echo $_SERVER['REQUEST_URI'] . '&listing_id=' .$listing->listing ; ?>"><?php echo get_the_title( $listing->listing ); ?></a></td>
                     <td class="tg-0lax"><?php echo $listing->total_count; ?></td>
                     <td class="tg-0lax"><?php echo $listing->new_count; ?></td>
                 </tr>
