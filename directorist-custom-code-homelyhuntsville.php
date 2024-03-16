@@ -1,11 +1,11 @@
 <?php
 
 /** 
- * @package  Directorist - Custom Code
+ * @package  Directorist - Custom Code - homelyhuntsville
  */
 
 /**
- * Plugin Name:       Directorist - Custom Code
+ * Plugin Name:       Directorist - Custom Code for Homelyhuntsville
  * Plugin URI:        https://wpwax.com
  * Description:       Best way to implement custom code for directorist plugin
  * Version:           1.0.0
@@ -27,9 +27,9 @@ if (!defined('ABSPATH')) {
     exit;                      // Exit if accessed
 }
 
-if (!class_exists('Directorist_Custom_Code')) {
+if (!class_exists('Directorist_Custom_Code_Homelyhuntsville')) {
 
-    final class Directorist_Custom_Code
+    final class Directorist_Custom_Code_Homelyhuntsville
     {
         /**
          * Instance
@@ -41,8 +41,8 @@ if (!class_exists('Directorist_Custom_Code')) {
          */
         public static function instance()
         {
-            if (!isset(self::$instance) && !(self::$instance instanceof Directorist_Custom_Code)) {
-                self::$instance = new Directorist_Custom_Code;
+            if (!isset(self::$instance) && !(self::$instance instanceof Directorist_Custom_Code_Homelyhuntsville)) {
+                self::$instance = new Directorist_Custom_Code_Homelyhuntsville;
                 self::$instance->init();
             }
             return self::$instance;
@@ -182,13 +182,13 @@ if (!class_exists('Directorist_Custom_Code')) {
         }
     }
 
-    function Directorist_Custom_Code()
+    function Directorist_Custom_Code_Homelyhuntsville()
     {
-        return Directorist_Custom_Code::instance();
+        return Directorist_Custom_Code_Homelyhuntsville::instance();
     }
 
     if (directorist_is_plugin_active('directorist/directorist-base.php')) {
-        Directorist_Custom_Code(); // get the plugin running
+        Directorist_Custom_Code_Homelyhuntsville(); // get the plugin running
     }
 }
 
