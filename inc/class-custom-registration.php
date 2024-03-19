@@ -27,7 +27,7 @@ class Directorist_Custom_Registration_Field
         add_action( 'directorist_registration_form_custom_fields', [ $this, 'directorist_registration_form_custom_fields' ] );
         add_action( 'atbdp_user_registration_completed', [ $this, 'atbdp_user_registration_completed' ] );
         add_action( 'directorist_dashboard_user_custom_fields', [ $this, 'directorist_dashboard_user_custom_fields' ] );
-        //add_action( 'wp_update_user', [$this, 'wp_update_user'] );
+        add_action( 'wp_update_user', [$this, 'wp_update_user'] );
     }
 
     public function directorist_registration_form_custom_fields()
@@ -134,15 +134,16 @@ class Directorist_Custom_Registration_Field
 
     public function atbdp_user_registration_completed( $user_id )
     {
-        file_put_contents( __DIR__ . '/data.json', json_encode( $_POST[$this->field_slug] ) );
-        $value	=   isset( $_POST[$this->field_slug] ) && !empty( $_POST[$this->field_slug] ) ? $_POST[$this->field_slug] : '';
-        if( ! empty( $value ) ) update_user_meta( $user_id, '_' . $this->field_slug, $value );
+        $value	=   isset( $_POST[$this->field_slug] ) && !empty( $_POST[$this->field_slug] ) ? ( $this->field_type == 'textarea' ? sanitize_textarea_field( trim( $_POST[$this->field_slug] ) ) : sanitize_text_field( trim( $_POST[$this->field_slug] ) ) ) : '';
+        if( $value ) update_user_meta( $user_id, '_' . $this->field_slug, $value );
     }
 
     public function wp_update_user( $user_id )
     {
-        $value	=   isset( $_POST['user'][$this->field_slug] ) && !empty( $_POST['user'][$this->field_slug] ) ? ( $this->field_type == 'textarea' ? sanitize_textarea_field( trim( $_POST['user'][$this->field_slug] ) ) : sanitize_text_field( trim( $_POST['user'][$this->field_slug] ) ) ) : '';
-        update_user_meta( $user_id, '_'.$this->field_slug, $_POST['user'][$this->field_slug] );
+        if( isset( $_POST[ 'action' ] ) && $_POST[ 'action' ] == 'update_user_profile' ):
+            $value	=   isset( $_POST['user'][$this->field_slug] ) && !empty( $_POST['user'][$this->field_slug] ) ? ( $this->field_type == 'textarea' ? sanitize_textarea_field( trim( $_POST['user'][$this->field_slug] ) ) : sanitize_text_field( trim( $_POST['user'][$this->field_slug] ) ) ) : '';
+            update_user_meta( $user_id, '_' . $this->field_slug, $value );
+        endif; 
     }
 
 }
