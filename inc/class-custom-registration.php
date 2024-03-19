@@ -41,8 +41,14 @@ class Directorist_Custom_Registration_Field
                 $this->text_field( $value, $name );
                 break;
             case 'textarea':
-                    $this->texarea_field( $value, $name );
-                    break;
+                $this->texarea_field( $value, $name );
+                break;
+            case 'url':
+                $this->url_field( $value, $name );
+                break;
+            case 'number':
+                $this->number_field( $value, $name );
+                break;
             default:
                 $this->text_field( $value, $name );
                 break;
@@ -60,8 +66,14 @@ class Directorist_Custom_Registration_Field
                 $this->text_field( $value, $name );
                 break;
             case 'textarea':
-                    $this->texarea_field( $value, $name );
-                    break;
+                $this->texarea_field( $value, $name );
+                break;
+            case 'url':
+                $this->url_field( $value, $name );
+                break;
+            case 'number':
+                $this->number_field( $value, $name );
+                break;
             default:
                 $this->text_field( $value, $name);
                 break;
@@ -94,16 +106,44 @@ class Directorist_Custom_Registration_Field
         <?php
     }
 
+    public function url_field( $value = '', $name = '' )
+    {
+        ?>
+            <div class="directorist-form-group directorist-mb-15">
+                <label for="<?php echo $this->field_slug; ?>">
+                    <?php echo $this->field_name; ?>
+                    <?php echo ( $this->field_required ? '<strong class="directorist-form-required">*</strong>' : '' ); ?>
+                </label>
+                <input id="<?php echo $this->field_slug; ?>" class="directorist-form-element" type="url" name="<?php echo $name; ?>" value="<?php echo  $value; ?>" <?php echo ( $this->field_required ? 'required' : '' ); ?> >
+            </div>
+        <?php
+    }
+
+    public function number_field( $value = '', $name = '' )
+    {
+        ?>
+            <div class="directorist-form-group directorist-mb-15">
+                <label for="<?php echo $this->field_slug; ?>">
+                    <?php echo $this->field_name; ?>
+                    <?php echo ( $this->field_required ? '<strong class="directorist-form-required">*</strong>' : '' ); ?>
+                </label>
+                <input id="<?php echo $this->field_slug; ?>" class="directorist-form-element" type="number" name="<?php echo $name; ?>" value="<?php echo  $value; ?>" <?php echo ( $this->field_required ? 'required' : '' ); ?> >
+            </div>
+        <?php
+    }
+
     public function atbdp_user_registration_completed( $user_id )
     {
-        $value	=   isset( $_POST[$this->field_slug] ) && !empty( $_POST[$this->field_slug] ) ? sanitize_text_field( trim( $_POST[$this->field_slug] ) ) : '';
-        if( $value ) update_user_meta( $user_id, '_'.$this->field_slug, $value );
+        $value	=   isset( $_POST[$this->field_slug] ) && !empty( $_POST[$this->field_slug] ) ? ( $this->field_type == 'textarea' ? sanitize_textarea_field( trim( $_POST[$this->field_slug] ) ) : sanitize_text_field( trim( $_POST[$this->field_slug] ) ) ) : '';
+        if( $value ) update_user_meta( $user_id, '_' . $this->field_slug, $value );
     }
 
     public function wp_update_user( $user_id )
     {
-        $value	=   isset( $_POST['user'][$this->field_slug] ) && !empty( $_POST['user'][$this->field_slug] ) ? ( $this->field_type == 'textarea' ? sanitize_textarea_field( trim( $_POST['user'][$this->field_slug] ) ) : sanitize_text_field( trim( $_POST['user'][$this->field_slug] ) ) ) : '';
-        update_user_meta( $user_id, '_'.$this->field_slug, $value );
+        if( isset( $_POST[ 'action' ] ) && $_POST[ 'action' ] == 'update_user_profile' ):
+            $value	=   isset( $_POST['user'][$this->field_slug] ) && !empty( $_POST['user'][$this->field_slug] ) ? ( $this->field_type == 'textarea' ? sanitize_textarea_field( trim( $_POST['user'][$this->field_slug] ) ) : sanitize_text_field( trim( $_POST['user'][$this->field_slug] ) ) ) : '';
+            update_user_meta( $user_id, '_' . $this->field_slug, $value );
+        endif; 
     }
 
 }
