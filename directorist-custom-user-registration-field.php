@@ -14,7 +14,7 @@
  * Author URI:        https://wpwax.com
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       directorist-custom-code
+ * Text Domain:       directorist-custom-code-registration
  * Domain Path:       /languages
  */
 
@@ -54,6 +54,7 @@ if (!class_exists('Directorist_Custom_User_Registration_Field')) {
         public function init()
         {
             $this->define_constant();
+            $this->core();
             $this->includes();
             $this->enqueues();
             $this->hooks();
@@ -71,6 +72,15 @@ if (!class_exists('Directorist_Custom_User_Registration_Field')) {
             if ( !defined( 'DIRECTORIST_CUSTOM_URF_DIR' ) ) {
                 define( 'DIRECTORIST_CUSTOM_URF_DIR', plugin_dir_path( __FILE__ ) );
             }
+        }
+
+        /**
+         * Core Functions
+         */
+        public function core()
+        {
+            add_action( 'edit_user_profile', [$this, 'user_profile_fields'] );
+            add_action( 'show_user_profile', [$this, 'user_profile_fields'] );
         }
 
         /**
@@ -157,6 +167,19 @@ if (!class_exists('Directorist_Custom_User_Registration_Field')) {
         {
             if ($this->template_exists($template)) $template = $this->get_template($template, $field_data);
             return $template;
+        }
+
+        /**
+         * User Profile Fields - Admin
+         */
+        public function user_profile_fields( $user )
+        {
+            ?>
+            <h3><?php _e('Custom Information', 'directorist-custom-code-registration'); ?></h3>
+            <table class="form-table">
+                <?php do_action( 'dcrf_user_admin_profile_fields', $user ); ?>
+            </table>
+            <?php
         }
     }
 

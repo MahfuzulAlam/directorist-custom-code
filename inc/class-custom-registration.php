@@ -27,7 +27,11 @@ class Directorist_Custom_Registration_Field
         add_action( 'directorist_registration_form_custom_fields', [ $this, 'directorist_registration_form_custom_fields' ] );
         add_action( 'atbdp_user_registration_completed', [ $this, 'atbdp_user_registration_completed' ] );
         add_action( 'directorist_dashboard_user_custom_fields', [ $this, 'directorist_dashboard_user_custom_fields' ] );
-        add_action( 'wp_update_user', [$this, 'wp_update_user'] );
+        add_action( 'wp_update_user', [ $this, 'wp_update_user' ] );
+
+        add_action( 'dcrf_user_admin_profile_fields', [ $this, 'user_profile_fields' ] );
+        add_action( 'personal_options_update', [ $this ,'user_profile_options_update' ] );
+        add_action( 'edit_user_profile_update', [ $this, 'user_profile_options_update' ] );
     }
 
     public function directorist_registration_form_custom_fields()
@@ -78,6 +82,49 @@ class Directorist_Custom_Registration_Field
                 $this->text_field( $value, $name);
                 break;
         }
+    }
+
+    public function user_profile_fields( $user )
+    {
+        ?>
+            <tr>
+                <th><label for="field-<?php echo $this->field_slug; ?>"><?php echo $this->field_name; ?></label></th>
+                <td>
+                    <?php
+                        $value = get_user_meta( $user->ID, '_'.$this->field_slug,  true);
+                
+                        switch( $this->field_type )
+                        {
+                            case 'text':
+                                ?>
+                                    <input type="text" name="<?php echo $this->field_slug; ?>" id="field-<?php echo $this->field_slug; ?>" value="<?php echo esc_attr( $value ); ?>" class="regular-text" /><br />
+                                <?php
+                                break;
+                            case 'textarea':
+                                ?>
+                                    <textarea name="<?php echo $this->field_slug; ?>" id="field-<?php echo $this->field_slug; ?>" rows="5" cols="30" autocomplete="chrome-off"><?php echo esc_attr( $value ); ?></textarea>
+                                <?php
+                                break;
+                            case 'url':
+                                ?>
+                                    <input type="url" name="<?php echo $this->field_slug; ?>" id="field-<?php echo $this->field_slug; ?>" value="<?php echo esc_attr( $value ); ?>" class="regular-text" /><br />
+                                <?php
+                                break;
+                            case 'number':
+                                ?>
+                                    <input type="number" name="<?php echo $this->field_slug; ?>" id="field-<?php echo $this->field_slug; ?>" value="<?php echo esc_attr( $value ); ?>" class="regular-text" /><br />
+                                <?php
+                                break;
+                            default:
+                                ?>
+                                    <input type="text" name="<?php echo $this->field_slug; ?>" id="field-<?php echo $this->field_slug; ?>" value="<?php echo esc_attr( $value ); ?>" class="regular-text" /><br />
+                                <?php
+                                break;
+                        }
+                    ?>
+                </td>
+            </tr>
+        <?php
     }
 
     public function text_field( $value = '', $name = '' )
@@ -144,6 +191,16 @@ class Directorist_Custom_Registration_Field
             $value	=   isset( $_POST['user'][$this->field_slug] ) && !empty( $_POST['user'][$this->field_slug] ) ? ( $this->field_type == 'textarea' ? sanitize_textarea_field( trim( $_POST['user'][$this->field_slug] ) ) : sanitize_text_field( trim( $_POST['user'][$this->field_slug] ) ) ) : '';
             update_user_meta( $user_id, '_' . $this->field_slug, $value );
         endif; 
+    }
+
+    public function user_profile_options_update( $user_id )
+    {
+        if ( ! current_user_can( 'edit_user', $user_id ) ) {
+            return false;
+        }
+    
+        $value	=   isset( $_POST[$this->field_slug] ) && !empty( $_POST[$this->field_slug] ) ? ( $this->field_type == 'textarea' ? sanitize_textarea_field( trim( $_POST[$this->field_slug] ) ) : sanitize_text_field( trim( $_POST[$this->field_slug] ) ) ) : '';
+        update_user_meta( $user_id, '_' . $this->field_slug, $value );
     }
 
 }
