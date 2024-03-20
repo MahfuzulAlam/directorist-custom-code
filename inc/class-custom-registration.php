@@ -78,6 +78,9 @@ class Directorist_Custom_Registration_Field
             case 'number':
                 $this->number_field( $value, $name );
                 break;
+            case 'file':
+                $this->upload_field( $value, $name );
+                break;
             default:
                 $this->text_field( $value, $name);
                 break;
@@ -179,6 +182,54 @@ class Directorist_Custom_Registration_Field
         <?php
     }
 
+    public function upload_field( $value = '', $name = '' )
+    {
+        ?>
+            <div class="directorist-form-group directorist-mb-15">
+                <label for="<?php echo $this->field_slug; ?>">
+                    <?php echo $this->field_name; ?>
+                    <?php echo ( $this->field_required ? '<strong class="directorist-form-required">*</strong>' : '' ); ?>
+                </label>
+                <input type="hidden" name="image-upload" id="image-upload">
+                <input id="<?php echo $this->field_slug; ?>" class="directorist-form-element" type="file" name="<?php echo $name; ?>"  >
+            </div>
+        <?php
+    }
+
+    public function upload_image( $image_url )
+    {
+        $upload_dir = wp_upload_dir();
+
+        $image_data = file_get_contents( $image_url );
+
+        $filename = basename( $image_url );
+
+        if ( wp_mkdir_p( $upload_dir['path'] ) ) {
+        $file = $upload_dir['path'] . '/' . $filename;
+        }
+        else {
+        $file = $upload_dir['basedir'] . '/' . $filename;
+        }
+
+        file_put_contents( $file, $image_data );
+
+        $wp_filetype = wp_check_filetype( $filename, null );
+
+        $attachment = array(
+            'post_mime_type' => $wp_filetype['type'],
+            'post_title' => sanitize_file_name( $filename ),
+            'post_content' => '',
+            'post_status' => 'inherit'
+        );
+
+        $attach_id = wp_insert_attachment( $attachment, $file );
+        require_once( ABSPATH . 'wp-admin/includes/image.php' );
+        $attach_data = wp_generate_attachment_metadata( $attach_id, $file );
+        wp_update_attachment_metadata( $attach_id, $attach_data );
+
+        return $attach_id;
+    }
+
     public function atbdp_user_registration_completed( $user_id )
     {
         $value	=   isset( $_POST[$this->field_slug] ) && !empty( $_POST[$this->field_slug] ) ? ( $this->field_type == 'textarea' ? sanitize_textarea_field( trim( $_POST[$this->field_slug] ) ) : sanitize_text_field( trim( $_POST[$this->field_slug] ) ) ) : '';
@@ -187,6 +238,7 @@ class Directorist_Custom_Registration_Field
 
     public function wp_update_user( $user_id )
     {
+        file_put_contents( __DIR__. '/data.json', json_encode( $_FILES ) );
         if( isset( $_POST[ 'action' ] ) && $_POST[ 'action' ] == 'update_user_profile' ):
             $value	=   isset( $_POST['user'][$this->field_slug] ) && !empty( $_POST['user'][$this->field_slug] ) ? ( $this->field_type == 'textarea' ? sanitize_textarea_field( trim( $_POST['user'][$this->field_slug] ) ) : sanitize_text_field( trim( $_POST['user'][$this->field_slug] ) ) ) : '';
             update_user_meta( $user_id, '_' . $this->field_slug, $value );

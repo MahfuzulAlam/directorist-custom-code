@@ -14,4 +14,5 @@ add_action( 'init', function(){
     new Directorist_Custom_Registration_Field('Vat Number', 'vat_number');
     new Directorist_Custom_Registration_Field('Registration Number', 'registration_number', 'number');
     new Directorist_Custom_Registration_Field('Company Address', 'company_address', 'textarea');
+    new Directorist_Custom_Registration_Field('Document', 'document', 'file');
 } );

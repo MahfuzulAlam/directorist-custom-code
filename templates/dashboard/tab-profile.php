@@ -10,7 +10,7 @@ use \Directorist\Helper;
 if ( ! defined( 'ABSPATH' ) ) exit;
 ?>
 
-<form action="#" id="user_profile_form" method="post">
+<form action="#" id="user_profile_form" method="post" enctype="multipart/form-data">
 
 	<div class="<?php Helper::directorist_row(); ?>">
 

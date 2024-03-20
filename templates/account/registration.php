@@ -46,7 +46,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			</div>
 			<div class="directorist-col-md-6 directorist-offset-md-3">
 				<div class="directory_register_form_wrap">
-					<form action="<?php the_permalink(); ?>" method="post">
+					<form action="<?php the_permalink(); ?>" method="post" enctype="multipart/form-data">
 						<div class="directorist-form-group directorist-mb-15">
 							<label for="username"><?php echo esc_html( $username ); ?> <strong class="directorist-form-required">*</strong></label>
 							<input id="username" class="directorist-form-element" type="text" name="username" value="<?php echo isset( $_REQUEST['username'] ) ? esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['username'] ) ) ) : ''; ?>" required>
