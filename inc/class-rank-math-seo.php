@@ -4,11 +4,11 @@ class Directorist_Rank_Math_Metas
 {
     public function __construct()
     {
-        add_filter( 'rank_math/frontend/title', [ $this, 'meta_title' ] );
-        add_filter( 'rank_math/frontend/description', [ $this, 'meta_description' ] );
-        add_filter( 'rank_math/frontend/canonical', [ $this, 'meta_canonical' ]);
-        add_filter( 'rank_math/opengraph/facebook/image',  [ $this, 'meta_image' ] );
-        add_filter( 'rank_math/opengraph/twitter/image',  [ $this, 'meta_image' ] );
+        add_filter( 'rank_math/frontend/title', [ $this, 'meta_title' ], 30 );
+        add_filter( 'rank_math/frontend/description', [ $this, 'meta_description' ], 30 );
+        add_filter( 'rank_math/frontend/canonical', [ $this, 'meta_canonical' ], 30);
+        add_filter( 'rank_math/opengraph/facebook/image',  [ $this, 'meta_image' ], 30 );
+        add_filter( 'rank_math/opengraph/twitter/image',  [ $this, 'meta_image' ], 30 );
     }
 	
 	// extract_user_id
@@ -31,28 +31,76 @@ class Directorist_Rank_Math_Metas
         }
     }
 
+    public function is_directorist_taxonomy_page()
+    {
+        if( atbdp_is_page( 'single_category' ) )
+        {
+            return [ 'slug' => 'atbdp_category', 'name' => ATBDP_CATEGORY ];
+        }
+        elseif( atbdp_is_page( 'single_location' ) )
+        {
+            return [ 'slug' => 'atbdp_location', 'name' => ATBDP_LOCATION ];
+        }
+        elseif( atbdp_is_page( 'single_tag' ) )
+        {
+            return [ 'slug' => 'atbdp_tag', 'name' => ATBDP_TAGS ];
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public function meta_title( $title )
     {
-        if( $this->is_author_profile_page() ):
+        $taxonomy = $this->is_directorist_taxonomy_page();
+        if( $taxonomy )
+        {
+            $term_slug = get_query_var( $taxonomy[ 'slug' ] );
+            if( $term_slug )
+            {
+                $term = get_term_by( 'slug', $term_slug, $taxonomy[ 'name' ] );
+                if( $term ){
+                    $custom_title =  get_term_meta( $term->term_id, 'rank_math_title', true );
+                    if( $custom_title ) return RankMath\Helper::replace_vars( str_replace( "%term%", $term->name, $custom_title ) );
+                }
+            }
+        }
+        else if( $this->is_author_profile_page() )
+        {
             $user = $this->extract_user_data( get_query_var( 'author_id' ) );
     
             if ($user) {
                 return $user->data->display_name;
             }
-        endif;
+        }
         return $title;
     }
 
     public function meta_description( $description )
     {
-        if( $this->is_author_profile_page() ):
+        $taxonomy = $this->is_directorist_taxonomy_page();
+        if( $taxonomy )
+        {
+            $term_slug = get_query_var( $taxonomy[ 'slug' ] );
+            if( $term_slug )
+            {
+                $term = get_term_by( 'slug', $term_slug, $taxonomy[ 'name' ] );
+                if( $term ){
+                    $custom_description =  get_term_meta( $term->term_id, 'rank_math_description', true );
+                    if( $custom_description ) return RankMath\Helper::replace_vars( str_replace( [ "%term%", "%term_description%" ], [ $term->name, $term->description ], $custom_description ) );
+                }
+            }
+        }
+        else if( $this->is_author_profile_page() )
+        {
             $user = $this->extract_user_data( get_query_var( 'author_id' ) );
     
             if ($user) {
                 $description = get_user_meta( $user->data->ID, 'description', true );
                 if( $description ) return $description;
             }
-        endif;
+        }
         return $description;
     }
 
