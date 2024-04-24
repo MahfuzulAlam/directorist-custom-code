@@ -96,6 +96,7 @@ if (!class_exists('Directorist_Custom_Code')) {
         public function hooks()
         {
             add_filter('directorist_template', array($this, 'directorist_template'), 10, 2);
+            add_filter( 'directorist_bh_plugin_template', array($this, 'directorist_bh_plugin_template'), 10, 3 );
         }
 
         /**
@@ -157,6 +158,16 @@ if (!class_exists('Directorist_Custom_Code')) {
             if ($this->template_exists($template)) $template = $this->get_template($template, $field_data);
             return $template;
         }
+
+        /**
+         * Directorist Business Hours Template
+         */
+        public function directorist_bh_plugin_template( $template, $field, $data )
+        {
+            $bh_template = DIRECTORIST_CUSTOM_CODE_DIR . '/directorist-business-hours/' . $field . '.php';
+            if( file_exists( $bh_template )  ) return $bh_template;
+            return $template;
+        }
     }
 
     if (!function_exists('directorist_is_plugin_active')) {
@@ -193,4 +204,3 @@ if (!class_exists('Directorist_Custom_Code')) {
 }
 
 
-?>
