@@ -1,0 +1,40 @@
+<?php
+/**
+ * @author  wpWax
+ * @since   6.6
+ * @version 7.3.0
+ */
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+$data = $data[ 'data' ];
+
+if( $data['options'] ){
+	$options = $data['options'];
+}else{
+	$options = get_option( $data['field_key'] . '_options' );
+}
+
+?>
+
+<div class="directorist-form-group directorist-custom-field-select">
+
+	<?php $listing_form->field_label_template( $data );?>
+
+	<?php if( !empty( $options ) ) : ?>
+
+		<select name="<?php echo esc_attr( $data['field_key'] ); ?>" id="<?php echo esc_attr( $data['field_key'] ); ?>" class="directorist-form-element" <?php $listing_form->required( $data ); ?>>
+
+			<?php foreach( $options as $key => $value ): ?>
+
+				<option value="<?php echo esc_attr( $value['option_value'] )?>" <?php selected( $value['option_value'], $data['value'] ); ?>><?php echo esc_attr( $value['option_label'] )?></option>
+
+			<?php endforeach ?>
+
+		</select>
+
+	<?php endif; ?>
+
+	<?php $listing_form->field_description_template( $data ); ?>
+
+</div>
