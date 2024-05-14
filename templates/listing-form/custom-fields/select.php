@@ -21,19 +21,21 @@ if( $data['options'] ){
 
 	<?php $listing_form->field_label_template( $data );?>
 
-	<?php if( !empty( $options ) ) : ?>
+	<select name="<?php echo esc_attr( $data['field_key'] ); ?>" id="<?php echo esc_attr( $data['field_key'] ); ?>" class="directorist-form-element" <?php $listing_form->required( $data ); ?>>
 
-		<select name="<?php echo esc_attr( $data['field_key'] ); ?>" id="<?php echo esc_attr( $data['field_key'] ); ?>" class="directorist-form-element" <?php $listing_form->required( $data ); ?>>
+		<option>Select</option>
 
-			<?php foreach( $options as $key => $value ): ?>
+		<?php if( !empty( $options ) ) : ?>
 
-				<option value="<?php echo esc_attr( $value['option_value'] )?>" <?php selected( $value['option_value'], $data['value'] ); ?>><?php echo esc_attr( $value['option_label'] )?></option>
+		<?php foreach( $options as $key => $value ): ?>
 
-			<?php endforeach ?>
+			<option value="<?php echo esc_attr( $value['option_value'] )?>" <?php selected( $value['option_value'], $data['value'] ); ?>><?php echo esc_attr( $value['option_label'] )?></option>
 
-		</select>
+		<?php endforeach ?>
 
-	<?php endif; ?>
+		<?php endif; ?>
+
+	</select>
 
 	<?php $listing_form->field_description_template( $data ); ?>
 
