@@ -23,7 +23,8 @@ Class Directorist_Location_Url_Rewrite {
 
         // Location Page Title
         add_filter( 'wpwax_theme_page_title', [$this, 'location_page_title'] );
-        add_filter( 'wp_title', [$this, 'location_page_title'], 20, 1 );
+        add_filter( 'atbdp_seo_meta_title', array( $this, 'location_page_title' ), 10, 1 );
+        add_filter( 'the_title', array( $this, 'location_page_title' ), 10, 1 );
 
         add_shortcode( 'directorist_custom_location_archive', [$this, 'directorist_custom_location_archive'] );
     }
