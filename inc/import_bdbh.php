@@ -4,8 +4,6 @@
  * Import business hour data
  */
 
-
-
 add_action( 'directorist_listing_imported', function( $post_id, $post ){
 
     $days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
@@ -69,11 +67,13 @@ if( !function_exists( 'import_bdbh_process_hours' ) )
         $close = [];
         $bdbh = str_replace(' ', '', $bdbh);
         $hours = explode( ',', $bdbh );
+
+        $format = get_bdbh_import_time_format();
         
         foreach( $hours as $hour ){
             $hour = explode( '-', $hour );
-            $start[] = isset($hour[0]) ? $hour[0]: '';
-            $close[] = isset($hour[1]) ? $hour[1]: '';
+            $start[] = isset($hour[0]) ? ( $format == '24' ? $hour[0] : bdbh_12_to_24_hour($hour[0]) ) : '';
+            $close[] = isset($hour[1]) ? ( $format == '24' ? $hour[1] : bdbh_12_to_24_hour($hour[1]) ) : '';
         }
         
         return import_bdbh_exists_value( ['start'=>$start, 'close'=>$close] );
@@ -117,5 +117,26 @@ if( !function_exists( 'import_bdbh_exists_value' ) )
             'start' => $business_hour['start'],
             'close' => $business_hour['close'],
         ];
+    }
+}
+
+if( !function_exists( 'get_bdbh_import_time_format' ) )
+{
+    function get_bdbh_import_time_format()
+    {
+        return get_directorist_option( 'atbh_import_time_format', '24' );
+    }
+}
+
+if( !function_exists( 'bdbh_12_to_24_hour' ) )
+{
+    function bdbh_12_to_24_hour( $time )
+    {
+        if( $time )
+        {
+            $timestamp = strtotime($time);
+            return date('H:i', $timestamp);
+        }
+        return '';
     }
 }
