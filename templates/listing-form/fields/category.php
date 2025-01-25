@@ -90,7 +90,7 @@ foreach ( $parents as $parent ) {
 
 	<div class="directorist-form-group directorist-form-categories-field">
 
-		<div class="directorist-form-label">Select Sub Category:</div>
+		<label class="directorist-form-label">Select Sub Category:</label>
 
 		<select name="admin_category_select_child[]" id="at_biz_dir-categories_child" class="directorist-form-element admin_category_select_child" data-selected-id="<?php echo esc_attr( $current_ids_as_string ) ?>" data-selected-label="<?php echo esc_attr( $current_labels_as_string ) ?>" data-placeholder="<?php echo esc_attr( $placeholder ); ?>" data-max="<?php echo esc_attr( $data_max ); ?>" data-allow_new="<?php echo esc_attr( $data_new ); ?>" <?php echo esc_attr( $multiple ); ?> <?php $listing_form->required( $data ); ?>>
 
