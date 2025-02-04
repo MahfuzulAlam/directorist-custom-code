@@ -24,8 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 		$template = str_replace( "-placeholder", "", $data['placeholderKey'] );
 		Helper::get_template( 'single/header-parts/'. $template, $args );
 	} ?>
+	<div class="directorist-card beehiiv-iframe">
+		<?php echo do_shortcode( '[beehiiv-iframe]' ); ?>
+	</div>
 </section>
-
-<div class="directorist-card beehiiv-iframe">
-	<?php echo do_shortcode( '[beehiiv-iframe]' ); ?>
-</div>

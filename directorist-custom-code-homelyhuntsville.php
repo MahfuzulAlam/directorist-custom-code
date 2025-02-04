@@ -8,7 +8,7 @@
  * Plugin Name:       Directorist - Custom Code for Homelyhuntsville
  * Plugin URI:        https://wpwax.com
  * Description:       Best way to implement custom code for directorist plugin
- * Version:           1.0.0
+ * Version:           2.0.0
  * Requires at least: 5.2
  * Author:            wpWax
  * Author URI:        https://wpwax.com
