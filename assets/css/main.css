@@ -1,1 +1,11 @@
 /* Add you custom css here */
+.directorist-form-categories-field-main
+{
+    display: none;
+}
+
+.directorist-form-sub-categories-field
+{
+    visibility: hidden;
+    height: 0;
+}
