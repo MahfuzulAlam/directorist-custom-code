@@ -5,3 +5,7 @@
     border: none;
     background: none;
 }
+
+h1.directorist-listing-details__listing-title {
+    display: none !important;
+}
