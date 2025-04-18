@@ -1,3 +1,13 @@
+<?php
+/**
+ * Template Name: Custom Category Taxonomy Archive
+ * Description: A custom template for displaying a taxonomy archive page.
+ *
+ * @package Directorist_Refined_Taxonomy
+ * @since 1.0.0
+ */
+?>
+
 <?php get_header(); ?>
 
 <div class="custom-taxonomy-wrapper container" style="padding: 40px 20px;">
