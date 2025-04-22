@@ -160,6 +160,9 @@ if (!class_exists('Directorist_Refined_Taxonomy')) {
         }
     }
 
+    /**
+     * Check if the plugin is active
+     */
     if (!function_exists('directorist_is_plugin_active')) {
         function directorist_is_plugin_active($plugin)
         {
@@ -167,6 +170,9 @@ if (!class_exists('Directorist_Refined_Taxonomy')) {
         }
     }
 
+    /**
+     * Check if the plugin is active for network
+     */
     if (!function_exists('directorist_is_plugin_active_for_network')) {
         function directorist_is_plugin_active_for_network($plugin)
         {
@@ -183,6 +189,9 @@ if (!class_exists('Directorist_Refined_Taxonomy')) {
         }
     }
 
+    /**
+     * Directorist Refined Taxonomy
+     */
     function Directorist_Refined_Taxonomy()
     {
         return Directorist_Refined_Taxonomy::instance();
