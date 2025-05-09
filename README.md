@@ -21,10 +21,10 @@ Note that this is a third-party plugin and directorist has no liabilty for this.
 
 ## 📦 Installation
 
-1. Download or clone the plugin:
-  ```bash
-  git clone https://github.com/yourusername/directorist-refined-taxonomy.git
-  ```
+1. Download the plugin from this link:
+  https://github.com/MahfuzulAlam/directorist-custom-code/tree/refined-taxonomy
+  ![Screenshot](https://prnt.sc/an00y8M74JNs)
+
 
 2. Upload it to your WordPress installation:
   - Via FTP: Upload the folder to `/wp-content/plugins/`
@@ -64,13 +64,17 @@ https://prnt.sc/nfdHOhObkA5S
 - Ensure that your permalink settings are set to "Post name" for SEO-friendly URLs.
 - After activating or changing slugs, **go to Settings > Permalinks** and click **Save Changes** to flush rewrite rules.
 
+---
 
-## Developer Guide
+## 👨‍💻 Developer Guide
 
-Need to add this hook in this place if it is already not included in the directoirst plugin core file to make the catelory term page work smooth.
+To ensure the category term page works smoothly with this extension, you may need to manually add the following filter hook if it is not already present in the Directorist core plugin:
 
-https://prnt.sc/an00y8M74JNs
+📍 **File Reference:**  
+Refer to the appropriate controller or redirection handler in the Directorist plugin as shown here:  
+![Screenshot](https://prnt.sc/an00y8M74JNs)
 
-```bash
-apply_filters( 'directorist_category_page_redirection_enabled', true )
-```
+🧩 **Hook to Add:**
+
+```php
+apply_filters( 'directorist_category_page_redirection_enabled', true );
