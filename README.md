@@ -4,13 +4,13 @@
 
 With this extension, you can regain proper SEO-friendly, multi-level URL structures for your taxonomy terms—moving away from the default Directorist behavior that uses a single page to handle all term listings.
 
-Note that this is a third-party plugin and directorist has no liabilty for this.
+**Note that this is a third-party plugin and directorist has no liabilty for this.**
 
 ---
 
 ## 🚀 Features
 
-- ✅ Use legacy single term pages for taxonomies like `location` and `category`
+- ✅ Use legacy single term pages for taxonomies like `listing location` and `listing category`
 - ✅ Enables SEO-friendly multi-step URLs  
   Example:  https://yourwebsite.com/location/london/east-ham
 - ✅ Customize the URL slug (e.g., use `city`, `area`, or `region` instead of `location`)
@@ -21,14 +21,13 @@ Note that this is a third-party plugin and directorist has no liabilty for this.
 
 ## 📦 Installation
 
-1. Download the plugin from this link:
-  https://github.com/MahfuzulAlam/directorist-custom-code/tree/refined-taxonomy
-  ![Screenshot](https://prnt.sc/an00y8M74JNs)
-
+1. Download the plugin from this link: 
+  - Github link: https://github.com/MahfuzulAlam/directorist-custom-code/tree/refined-taxonomy
+  - Screenshot: https://prnt.sc/AkkWW6CqV4yf
 
 2. Upload it to your WordPress installation:
   - Via FTP: Upload the folder to `/wp-content/plugins/`
-  - Or, Zip the folder and upload through **WordPress Dashboard > Plugins > Add New > Upload Plugin**
+  - Or, upload the Zip folder through **WordPress Dashboard > Plugins > Add New > Upload Plugin**
 
 3. Activate the plugin via **Plugins > Installed Plugins**
 
@@ -72,7 +71,7 @@ To ensure the category term page works smoothly with this extension, you may nee
 
 📍 **File Reference:**  
 Refer to the appropriate controller or redirection handler in the Directorist plugin as shown here:  
-![Screenshot](https://prnt.sc/an00y8M74JNs)
+https://prnt.sc/an00y8M74JNs
 
 🧩 **Hook to Add:**
 
