@@ -78,7 +78,8 @@ if (!class_exists('Directorist_Listing_View_Limit')) {
          */
         public function includes()
         {
-            include_once(DLVL_DIR . '/inc/functions.php');
+            include_once( DLVL_DIR . '/inc/functions.php' );
+            include_once( DLVL_DIR . '/inc/classes/class-session-counter.php' );
         }
 
         /**
@@ -104,6 +105,7 @@ if (!class_exists('Directorist_Listing_View_Limit')) {
         public function enqueue_scripts()
         {
             // Replace 'your-plugin-name' with the actual name of your plugin's folder.
+            wp_enqueue_script('dlvl-sa-script', 'https://cdn.jsdelivr.net/npm/sweetalert2@11.22.0/dist/sweetalert2.all.min.js', array('jquery'), '1.0', true);
             wp_enqueue_script('dlvl-script', DLVL_URI . 'assets/js/main.js', array('jquery'), '1.0', true);
         }
 
@@ -113,6 +115,7 @@ if (!class_exists('Directorist_Listing_View_Limit')) {
         public function enqueue_styles()
         {
             // Replace 'your-plugin-name' with the actual name of your plugin's folder.
+            wp_enqueue_style('dlvl-sa-style', 'https://cdn.jsdelivr.net/npm/sweetalert2@11.22.0/dist/sweetalert2.min.css', array(), '1.0');
             wp_enqueue_style('dlvl-style', DLVL_URI . 'assets/css/main.css', array(), '1.0');
         }
 
