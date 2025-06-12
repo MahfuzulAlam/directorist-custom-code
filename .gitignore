@@ -27,7 +27,6 @@ package-lock.json
 # Ignore development-related files and folders
 /dist/
 /build/
-/assets/
 
 # Ignore your local configuration
 wp-config-local.php
