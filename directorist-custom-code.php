@@ -138,7 +138,7 @@ if (!class_exists('Directorist_Custom_Code')) {
             if (is_array($args)) {
                 extract($args);
             }
-            $data = $args;
+            //$data = $args;
 
             if (isset($args['form'])) $listing_form = $args['form'];
 
