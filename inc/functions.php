@@ -34,8 +34,6 @@ add_filter('manage_at_biz_dir-tags_custom_column', function($out, $column, $term
 
 add_action('init', function() {
 
-    if( ! get_directorist_option( 'tag_sorting', false ) ) return;
-
     add_filter('manage_edit-at_biz_dir-tags_columns', function($columns) {
         $columns['order'] = 'Order';
         return $columns;
@@ -91,6 +89,8 @@ add_action('init', function() {
 
         wp_send_json_success();
     });
+
+    if( ! get_directorist_option( 'tag_sorting', false ) ) return;
 
     add_filter('get_terms_args', function ($args, $taxonomies) {
         if (is_admin() && in_array('at_biz_dir-tags', (array) $taxonomies)) {
@@ -180,6 +180,18 @@ add_action('edited_at_biz_dir-tags', function ($term_id) {
         delete_term_meta($term_id, 'directory_types');
     }
 });
+
+/**
+ * Set added term as last order
+ */
+add_action( 'created_term', function( $term_id, $tt_id, $taxonomy ) {
+    if ( 'at_biz_dir-tags' !== $taxonomy ) {
+        return;
+    }
+    // Add the next order value to the newly created term
+    add_term_meta( $term_id, 'custom_term_order', 999999, true );
+}, 10, 3 );
+
 
 /**
  * Admin Setting Field
