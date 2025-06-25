@@ -1,0 +1,39 @@
+<?php
+/**
+ * @author  wpWax
+ * @since   6.6
+ * @version 6.7
+ */
+
+use \Directorist\Helper;
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+$id = get_the_ID();
+
+$min_price = get_post_meta( $id, '_min_price', true );
+$max_price = get_post_meta( $id, '_max_price', true );
+
+if ( !Helper::has_price_range( $id ) && !Helper::has_price( $id ) && !$min_price && !$max_price) {
+	return;
+}
+?>
+
+<span class="directorist-info-item directorist-pricing-meta">
+	<?php
+    if(  $min_price && $max_price ) {
+?>
+        <span class="directorist-listing-price"><?php echo wp_kses_post( Helper::formatted_price( $min_price ) ); ?></span>
+        <span> - </span>
+        <span class="directorist-listing-price"><?php echo wp_kses_post( Helper::formatted_price( $max_price ) ); ?></span>
+<?php
+    }else{
+        if ( 'range' === Helper::pricing_type( $id ) ) {
+            Helper::price_range_template( $id );
+        }
+        elseif ( !$listings->is_disable_price ) {
+            Helper::price_template( $id );
+        }
+    }
+	?>
+</span>
