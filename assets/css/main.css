@@ -1,1 +1,12 @@
 /* Add you custom css here */
+.directory_price_unit_range_field
+{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+.directory_price_unit_range_field .directory_pricing_field
+{
+    min-width: 30%;
+    width: 30%;
+}

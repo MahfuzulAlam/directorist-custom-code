@@ -36,6 +36,11 @@ $max_price               = get_post_meta( $listing_id, '_max_price', true );
 				<input type="checkbox" id="price_range_selected" value="range" name="atbd_listing_pricing" <?php checked( $price_type, 'range' ); ?>>
 				<label for="price_range_selected" class="directorist-checkbox__label" data-option="price_range"><?php echo esc_html( $data['price_range_label'] ); ?></label>
 			</div>
+
+            <!-- <div class="directorist-checkbox directorist_pricing_options">
+				<input type="checkbox" id="price_unit_range_selected" value="price_unit_range" name="atbd_listing_pricing" <?php checked( $price_type, 'price_unit_range' ); ?>>
+				<label for="price_unit_range_selected" class="directorist-checkbox__label" data-option="price_unit_range"><?php echo esc_html( 'Price Unit Range' ); ?></label>
+			</div> -->
 		</div>
 	<?php } ?>
 
@@ -53,8 +58,10 @@ $max_price               = get_post_meta( $listing_id, '_max_price', true );
 		</select>
 	<?php } ?>
 
-    <?php if ( $data['pricing_type'] === 'both' || $data['pricing_type'] === 'price_unit_range' ) { ?>
-        <input class="directorist-form-element directory_field directory_pricing_field" type="number" name="min_price" placeholder="Minimum Price" value="<?php echo ( $min_price ); ?>">
-        <input class="directorist-form-element directory_field directory_pricing_field" type="number" name="max_price" placeholder="Maximum Price" value="<?php echo ( $max_price ); ?>">
+    <?php if ( $data['pricing_type'] === 'price_unit_range' ) { ?>
+        <div class="directory_price_unit_range_field">
+            <input class="directorist-form-element directory_field directory_pricing_field" type="number" name="min_price" placeholder="Minimum Price" value="<?php echo ( $min_price ); ?>">
+            <input class="directorist-form-element directory_field directory_pricing_field " type="number" name="max_price" placeholder="Maximum Price" value="<?php echo ( $max_price ); ?>">
+        </div>
     <?php } ?>
 </div>
