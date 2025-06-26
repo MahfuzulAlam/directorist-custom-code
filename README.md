@@ -20,25 +20,29 @@ Once the extension is activated, it introduces a new **Price Unit Range** featur
 
 - **Location:** `Directory Builder` → `Add Listing Form` → `Pricing Field Settings`
 - **Effect:** A new field option called **"Price Unit Range"** will be available in the pricing field configuration.
+- **Screenshot:** https://prnt.sc/JdpPQmpQplZO
 
 ---
 
 ### ✅ Add Listing Form (Frontend)
 
 - If the listing owner selects **"Price Unit Range"**, a **range input field** will be displayed on the add listing form.
-- This allows them to define a range (e.g., `$100 - $200 per hour`) in a structured format.
+- This allows them to define a range (e.g., `$100 - $200`) in a structured format.
+- **Screenshot:** https://prnt.sc/aZ0oiVZnKD8u
 
 ---
 
 ### ✅ All Listings Page (Frontend)
 
 - If a listing uses the **Price Unit Range**, it will automatically show the range value in the pricing section of the listing cards.
+- **Screenshot:** https://prnt.sc/gI87KlvLZd7d
 
 ---
 
 ### ✅ Single Listing Page (Frontend)
 
 - The selected price unit range will be displayed prominently in the pricing section, providing clear pricing information for visitors.
+- **Screenshot:** https://prnt.sc/LseegdfPRZrs
 
 ---
 
@@ -67,7 +71,7 @@ Once the extension is activated, it introduces a new **Price Unit Range** featur
 
 ## 🙌 Credits
 
-Developed by the [Directorist Team at SovWare](https://sovware.com)
+Developed by the [Mahfuz](https://www.linkedin.com/in/mahfuzul-alam/)
 
 ---
 
@@ -79,5 +83,5 @@ This plugin is licensed under the GPLv2 or later.
 
 ## 💬 Support
 
-Need help or found a bug? Please open an issue in this repository or reach out via the official [Directorist Support Portal](https://directorist.com/contact).
+Need help or found a bug? Please open an issue in this repository.
 
