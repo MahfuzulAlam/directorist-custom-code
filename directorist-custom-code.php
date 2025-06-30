@@ -8,7 +8,7 @@
  * Plugin Name:       Directorist - Custom Code
  * Plugin URI:        https://wpwax.com
  * Description:       Best way to implement custom code for directorist plugin
- * Version:           1.0.0
+ * Version:           2.0.0
  * Requires at least: 5.2
  * Author:            wpWax
  * Author URI:        https://wpwax.com
@@ -104,7 +104,7 @@ if (!class_exists('Directorist_Custom_Code')) {
         public function enqueue_scripts()
         {
             // Replace 'your-plugin-name' with the actual name of your plugin's folder.
-            wp_enqueue_script('directorist-custom-script', DIRECTORIST_CUSTOM_CODE_URI . 'assets/js/main.js', array('jquery'), '1.0', true);
+            wp_enqueue_script('directorist-custom-script', DIRECTORIST_CUSTOM_CODE_URI . 'assets/js/main.js', array('jquery'), '2.0', true);
         }
 
         /**
@@ -113,7 +113,7 @@ if (!class_exists('Directorist_Custom_Code')) {
         public function enqueue_styles()
         {
             // Replace 'your-plugin-name' with the actual name of your plugin's folder.
-            wp_enqueue_style('directorist-custom-style', DIRECTORIST_CUSTOM_CODE_URI . 'assets/css/main.css', array(), '1.0');
+            wp_enqueue_style('directorist-custom-style', DIRECTORIST_CUSTOM_CODE_URI . 'assets/css/main.css', array(), '2.0');
         }
 
         /**
