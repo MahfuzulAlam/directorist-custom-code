@@ -85,6 +85,7 @@ if (! class_exists('DGR_Custom_Field')):
         public function single_listing_content_widgets($widgets)
         {
             $widgets['google_place'] = [
+                'label'   => __('Google Reviews', 'directorist-google-reviews'),
                 'options' => [
                     'icon' => [
                         'type'  => 'icon',
