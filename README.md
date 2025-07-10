@@ -65,7 +65,7 @@ From the [Google Cloud Console](https://console.cloud.google.com/), make sure th
 2. Add the **Google Place** field
 3. Save changes
 
-📷 ![Screenshot](https://prnt.sc/Pszx0AVXSIVs)
+📷 [Screenshot](https://prnt.sc/Pszx0AVXSIVs)
 
 ### 🧩 Single Listing Layout
 
@@ -74,7 +74,7 @@ From the [Google Cloud Console](https://console.cloud.google.com/), make sure th
 3. Add the **Google Reviews** field
 4. Save changes
 
-📷 ![Screenshot](https://prnt.sc/hIp0T-rnswWr)
+📷 [Screenshot](https://prnt.sc/hIp0T-rnswWr)
 
 ---
 
@@ -83,12 +83,12 @@ From the [Google Cloud Console](https://console.cloud.google.com/), make sure th
 ### Add Listing Page:
 Users can search for a business and select it from the Google suggestions.
 
-📷 ![Screenshot](https://prnt.sc/TSAX6qwMKg9P)
+📷 [Screenshot](https://prnt.sc/TSAX6qwMKg9P)
 
 ### Single Listing Page:
 Google Reviews will appear for the selected place.
 
-📷 ![Screenshot](https://prnt.sc/jJc_y6gJeMAr)
+📷 [Screenshot](https://prnt.sc/jJc_y6gJeMAr)
 
 ---
 
