@@ -53,6 +53,8 @@ From the [Google Cloud Console](https://console.cloud.google.com/), make sure th
 - **Maps JavaScript API**
 - **Places API**
 
+📷 [Screenshot](https://prnt.sc/cn7vRLiGWCMq)
+
 > 🧾 Billing must be active on your Google Cloud project.
 
 ---
