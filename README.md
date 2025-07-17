@@ -43,8 +43,10 @@ git clone --branch google/reviews https://github.com/MahfuzulAlam/directorist-cu
 
 ### ✅ 1. Enable Google Maps in Directorist
 
-- Go to: **Directorist → Settings → Extensions → Google Maps**
-- Enable the extension and enter your **Google Maps API Key**
+- Go to: **Directorist → Settings → Listings → Map**
+- Select the "Google Pap" and enter your **Google Maps API Key**
+
+📷 [Screenshot](https://prnt.sc/cn7vRLiGWCMq)
 
 ### ✅ 2. Enable Required Google APIs
 
@@ -52,8 +54,6 @@ From the [Google Cloud Console](https://console.cloud.google.com/), make sure th
 
 - **Maps JavaScript API**
 - **Places API**
-
-📷 [Screenshot](https://prnt.sc/cn7vRLiGWCMq)
 
 > 🧾 Billing must be active on your Google Cloud project.
 
