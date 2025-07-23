@@ -51,7 +51,7 @@
 - Drag it into your form layout
 
 🖼️ Screenshot:  
-![Backend Field Added](https://prnt.sc/Ua_FKWIXp3WH)
+[Backend Field Added](https://prnt.sc/Ua_FKWIXp3WH)
 
 ---
 
@@ -60,7 +60,7 @@
 Once saved, the field appears on the frontend search form.
 
 🖼️ Screenshot:  
-![Frontend Search Field](https://prnt.sc/xeOUOl-OaAP0)
+[Frontend Search Field](https://prnt.sc/xeOUOl-OaAP0)
 
 ---
 
@@ -69,7 +69,7 @@ Once saved, the field appears on the frontend search form.
 After selecting an author and submitting the form, listings will be filtered by the selected author.
 
 🖼️ Screenshot:  
-![Search Results](https://prnt.sc/ccQBJHpjNVhZ)
+[Search Results](https://prnt.sc/ccQBJHpjNVhZ)
 
 ---
 
