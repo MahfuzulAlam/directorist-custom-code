@@ -53,6 +53,9 @@ class Directorist_Custom_Registration_Field
             case 'number':
                 $this->number_field( $value, $name );
                 break;
+            case 'file':
+                $this->upload_field( $value, $name );
+                break;
             default:
                 $this->text_field( $value, $name );
                 break;
@@ -61,6 +64,7 @@ class Directorist_Custom_Registration_Field
 
     public function directorist_dashboard_user_custom_fields()
     {
+        if($this->field_slug == 'pro_pic') return;
         $value = get_user_meta( get_current_user_id(), '_'.$this->field_slug,  true);
         $name = 'user['.$this->field_slug.']';
 
@@ -87,48 +91,57 @@ class Directorist_Custom_Registration_Field
         }
     }
 
-    public function user_profile_fields( $user )
-    {
-        ?>
-            <tr>
-                <th><label for="field-<?php echo $this->field_slug; ?>"><?php echo $this->field_name; ?></label></th>
-                <td>
-                    <?php
-                        $value = get_user_meta( $user->ID, '_'.$this->field_slug,  true);
-                
-                        switch( $this->field_type )
-                        {
-                            case 'text':
-                                ?>
-                                    <input type="text" name="<?php echo $this->field_slug; ?>" id="field-<?php echo $this->field_slug; ?>" value="<?php echo esc_attr( $value ); ?>" class="regular-text" /><br />
-                                <?php
-                                break;
-                            case 'textarea':
-                                ?>
-                                    <textarea name="<?php echo $this->field_slug; ?>" id="field-<?php echo $this->field_slug; ?>" rows="5" cols="30" autocomplete="chrome-off"><?php echo esc_attr( $value ); ?></textarea>
-                                <?php
-                                break;
-                            case 'url':
-                                ?>
-                                    <input type="url" name="<?php echo $this->field_slug; ?>" id="field-<?php echo $this->field_slug; ?>" value="<?php echo esc_attr( $value ); ?>" class="regular-text" /><br />
-                                <?php
-                                break;
-                            case 'number':
-                                ?>
-                                    <input type="number" name="<?php echo $this->field_slug; ?>" id="field-<?php echo $this->field_slug; ?>" value="<?php echo esc_attr( $value ); ?>" class="regular-text" /><br />
-                                <?php
-                                break;
-                            default:
-                                ?>
-                                    <input type="text" name="<?php echo $this->field_slug; ?>" id="field-<?php echo $this->field_slug; ?>" value="<?php echo esc_attr( $value ); ?>" class="regular-text" /><br />
-                                <?php
-                                break;
-                        }
-                    ?>
-                </td>
-            </tr>
-        <?php
-    }
+    public function user_profile_fields( $user ) {
+    ?>
+        <tr>
+            <th><label for="field-<?php echo $this->field_slug; ?>"><?php echo $this->field_name; ?></label></th>
+            <td>
+                <?php
+                    $value = get_user_meta( $user->ID, '_'.$this->field_slug, true );
+
+                    switch( $this->field_type ) {
+                        case 'text':
+                            ?>
+                                <input type="text" name="<?php echo $this->field_slug; ?>" id="field-<?php echo $this->field_slug; ?>" value="<?php echo esc_attr( $value ); ?>" class="regular-text" /><br />
+                            <?php
+                            break;
+
+                        case 'textarea':
+                            ?>
+                                <textarea name="<?php echo $this->field_slug; ?>" id="field-<?php echo $this->field_slug; ?>" rows="5" cols="30"><?php echo esc_attr( $value ); ?></textarea>
+                            <?php
+                            break;
+
+                        case 'url':
+                            ?>
+                                <input type="url" name="<?php echo $this->field_slug; ?>" id="field-<?php echo $this->field_slug; ?>" value="<?php echo esc_attr( $value ); ?>" class="regular-text" /><br />
+                            <?php
+                            break;
+
+                        case 'number':
+                            ?>
+                                <input type="number" name="<?php echo $this->field_slug; ?>" id="field-<?php echo $this->field_slug; ?>" value="<?php echo esc_attr( $value ); ?>" class="regular-text" /><br />
+                            <?php
+                            break;
+
+                        case 'file':
+                            ?>
+                                <input type="file" name="<?php echo $this->field_slug; ?>" id="field-<?php echo $this->field_slug; ?>" /><br />
+                            <?php
+                            break;
+
+                        default:
+                            ?>
+                                <input type="text" name="<?php echo $this->field_slug; ?>" id="field-<?php echo $this->field_slug; ?>" value="<?php echo esc_attr( $value ); ?>" class="regular-text" /><br />
+                            <?php
+                            break;
+                    }
+                ?>
+            </td>
+        </tr>
+    <?php
+}
+
 
     public function text_field( $value = '', $name = '' )
     {
@@ -211,7 +224,7 @@ class Directorist_Custom_Registration_Field
         $file = $upload_dir['basedir'] . '/' . $filename;
         }
 
-        file_put_contents( $file, $image_data );
+        //file_put_contents( $file, $image_data );
 
         $wp_filetype = wp_check_filetype( $filename, null );
 
@@ -230,18 +243,42 @@ class Directorist_Custom_Registration_Field
         return $attach_id;
     }
 
-    public function atbdp_user_registration_completed( $user_id )
-    {
-        $value	=   isset( $_POST[$this->field_slug] ) && !empty( $_POST[$this->field_slug] ) ? ( $this->field_type == 'textarea' ? sanitize_textarea_field( trim( $_POST[$this->field_slug] ) ) : sanitize_text_field( trim( $_POST[$this->field_slug] ) ) ) : '';
-        if( $value ) update_user_meta( $user_id, '_' . $this->field_slug, $value );
+    public function atbdp_user_registration_completed( $user_id ) {
+        // Handle normal text/textarea fields
+        if ( isset( $_POST[ $this->field_slug ] ) && $this->field_type !== 'file' ) {
+            $value = ( $this->field_type === 'textarea' ) 
+                ? sanitize_textarea_field( trim( $_POST[ $this->field_slug ] ) ) 
+                : sanitize_text_field( trim( $_POST[ $this->field_slug ] ) );
+            
+            if ( $value ) {
+                update_user_meta( $user_id, $this->field_slug, $value );
+            }
+        }
+
+        // Handle file uploads
+        if ( $this->field_type === 'file' && isset( $_FILES[ $this->field_slug ] ) && ! empty( $_FILES[ $this->field_slug ]['name'] ) ) {
+
+            require_once ABSPATH . 'wp-admin/includes/file.php';
+            require_once ABSPATH . 'wp-admin/includes/media.php';
+            require_once ABSPATH . 'wp-admin/includes/image.php';
+
+            // Upload the file and create attachment
+            $attachment_id = media_handle_upload( $this->field_slug, 0 );
+
+            if ( ! is_wp_error( $attachment_id ) ) {
+                // Save the attachment ID as user meta
+                update_user_meta( $user_id, $this->field_slug, $attachment_id );
+            }
+        }
     }
+
 
     public function wp_update_user( $user_id )
     {
-        file_put_contents( __DIR__. '/data.json', json_encode( $_FILES ) );
+        //file_put_contents( __DIR__. '/data.json', json_encode( $_FILES ) );
         if( isset( $_POST[ 'action' ] ) && $_POST[ 'action' ] == 'update_user_profile' ):
             $value	=   isset( $_POST['user'][$this->field_slug] ) && !empty( $_POST['user'][$this->field_slug] ) ? ( $this->field_type == 'textarea' ? sanitize_textarea_field( trim( $_POST['user'][$this->field_slug] ) ) : sanitize_text_field( trim( $_POST['user'][$this->field_slug] ) ) ) : '';
-            update_user_meta( $user_id, '_' . $this->field_slug, $value );
+            update_user_meta( $user_id, $this->field_slug, $value );
         endif; 
     }
 
@@ -252,7 +289,7 @@ class Directorist_Custom_Registration_Field
         }
     
         $value	=   isset( $_POST[$this->field_slug] ) && !empty( $_POST[$this->field_slug] ) ? ( $this->field_type == 'textarea' ? sanitize_textarea_field( trim( $_POST[$this->field_slug] ) ) : sanitize_text_field( trim( $_POST[$this->field_slug] ) ) ) : '';
-        update_user_meta( $user_id, '_' . $this->field_slug, $value );
+        update_user_meta( $user_id, $this->field_slug, $value );
     }
 
 }
