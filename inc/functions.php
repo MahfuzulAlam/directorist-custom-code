@@ -18,6 +18,6 @@
 // } );
 
 add_action( 'init', function(){
-    new Directorist_Custom_Registration_Field('Contact number', 'contact_number');
-    new Directorist_Custom_Registration_Field('Profile Image', 'pro_pic', 'file');
+    new Directorist_Custom_Registration_Field('TAX Code', 'tax_code', 'text');
+    new Directorist_Custom_Registration_Field('Vat Number', 'vat_number', 'text');
 } );
