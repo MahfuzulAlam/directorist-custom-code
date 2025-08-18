@@ -1,1 +1,75 @@
 /* Add you custom css here */
+.directorist-form-multi-address-field {
+    background: #f9fafb;
+    padding: 15px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+}
+
+.directorist-form-multi-address-field label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #374151;
+}
+
+.address_field_holder {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.address_item {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    background: #fff;
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+}
+
+.address_item input[type="text"] {
+    flex: 1;
+    min-width: 250px;
+    padding: 8px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.remove_address_btn {
+    background-color: #ef4444;
+    border: none;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.remove_address_btn:hover {
+    background-color: #dc2626;
+}
+
+.add_address_btn {
+    margin-top: 12px;
+    background-color: #3b82f6;
+    border: none;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.add_address_btn:hover {
+    background-color: #2563eb;
+}
+
+.directorist-single-info__addresses{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
