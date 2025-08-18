@@ -5,7 +5,7 @@
  */
 
 /**
- * Plugin Name:       Directorist - Custom Code
+ * Plugin Name:       Directorist - Multi-Location Radius Search
  * Plugin URI:        https://wpwax.com
  * Description:       Enable powerful radius-based searches across multiple saved addresses per listing, helping users find the nearest businesses or services with ease.
  * Version:           2.0.0
