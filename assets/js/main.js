@@ -60,12 +60,12 @@ jQuery(function ($) {
     const uniqueId = getRandomInt(100000, 999999);
     const newField = `
       <div class="address_item" data-id="${uniqueId}">
-        <input type="text" autocomplete="off" name="address[]" 
+        <input type="text" autocomplete="off" name="addresses[]" 
                class="directorist-form-element google_addresses" 
                placeholder="Enter address">
         <input type="hidden" class="google_addresses_lat" name="latitude[]" value="">
         <input type="hidden" class="google_addresses_lng" name="longitude[]" value="">
-        <button type="button" class="remove_address_btn">Remove</button>
+        <button type="button" class="remove_address_btn">X</button>
       </div>
     `;
     $(".directorist-form-multi-address-field .address_field_holder").append(newField);
