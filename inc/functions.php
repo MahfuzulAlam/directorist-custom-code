@@ -15,6 +15,8 @@ function directorist_qrcode_generator( $atts )
         'level' => 'L',
     ), $atts, 'directorist_listing_qrcode');
 
+    if( ! is_user_logged_in() ) return;
+
     ob_start();
     ?>
     <div id="directorist_qrcode" text="<?php echo get_the_permalink(); ?>"></div>

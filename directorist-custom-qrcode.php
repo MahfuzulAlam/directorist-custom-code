@@ -105,7 +105,7 @@ if (!class_exists('Directorist_Custom_Qrcode')) {
         {
             wp_enqueue_script('directorist-qrcode-script', DIRECTORIST_CUSTOM_QRCODE_URI . 'assets/js/qrcode.min.js', [], '2.0', true);
             // Replace 'your-plugin-name' with the actual name of your plugin's folder.
-            wp_enqueue_script('directorist-custom-script', DIRECTORIST_CUSTOM_QRCODE_URI . 'assets/js/main.js', array('jquery', 'directorist-qrcode-script'), '2.0', true);
+            wp_enqueue_script('directorist-custom-qrcode-script', DIRECTORIST_CUSTOM_QRCODE_URI . 'assets/js/main.js', array('jquery', 'directorist-qrcode-script'), '2.0', true);
         }
 
         /**
