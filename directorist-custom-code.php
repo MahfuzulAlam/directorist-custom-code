@@ -86,6 +86,7 @@ if (!class_exists('Directorist_Custom_Code')) {
          */
         public function enqueues()
         {
+            add_action('wp_print_scripts', array($this,'mpp_bbd_inspect_scripts'));
             add_action('wp_enqueue_scripts', array($this, 'enqueue_styles'));
             add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
         }
@@ -99,12 +100,28 @@ if (!class_exists('Directorist_Custom_Code')) {
         }
 
         /**
+         * Unregistered Scripts
+         */
+        public function mpp_bbd_inspect_scripts()
+        {
+            if (!is_admin()) {
+                wp_dequeue_script('directorist-google-map');
+                wp_deregister_script('directorist-google-map');
+            }
+        }
+
+        /**
          *  Enqueue JS file
          */
         public function enqueue_scripts()
         {
             // Replace 'your-plugin-name' with the actual name of your plugin's folder.
             wp_enqueue_script('directorist-custom-script', DIRECTORIST_CUSTOM_CODE_URI . 'assets/js/main.js', array('jquery'), '2.0', true);
+
+            wp_enqueue_script('google-map-api');
+	        wp_enqueue_script('directorist-markerclusterer');
+            wp_enqueue_script('directorist-custom-map-script', DIRECTORIST_CUSTOM_CODE_URI . 'assets/js/custom-map.js', array('google-map-api'), '2.0', true);
+            wp_localize_script('directorist-custom-map-script', 'directorist_options', bbd_get_option_data());
         }
 
         /**
