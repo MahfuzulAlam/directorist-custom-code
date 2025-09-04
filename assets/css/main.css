@@ -1,1 +1,13 @@
 /* Add you custom css here */
+.directorist-listing-single__info__tags {
+    display: flex;
+    flex-wrap: wrap;
+}
+.directorist-listing-single__info__tag {
+    margin-right: 5px;
+    margin-bottom: 5px;
+    background-color: aliceblue;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+}
