@@ -1,0 +1,165 @@
+/**
+ * Admin Styles for Expiring Listings Page
+ */
+
+.expiring-listings-table-container {
+    margin-top: 20px;
+}
+
+.expiring-listings-table-container .wp-list-table {
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+}
+
+.expiring-listings-table-container .wp-list-table th {
+    background-color: #f6f7f7;
+    font-weight: 600;
+}
+
+.expiring-listings-table-container .wp-list-table td {
+    vertical-align: middle;
+}
+
+/* Days Remaining Styling */
+.days-remaining-urgent {
+    color: #d63638;
+    font-weight: bold;
+    background-color: #fcf0f1;
+    padding: 4px 8px;
+    border-radius: 3px;
+    border: 1px solid #f0b7b8;
+}
+
+.days-remaining-warning {
+    color: #dba617;
+    font-weight: bold;
+    background-color: #fcf9e8;
+    padding: 4px 8px;
+    border-radius: 3px;
+    border: 1px solid #f0d23b;
+}
+
+.days-remaining-normal {
+    color: #00a32a;
+    font-weight: bold;
+    background-color: #f0f6fc;
+    padding: 4px 8px;
+    border-radius: 3px;
+    border: 1px solid #72aee6;
+}
+
+/* Column Widths */
+.column-title {
+    width: 40%;
+}
+
+.column-expiry-date {
+    width: 20%;
+}
+
+.column-days-remaining {
+    width: 15%;
+}
+
+.column-actions {
+    width: 25%;
+}
+
+/* Action Buttons */
+.column-actions .button {
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+/* Summary Section */
+.expiring-listings-summary {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f6f7f7;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+}
+
+.expiring-listings-summary p {
+    margin: 0;
+    font-size: 14px;
+}
+
+/* Tab Styling */
+.nav-tab-wrapper {
+    margin-bottom: 20px;
+}
+
+.nav-tab {
+    text-decoration: none;
+}
+
+.nav-tab-active {
+    background-color: #fff;
+    border-bottom-color: #fff;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 782px) {
+    .expiring-listings-table-container .wp-list-table {
+        font-size: 14px;
+    }
+    
+    .column-actions .button {
+        display: block;
+        width: 100%;
+        margin-bottom: 5px;
+        text-align: center;
+    }
+    
+    .days-remaining-urgent,
+    .days-remaining-warning,
+    .days-remaining-normal {
+        display: inline-block;
+        margin-top: 5px;
+    }
+}
+
+/* Loading State */
+.expiring-listings-loading {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+}
+
+.expiring-listings-loading .spinner {
+    float: none;
+    margin: 0 auto 10px;
+}
+
+/* Empty State */
+.expiring-listings-empty {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+}
+
+.expiring-listings-empty .dashicons {
+    font-size: 48px;
+    color: #c3c4c7;
+    margin-bottom: 15px;
+}
+
+/* Notice Styling */
+.notice.notice-info {
+    border-left-color: #72aee6;
+}
+
+/* Hover Effects */
+.expiring-listings-table-container .wp-list-table tbody tr:hover {
+    background-color: #f6f7f7;
+}
+
+/* Link Styling */
+.expiring-listings-table-container a {
+    text-decoration: none;
+}
+
+.expiring-listings-table-container a:hover {
+    text-decoration: underline;
+}
