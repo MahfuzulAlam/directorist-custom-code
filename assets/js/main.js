@@ -3,5 +3,5 @@
  * */
 
 jQuery(document).ready(function ($) {
-  // Write your javascript code here
+  // Placeholder for legacy scripts. React app enqueued separately.
 });

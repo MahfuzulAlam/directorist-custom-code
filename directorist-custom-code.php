@@ -1,11 +1,11 @@
 <?php
 
 /** 
- * @package  Directorist - Custom Code
+ * @package  Directorist - Shanir Akhra
  */
 
 /**
- * Plugin Name:       Directorist - Custom Code
+ * Plugin Name:       Directorist - Shanir Akhra
  * Plugin URI:        https://wpwax.com
  * Description:       Best way to implement custom code for directorist plugin
  * Version:           2.0.0
@@ -79,6 +79,8 @@ if (!class_exists('Directorist_Custom_Code')) {
         public function includes()
         {
             include_once(DIRECTORIST_CUSTOM_CODE_DIR . '/inc/functions.php');
+            include_once(DIRECTORIST_CUSTOM_CODE_DIR . '/inc/shortcodes.php');
+            include_once(DIRECTORIST_CUSTOM_CODE_DIR . '/inc/enqueue.php');
         }
 
         /**
