@@ -25,7 +25,7 @@ function dcc_render_remote_directorist_listings_shortcode( $atts ) {
 			'site_url'  => '',
 			'per_page'  => '8',
 			'featured'  => '0',
-			'orderby'   => 'rand',
+			'orderby'   => 'date',
 			'order'     => 'desc',
 			'directory' => '34',
 		),
