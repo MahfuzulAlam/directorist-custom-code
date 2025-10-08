@@ -3,5 +3,13 @@
  * */
 
 jQuery(document).ready(function ($) {
-  // Write your javascript code here
+  $(document).on('click', '.directorist-contact-popup', function(event){
+    event.preventDefault();
+    let title = $(this).data('title');
+    let value = $(this).data('value');
+    Swal.fire({
+      title: title,
+      text: value,
+    });
+  });
 });

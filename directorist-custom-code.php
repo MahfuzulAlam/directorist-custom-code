@@ -103,8 +103,18 @@ if (!class_exists('Directorist_Custom_Code')) {
          */
         public function enqueue_scripts()
         {
-            // Replace 'your-plugin-name' with the actual name of your plugin's folder.
-            wp_enqueue_script('directorist-custom-script', DIRECTORIST_CUSTOM_CODE_URI . 'assets/js/main.js', array('jquery'), '2.0', true);
+            if( is_singular( 'at_biz_dir' ) ):
+                // Register SweetAlert2 from CDN
+                wp_register_script(
+                    'sweetalert2',
+                    'https://cdn.jsdelivr.net/npm/sweetalert2@11',
+                    [],
+                    null,          // let CDN control version cache
+                    true           // load in footer
+                );
+                // Replace 'your-plugin-name' with the actual name of your plugin's folder.
+                wp_enqueue_script('directorist-custom-script', DIRECTORIST_CUSTOM_CODE_URI . 'assets/js/main.js', array('jquery', 'sweetalert2'), '2.1.0', true);
+            endif;
         }
 
         /**
@@ -112,8 +122,10 @@ if (!class_exists('Directorist_Custom_Code')) {
          */
         public function enqueue_styles()
         {
-            // Replace 'your-plugin-name' with the actual name of your plugin's folder.
-            wp_enqueue_style('directorist-custom-style', DIRECTORIST_CUSTOM_CODE_URI . 'assets/css/main.css', array(), '2.0');
+            if( is_singular( 'at_biz_dir' ) ):
+                // Replace 'your-plugin-name' with the actual name of your plugin's folder.
+                wp_enqueue_style('directorist-custom-style', DIRECTORIST_CUSTOM_CODE_URI . 'assets/css/main.css', array(), '2.0');
+            endif;
         }
 
         /**
@@ -138,7 +150,7 @@ if (!class_exists('Directorist_Custom_Code')) {
             if (is_array($args)) {
                 extract($args);
             }
-            $data = $args;
+            //$data = $args;
 
             if (isset($args['form'])) $listing_form = $args['form'];
 
