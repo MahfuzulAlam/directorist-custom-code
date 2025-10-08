@@ -9,10 +9,10 @@ add_action('wp_head', function(){
     if( ! gluvega_is_paid_user() ):
     ?>
     <style>
-        .single-at_biz_dir
+        /* .single-at_biz_dir
         .directorist-action-save-wrap,
         .directorist-mark-as-favorite__btn,
-        .directorist-added-to-favorite,
+        .directorist-added-to-favorite, */
         .directorist-search-field-paid-only
         {
             display: none !important;
@@ -21,6 +21,23 @@ add_action('wp_head', function(){
     <?php
     endif;
 });
+
+
+add_action( 'wp_footer', function(){
+    if( ! gluvega_is_paid_user() ):
+    ?>
+    <script type="text/javascript">
+        jQuery(document).ready(function($){
+            $('body').on('click', '.directorist-mark-as-favorite__btn', function (event) {
+                event.preventDefault();
+                window.location.href = 'https://gluvega.com/log-in/';
+            });
+        });
+    </script>
+    <?php
+    endif;
+} );
+
 
 if( ! function_exists('gluvega_is_paid_user') ){
     function gluvega_is_paid_user($user_id = 0){
