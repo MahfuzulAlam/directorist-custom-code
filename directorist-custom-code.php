@@ -78,6 +78,7 @@ if (!class_exists('Directorist_Custom_Code')) {
          */
         public function includes()
         {
+            include_once(DIRECTORIST_CUSTOM_CODE_DIR . '/inc/class-badge.php');
             include_once(DIRECTORIST_CUSTOM_CODE_DIR . '/inc/functions.php');
             include_once(DIRECTORIST_CUSTOM_CODE_DIR . '/inc/shortcodes.php');
             include_once(DIRECTORIST_CUSTOM_CODE_DIR . '/inc/enqueue.php');

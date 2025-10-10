@@ -4,6 +4,36 @@
  * Add your custom php code here
  */
 
+/**
+ * Add Custom Badges
+ */
+
+add_action( 'init', function (){
+    $category_badge_atts = [
+        'id'         => 'category-badge',
+        'label'      => 'Categories',
+        'icon'       => 'uil uil-text-fields',
+        'hook'       => 'atbdp-category-badge',
+        'title'      => 'Categories',
+        'meta_key'   => '_categories',
+        'meta_value' => '',
+        'class'      => 'categories-badge'
+    ];
+
+    $listing_view_badge_atts = [
+        'id'         => 'listing-view-badge',
+        'label'      => 'Views',
+        'icon'       => 'uil uil-text-fields',
+        'hook'       => 'atbdp-view-badge',
+        'title'      => 'Listing Views',
+        'meta_key'   => '_listing_views',
+        'meta_value' => '',
+        'class'      => 'listing-view-badge'
+    ];
+
+    new Shanir_Akhra_Badge($category_badge_atts);
+    new Shanir_Akhra_Badge($listing_view_badge_atts);
+} );
 
 add_action( 'wp_footer', function(){
     $network_home = esc_url( network_home_url( '/' ) );

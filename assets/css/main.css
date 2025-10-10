@@ -1,1 +1,53 @@
 /* Add you custom css here */
+
+footer.directorist-listing-single__meta
+{
+    display: none !important;
+}
+
+.directorist-content-active
+.directorist-listing-single
+.directorist-listing-single__content
+.directorist-listing-single__info
+.directorist-listing-title
+{
+    font-size: calc(0.9rem + 0.3vw) !important;
+}
+
+.directorist-content-active
+.directorist-listing-single
+.directorist-listing-single__content
+.directorist-listing-single__info__list
+{
+    margin-top: 0 !important;
+}
+
+.directorist-custom-badge-archive
+{
+    width: auto !important;
+    border-radius: 5px !important;
+    padding: 0px 5px !important;
+    color: #ffffff;
+    font-size: 10px;
+    height: 21px;
+}
+
+.directorist-custom-badge-archive.categories-badge
+{
+    background-color: #dd3333 !important;
+}
+
+.directorist-custom-badge-archive.listing-view-badge
+{
+    background-color: #ffffff !important;
+    color: #605F74 !important;
+    font-size: 12px;
+}
+
+.directorist-custom-badge-archive.listing-view-badge i::after
+{
+    background-color: #605F74 !important;
+    margin-right: 2px;
+    width: 14px !important;
+    height: 14px !important;
+}
