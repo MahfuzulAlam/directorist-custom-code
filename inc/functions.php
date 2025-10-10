@@ -15,3 +15,8 @@ add_action( 'wp_footer', function(){
     </script>
     <?php
 } );
+
+add_filter('directorist_custom_field_meta_key_field_args', function ($args) {
+    $args['type'] = 'text';
+    return $args;
+});
