@@ -1,1 +1,60 @@
 /* Add you custom css here */
+
+/* Claim button - enhanced style */
+.dcc-claim-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-weight: 600;
+  letter-spacing: .2px;
+  background: linear-gradient(135deg, #6a5af9 0%, #4c38f6 50%, #2f89ff 100%);
+  color: #fff !important;
+  border: none;
+  box-shadow: 0 8px 20px rgba(76, 56, 246, .35), inset 0 -2px 0 rgba(0,0,0,.15);
+  transition: transform .15s ease, box-shadow .25s ease, background .25s ease;
+}
+
+.dcc-claim-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px rgba(76, 56, 246, .45), inset 0 -2px 0 rgba(0,0,0,.2);
+}
+
+.dcc-claim-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 6px 16px rgba(76, 56, 246, .35), inset 0 1px 0 rgba(255,255,255,.1);
+}
+
+/* Subtle pulse shine on hover */
+.dcc-claim-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(120px 60px at var(--x, 10%) var(--y, 10%), rgba(255, 255, 255, .25), transparent 60%);
+  opacity: 0;
+  transition: opacity .25s ease;
+  pointer-events: none;
+}
+
+.dcc-claim-btn:hover::after { opacity: 1; }
+
+/* Focus states for accessibility */
+.dcc-claim-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(47, 137, 255, .35), 0 10px 24px rgba(76, 56, 246, .45);
+}
+
+/* Optional icon spacing if used inside button */
+.dcc-claim-btn .atbd_badge,
+.dcc-claim-btn i,
+.dcc-claim-btn svg { margin-right: 6px; }
+
+/* Dark mode tweak (if site has dark background) */
+@media (prefers-color-scheme: dark) {
+  .dcc-claim-btn {
+    box-shadow: 0 8px 20px rgba(0,0,0,.45), inset 0 -2px 0 rgba(0,0,0,.3);
+  }
+}
