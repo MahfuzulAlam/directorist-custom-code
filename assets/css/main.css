@@ -1,1 +1,16 @@
 /* Add you custom css here */
+
+div.atpp-tax-html{
+    margin: 5px;
+    margin-top: 10px;
+    background-color: lightskyblue;
+    color: black;
+    font-weight: 777;
+    font-size: 0.8rem;
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: inline-block;
+}
+div.atpp-tax-html span.tax_placeholder{
+    margin-right: 5px;
+}

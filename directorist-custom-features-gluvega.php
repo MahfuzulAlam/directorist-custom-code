@@ -104,7 +104,7 @@ if (!class_exists('Directorist_Custom_Features_Gluvega')) {
         public function enqueue_scripts()
         {
             // Replace 'your-plugin-name' with the actual name of your plugin's folder.
-            wp_enqueue_script('directorist-custom-script', DIRECTORIST_CUSTOM_FEATURES_FOR_GLUVEGA_URI . 'assets/js/main.js', array('jquery'), '2.0', true);
+            wp_enqueue_script('dir-gluvega-custom-script', DIRECTORIST_CUSTOM_FEATURES_FOR_GLUVEGA_URI . 'assets/js/main.js', array('jquery'), '2.0', true);
         }
 
         /**
@@ -113,7 +113,7 @@ if (!class_exists('Directorist_Custom_Features_Gluvega')) {
         public function enqueue_styles()
         {
             // Replace 'your-plugin-name' with the actual name of your plugin's folder.
-            wp_enqueue_style('directorist-custom-style', DIRECTORIST_CUSTOM_FEATURES_FOR_GLUVEGA_URI . 'assets/css/main.css', array(), '2.0');
+            wp_enqueue_style('dir-gluvega-custom-style', DIRECTORIST_CUSTOM_FEATURES_FOR_GLUVEGA_URI . 'assets/css/main.css', array(), '2.0');
         }
 
         /**

@@ -179,3 +179,36 @@ add_filter('directorist_search_form_widgets', function( $widgets ){
     }
     return $widgets;
 });
+
+/**
+ * Directorist Pricing Plan - Tax Html
+ */
+
+ if ( ! function_exists( 'atpp_tax_html' ) ) {
+    function atpp_tax_html( $plan_id ) {
+        $fm_price = (float) get_post_meta( $plan_id, 'fm_price', true );
+        if ( ! $fm_price ) {
+            return '';
+        }
+
+        $fm_tax        = (float) get_post_meta( $plan_id, 'fm_tax', true );
+        $plan_tax_type = get_post_meta( $plan_id, 'plan_tax_type', true );
+        $plan_tax      = get_post_meta( $plan_id, 'plan_tax', true );
+        $tax_placeholder   = get_directorist_option('tax_placeholder', 'Tax');
+
+        $currency = atbdp_get_payment_currency();
+        $symbol = atbdp_currency_symbol($currency);
+        
+        if( $plan_tax_type == 'flat' ){
+            echo '<div class="atpp-tax-html"><span class="tax_placeholder">'.$tax_placeholder.'</span>';
+            echo '<span class="tax_amount">'.$symbol.$fm_tax.'</span>';
+            echo '</div>';
+        }
+
+        if( $plan_tax_type == 'percent' ){
+            echo '<div class="atpp-tax-html"><span class="tax_placeholder">'.$tax_placeholder.'</span>';
+            echo '<span class="tax_amount">'.$fm_tax.'%</span>';
+            echo '</div>';
+        }
+    }
+}
