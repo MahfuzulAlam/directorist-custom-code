@@ -245,12 +245,12 @@ class Directorist_Custom_Registration_Field
 
     public function atbdp_user_registration_completed( $user_id ) {
         // Handle normal text/textarea fields
-        if ( isset( $_POST[ $this->field_slug ] ) && $this->field_type !== 'file' ) {
+        if ( isset( $_POST[ $this->field_slug ] ) && !empty( $_POST[ $this->field_slug ] ) && $this->field_type !== 'file' ) {
             $value = ( $this->field_type === 'textarea' ) 
                 ? sanitize_textarea_field( trim( $_POST[ $this->field_slug ] ) ) 
                 : sanitize_text_field( trim( $_POST[ $this->field_slug ] ) );
             
-            if ( $value ) {
+            if ( $value && ! empty( $value ) ) {
                 update_user_meta( $user_id, $this->field_slug, $value );
             }
         }
