@@ -14,7 +14,7 @@
  * Author URI:        https://wpwax.com
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       directorist-custom-features-for-gluvega
+ * Text Domain:       directorist-gluvega
  * Domain Path:       /languages
  */
 
