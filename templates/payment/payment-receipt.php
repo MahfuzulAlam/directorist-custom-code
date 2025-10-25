@@ -38,11 +38,9 @@ $c_position = function_exists('get_directorist_option') ? get_directorist_option
 $before = ($c_position === 'before') ? $symbol : '';
 $after  = ($c_position === 'after') ? $symbol : '';
 
-$subtotal = 0;
-if ( ! empty( $order_items ) ) {
-    foreach ( $order_items as $item ) {
-        $subtotal += isset($item['price']) ? floatval($item['price']) : 0;
-    }
+$subtotal = isset( $data[ 'price' ] ) && ! empty( $data[ 'price' ] ) ? $data[ 'price' ] : 0;
+if( $subtotal < 1  ){
+	$subtotal = isset( $data[ 'o_metas' ]['_amount'][0] ) && ! empty( $data[ 'o_metas' ]['_amount'][0] ) ? $data[ 'o_metas' ]['_amount'][0] : 0;
 }
 
 /* -------------------------
