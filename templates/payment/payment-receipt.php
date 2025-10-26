@@ -38,16 +38,40 @@ $c_position = function_exists('get_directorist_option') ? get_directorist_option
 $before = ($c_position === 'before') ? $symbol : '';
 $after  = ($c_position === 'after') ? $symbol : '';
 
-$subtotal = isset( $data[ 'price' ] ) && ! empty( $data[ 'price' ] ) ? $data[ 'price' ] : 0;
-if( $subtotal < 1  ){
-	$subtotal = isset( $data[ 'o_metas' ]['_amount'][0] ) && ! empty( $data[ 'o_metas' ]['_amount'][0] ) ? $data[ 'o_metas' ]['_amount'][0] : 0;
-}
+// $subtotal = isset( $data[ 'price' ] ) && ! empty( $data[ 'price' ] ) ? $data[ 'price' ] : 0;
+// if( $subtotal < 1  ){
+// 	$subtotal = isset( $data[ 'o_metas' ]['_amount'][0] ) && ! empty( $data[ 'o_metas' ]['_amount'][0] ) ? $data[ 'o_metas' ]['_amount'][0] : 0;
+// }
 
 /* -------------------------
    VAT calculation (optional)
 ------------------------- */
-$vat_rate = 0.23; // Standard, kann angepasst werden
-$vat_amount = round($subtotal * $vat_rate, 2);
+$vat_rate = 0;
+$tax_type = 'flat';
+$fm_price = 0;
+$fm_description = '';
+$fm_title = '';
+$pricing_plan = isset( $data[ 'o_metas' ][ '_fm_plan_ordered' ][0] ) && ! empty( $data[ 'o_metas' ][ '_fm_plan_ordered' ][0] ) ? $data[ 'o_metas' ][ '_fm_plan_ordered' ][0] : null;
+if( $pricing_plan ){
+	$vat_rate = get_post_meta( $pricing_plan, 'fm_tax', true );
+	$tax_type = get_post_meta( $pricing_plan, 'plan_tax_type', true );
+    $fm_price = get_post_meta( $pricing_plan, 'fm_price', true );
+    $fm_description = get_post_meta( $pricing_plan, 'fm_description', true );
+    $fm_title = get_the_title( $pricing_plan );
+}
+
+$order_items = [
+    [
+        'title' => $fm_title,
+        'desc' => $fm_description,
+        'price' => $fm_price,
+    ]
+];
+
+$vat_html = $tax_type == 'percent' ? $vat_rate . '%' : $symbol . $vat_rate;
+$vat_rate = $tax_type == 'percent' ? $vat_rate / 100 : $vat_rate; // Standard, kann angepasst werden
+$subtotal = $fm_price;
+$vat_amount = round($fm_price * $vat_rate, 2);
 $total = round($subtotal + $vat_amount, 2);
 
 /* -------------------------
@@ -118,7 +142,10 @@ body{font-family:Helvetica, Arial; margin:0; padding:0; background:#f8f9fa;}
         <tbody>
             <?php if(!empty($order_items)) : foreach($order_items as $it): ?>
             <tr>
-                <td><?php echo esc_html($it['title']); ?></td>
+                <td>
+                    <?php echo esc_html($it['title']); ?>
+                    <?php if($it['desc']) echo '<br><span style="font-size:12px;color:#666;">' . esc_html($it['desc']) . '</span>'; ?>
+                </td>
                 <td style="text-align:right;"><?php echo $before . number_format($it['price'], 2) . $after; ?></td>
             </tr>
             <?php endforeach; endif; ?>
@@ -127,7 +154,7 @@ body{font-family:Helvetica, Arial; margin:0; padding:0; background:#f8f9fa;}
                 <td style="text-align:right;"><?php echo $before . number_format($subtotal, 2) . $after; ?></td>
             </tr>
             <tr>
-                <td><strong>VAT (23%)</strong></td>
+                <td><strong>VAT (<?php echo esc_html($vat_html); ?>)</strong></td>
                 <td style="text-align:right;"><?php echo $before . number_format($vat_amount, 2) . $after; ?></td>
             </tr>
             <tr>
