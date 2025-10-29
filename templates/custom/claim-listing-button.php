@@ -16,7 +16,8 @@
             <?php } else { ?>
                 <a href="#" class="directorist-claim-listing__login-alert directorist-btn directorist-btn-primary directorist-btn-modal directorist-btn-custom-modal-js dcc-claim-btn"><?php _e("$claim_now", 'directorist-claim-listing'); ?></a>
             <?php } ?>
-            <input type="hidden" id="directorist__post-id" value="<?php echo get_the_ID(); ?>"/>
+            <p class="dcc-claim-btn-message">Notification message will be shown here</p>
+            <input type="hidden" class="directorist__post-id" value="<?php echo get_the_ID(); ?>"/>
         </div>
         <div class="directorist-modal directorist-modal-js directorist-fade directorist-claim-listing-modal directorist-claimer">
             <div class="directorist-modal__dialog directorist-modal__dialog-lg">

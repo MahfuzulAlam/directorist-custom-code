@@ -27,15 +27,22 @@ jQuery(document).ready(function ($) {
   // Delegated submit for each form instance
   $('body').on('submit', '.directorist-claimer__form_custom', function (e) {
     e.preventDefault();
+    e.stopPropagation();
+    e.stopImmediatePropagation();
 
     var $form = $(this);
     var $modal = $form.closest('.directorist-modal-js');
     var $holder = $form.closest('.directorist-claim-listing-holder');
+    
+    // Ensure modal stays open during form processing
+    $modal.addClass('directorist-show');
+
 
     // Optional: show loading state on submit button inside this form only
     var $submitBtn = $form.find('.directorist-modal__footer .directorist-btn');
+    var $notificationMessage = $holder.find('.dcc-claim-btn-message');
     //$submitBtn.addClass('directorist-loader');
-
+    
     // Collect values scoped to this form/holder
     var listing_type = $form.find('input[type="radio"][name=listing_type]:checked').val();
     var plan_id = $form.find('#directorist-claimer_plan').find(':selected').val();
@@ -44,7 +51,7 @@ jQuery(document).ready(function ($) {
     var formData = new FormData();
     formData.append('action', 'dcl_submit_claim');
 
-    var postId = $holder.find('#directorist__post-id').val() || $form.find('.directorist__custom-post-id').val();
+    var postId = $holder.find('.directorist__post-id').val() || $form.find('.directorist__custom-post-id').val();
     if (postId) {
       formData.append('post_id', postId);
     }
@@ -59,20 +66,22 @@ jQuery(document).ready(function ($) {
     if (claimerDetails) formData.append('claimer_details', claimerDetails);
 
     if (plan_id) formData.append('plan_id', plan_id);
-    if (typeof dcl_main !== 'undefined' && dcl_main.nonce) formData.append('nonce', dcl_main.nonce);
+    if (dir_claim_badge.directorist_claim_nonce) formData.append('nonce', dir_claim_badge.directorist_claim_nonce);
     if (listing_type) formData.append('type', listing_type);
     if (active_elm.length) formData.append('order_id', active_elm.attr('data-value'));
-
-    console.log(formData);
 
     $.ajax({
       method: 'POST',
       processData: false,
       contentType: false,
-      url: (typeof dcl_main !== 'undefined' ? dcl_main.ajaxurl : (window.ajaxurl || '')),
+      url: directorist.ajaxurl,
       data: formData,
       success: function (response) {
         $submitBtn.removeClass('directorist-loader');
+        
+        // Ensure modal stays open after successful submission
+        $modal.addClass('directorist-show');
+        
         if (response && response.take_payment) {
           window.location.href = response.checkout_url;
         } else {
@@ -80,20 +89,29 @@ jQuery(document).ready(function ($) {
           $form.find('#directorist-claimer__phone').val('');
           $form.find('#directorist-claimer__details').val('');
           $form.find('#directorist-claimer__submit-notification').addClass('text-success').html(response && response.message ? response.message : 'Submitted');
+          $holder.find('.dcc-claim-btn-message').text(response && response.message ? response.message : 'Submitted');
           setTimeout(function () {
             $form.find('#directorist-claimer__submit-notification').html("");
+            $holder.find('.dcc-claim-btn-message').text('');
           }, 5000);
         }
         if (response && response.error_msg) {
           $form.find('#directorist-claimer__warning-notification').addClass('text-warning').html(response.error_msg);
+          $holder.find('.dcc-claim-btn-message').text(response.error_msg);
           setTimeout(function () {
             $form.find('#directorist-claimer__warning-notification').html("");
+            $holder.find('.dcc-claim-btn-message').text('');
           }, 5000);
         }
       },
       error: function () {
         $submitBtn.removeClass('directorist-loader');
+        // Ensure modal stays open even on error
+        $modal.addClass('directorist-show');
       }
     });
+    
+    // Ensure modal stays open by preventing any default form behavior
+    return false;
   });
 });
