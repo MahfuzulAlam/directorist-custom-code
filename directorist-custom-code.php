@@ -56,7 +56,6 @@ if (!class_exists('Directorist_Custom_Code')) {
             $this->define_constant();
             $this->includes();
             $this->enqueues();
-            $this->hooks();
         }
 
         /**
@@ -91,14 +90,6 @@ if (!class_exists('Directorist_Custom_Code')) {
         }
 
         /**
-         * Hooks
-         */
-        public function hooks()
-        {
-            add_filter('directorist_template', array($this, 'directorist_template'), 10, 2);
-        }
-
-        /**
          *  Enqueue JS file
          */
         public function enqueue_scripts()
@@ -117,50 +108,9 @@ if (!class_exists('Directorist_Custom_Code')) {
         public function enqueue_styles()
         {
             // Replace 'your-plugin-name' with the actual name of your plugin's folder.
-            wp_enqueue_style('directorist-custom-style', DIRECTORIST_CUSTOM_CODE_URI . 'assets/css/main.css', array(), '2.0');
+            wp_enqueue_style('directorist-custom-claim-style', DIRECTORIST_CUSTOM_CODE_URI . 'assets/css/main.css', array(), '2.0');
         }
 
-        /**
-         * Template Exists
-         */
-        public function template_exists($template_file)
-        {
-            $file = DIRECTORIST_CUSTOM_CODE_DIR . '/templates/' . $template_file . '.php';
-
-            if (file_exists($file)) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-        /**
-         * Get Template
-         */
-        public function get_template($template_file, $args = array())
-        {
-            if (is_array($args)) {
-                extract($args);
-            }
-            $data = $args;
-
-            if (isset($args['form'])) $listing_form = $args['form'];
-
-            $file = DIRECTORIST_CUSTOM_CODE_DIR . '/templates/' . $template_file . '.php';
-
-            if ($this->template_exists($template_file)) {
-                include $file;
-            }
-        }
-
-        /**
-         * Directorist Template
-         */
-        public function directorist_template($template, $field_data)
-        {
-            if ($this->template_exists($template)) $template = $this->get_template($template, $field_data);
-            return $template;
-        }
     }
 
     if (!function_exists('directorist_is_plugin_active')) {

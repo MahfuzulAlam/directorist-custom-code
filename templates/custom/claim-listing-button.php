@@ -1,13 +1,14 @@
 <?php
     $listing_id           = get_the_ID();
     $admin_only_claimable = get_directorist_option( 'admin_only_claimable', false );
-    
+    $enable_claim_listing = get_directorist_option('enable_claim_listing', 1);
+
     if ( ! empty( $admin_only_claimable ) && ! directorist_is_listing_created_by_admin( $listing_id ) ) return; // vBail if not created by admin
-    if (!get_directorist_option('enable_claim_listing', 1)) return; // vail if the business hour is not enabled
+    if ( ! $enable_claim_listing) return; // vail if the business hour is not enabled
     $claim_now = get_directorist_option('claim_now', esc_html__('Claim Now!', 'directorist-claim-listing'));
     $claimed_by_admin = get_post_meta($listing_id, '_claimed_by_admin', true);
     $claim_fee = get_post_meta($listing_id, '_claim_fee', true);
-    if ($claimed_by_admin || ('claim_approved' === $claim_fee)) return;
+    if ( $claimed_by_admin || ('claim_approved' === $claim_fee) ) return;
     ?>
     <div class="directorist-claim-listing-holder">
         <div class="directorist-claim-listing-wrapper <?php echo esc_html( $field_data['custom_block_classes'] ); ?>">
@@ -16,7 +17,7 @@
             <?php } else { ?>
                 <a href="#" class="directorist-claim-listing__login-alert directorist-btn directorist-btn-primary directorist-btn-modal directorist-btn-custom-modal-js dcc-claim-btn"><?php _e("$claim_now", 'directorist-claim-listing'); ?></a>
             <?php } ?>
-            <p class="dcc-claim-btn-message">Notification message will be shown here</p>
+            <p class="dcc-claim-btn-message"></p>
             <input type="hidden" class="directorist__post-id" value="<?php echo get_the_ID(); ?>"/>
         </div>
         <div class="directorist-modal directorist-modal-js directorist-fade directorist-claim-listing-modal directorist-claimer">

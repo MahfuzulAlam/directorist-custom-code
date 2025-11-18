@@ -6,6 +6,9 @@
 
 
 add_action( 'directorist_loop_grid_info_before_excerpt', function( $listing ){
+
+    if( is_singular('at_biz_dir') ) return;
+
     $listing_id = $listing->loop['id'];
 
     // Include claim listing button template from the template folder
