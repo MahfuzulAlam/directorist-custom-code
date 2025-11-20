@@ -94,6 +94,7 @@ if (!class_exists('Directorist_Custom_Code')) {
          */
         public function enqueue_scripts()
         {
+            if( is_singular('at_biz_dir') ) return;
             // Replace 'your-plugin-name' with the actual name of your plugin's folder.
             wp_enqueue_script('directorist-custom-claim-script', DIRECTORIST_CUSTOM_CODE_URI . 'assets/js/main.js', array('jquery'), '2.0', true);
             wp_localize_script('directorist-custom-claim-script', 'dir_claim_badge', array(
@@ -107,6 +108,7 @@ if (!class_exists('Directorist_Custom_Code')) {
          */
         public function enqueue_styles()
         {
+            if( is_singular('at_biz_dir') ) return;
             // Replace 'your-plugin-name' with the actual name of your plugin's folder.
             wp_enqueue_style('directorist-custom-claim-style', DIRECTORIST_CUSTOM_CODE_URI . 'assets/css/main.css', array(), '2.0');
         }

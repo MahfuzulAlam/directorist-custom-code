@@ -1,7 +1,7 @@
 <?php
     $listing_id           = get_the_ID();
     $admin_only_claimable = get_directorist_option( 'admin_only_claimable', false );
-    $enable_claim_listing = get_directorist_option('enable_claim_listing', 1);
+    $enable_claim_listing = get_directorist_option( 'enable_claim_listing', 1 );
 
     if ( ! empty( $admin_only_claimable ) && ! directorist_is_listing_created_by_admin( $listing_id ) ) return; // vBail if not created by admin
     if ( ! $enable_claim_listing) return; // vail if the business hour is not enabled
@@ -25,7 +25,7 @@
                 <div class="directorist-modal__content">
                     <form id="directorist-claimer__form_custom" class="directorist-claimer__form_custom">
                         <div class="directorist-modal__header">
-                            <h3 class="directorist-modal-title" id="directorist-claim-label"><?php _e('Claim This Listing', 'directorist-claim-listing'); ?> - <?php echo get_the_ID();?></h3>
+                            <h3 class="directorist-modal-title" id="directorist-claim-label"><?php _e('Claim This Listing', 'directorist-claim-listing'); ?></h3>
                             <a href="#" class="directorist-modal-close directorist-modal-close-js"><span aria-hidden="true">&times;</span></a>
                         </div>
                         <div class="directorist-modal__body">
@@ -35,10 +35,10 @@
                             </div>
                             <div class="directorist-form-group">
                                 <label for="directorist-claimer__phone" class="directorist-claimer__phone"><?php _e('Phone', 'directorist-claim-listing'); ?> <span class="directorist-claimer__star-red">*</span></label>
-                                <input type="tel" class="directorist-form-element" id="directorist-claimer__phone" placeholder="<?php _e('111-111-235', 'directorist-claim-listing'); ?>" required>
+                                <input type="tel" class="directorist-form-element" id="directorist-claimer__phone" placeholder="<?php _e('(555) 123-4567', 'directorist-claim-listing'); ?>" required>
                             </div>
                             <div class="directorist-form-group">
-                                <label for="directorist-claimer__details" class="directorist-claimer__details"><?php _e('Verification Details', 'directorist-claim-listing'); ?> <span class="directorist-claimer__star-red">*</span></label>
+                                <label for="directorist-claimer__details" class="directorist-claimer__details"><?php _e('Business Description', 'directorist-claim-listing'); ?> <span class="directorist-claimer__star-red">*</span></label>
                                 <textarea class="directorist-form-element" id="directorist-claimer__details" rows="3" placeholder="<?php _e('Details description about your business', 'directorist-claim-listing'); ?>..." required></textarea>
                             </div>
                             <div class="directorist-form-group">
