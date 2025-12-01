@@ -55,8 +55,8 @@ if (!class_exists('Directorist_Location_Based_Listings')) {
         {
             $this->define_constant();
             $this->includes();
-            $this->enqueues();
-            $this->hooks();
+            //$this->enqueues();
+            //$this->hooks();
         }
 
         /**
@@ -80,6 +80,7 @@ if (!class_exists('Directorist_Location_Based_Listings')) {
         {
             include_once(DIRECTORIST_LOCATION_BASED_LISTINGS_DIR . '/inc/functions.php');
             include_once(DIRECTORIST_LOCATION_BASED_LISTINGS_DIR . '/inc/class-user-location.php');
+            include_once(DIRECTORIST_LOCATION_BASED_LISTINGS_DIR . '/inc/class-geo-location.php');
         }
 
         /**

@@ -57,8 +57,27 @@ class Directorist_User_Location {
         
         // Add inline script with AJAX URL
         add_action('wp_footer', array($this, 'add_location_script'));
+
+        add_filter( 'directorist_all_listings_query_arguments', array($this, 'filter_all_listings_query_arguments') );
     }
-    
+
+    public function filter_all_listings_query_arguments( $args ) {
+        $location = $this->get_location();
+        if ( $location ) {
+            $args['atbdp_geo_query_custom'] = [
+                'lat_field'  => '_manual_lat',
+                'lng_field'  => '_manual_lng',
+                'latitude'   => $location['latitude'],
+                'longitude'  => $location['longitude'],
+                'min_distance'   => 0,
+                'max_distance'   => 100,
+                'units'      => 'miles'
+            ];
+            $args['orderby'] = 'distance';
+            $args['order'] = 'ASC';
+        }
+        return $args;
+    }
     /**
      * Get transient key for current user
      */
@@ -207,6 +226,7 @@ class Directorist_User_Location {
             return;
         }
         
+        wp_enqueue_script('directorist-location-based-listings-script', DIRECTORIST_LOCATION_BASED_LISTINGS_URI . 'assets/js/main.js', array('jquery'), '2.0', true);
         // Create nonce for AJAX security
         wp_localize_script('directorist-location-based-listings-script', 'directoristLocation', array(
             'ajaxUrl' => admin_url('admin-ajax.php'),
@@ -248,8 +268,10 @@ class Directorist_User_Location {
                 navigator.geolocation.getCurrentPosition(
                     function(position) {
                         // Success callback
-                        var latitude = position.coords.latitude;
-                        var longitude = position.coords.longitude;
+                        //var latitude = position.coords.latitude;
+                        //var longitude = position.coords.longitude;
+                        var latitude = 23.723080;
+                        var longitude = 90.409138;
                         
                         // Function to send location via AJAX
                         function sendLocation() {
