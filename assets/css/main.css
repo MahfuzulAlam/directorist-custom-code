@@ -1,1 +1,48 @@
 /* Add you custom css here */
+
+.directorist-single-info-checkbox {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.directorist-single-info__value-checkbox-new {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.directorist-single-info__value-checkbox-new-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex: 0 0 calc(50% - 5px); /* two items per row with gap considered */
+    box-sizing: border-box;
+}
+
+/* Icon background mask design */
+.directorist-single-info__value-checkbox-new-item .directorist-icon-mask {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    border-radius: 50%;
+    background-color: var(--directorist-color-bg-light, #f5f5f5);
+    position: relative;
+    top: 0;
+    transition: 0.3s ease;
+    margin-right: 10px;
+}
+
+.directorist-single-info__value-checkbox-new-item .directorist-icon-mask::after {
+    content: "";
+    display: block;
+    width: 12px;
+    height: 12px;
+    background-color: var(--directorist-color-dark);
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-image: var(--directorist-icon);
+}
