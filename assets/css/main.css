@@ -1,9 +1,9 @@
 /* Add you custom css here */
 
 .directorist-single-info-checkbox {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
 }
 
 .directorist-single-info__value-checkbox-new {
