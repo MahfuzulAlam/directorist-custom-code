@@ -70,7 +70,7 @@ add_action( 'save_post', function( $post_id ) {
 } );
 
 add_filter( 'atbdp_form_preset_widgets', function ( $widgets ){
-    $widgets[ 'pricing' ][ 'pricing_type' ][ 'options' ][] = ['value' => 'price_unit_range', 'label' => 'Price Unit Range'];
+    $widgets[ 'pricing' ]['options'][ 'pricing_type' ][ 'options' ][] = ['value' => 'price_unit_range', 'label' => 'Price Unit Range'];
     return $widgets;
 } );
 
