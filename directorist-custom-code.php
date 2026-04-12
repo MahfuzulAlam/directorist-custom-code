@@ -88,6 +88,7 @@ if (!class_exists('Directorist_Custom_Code')) {
         {
             add_action('wp_enqueue_scripts', array($this, 'enqueue_styles'));
             add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
+            add_action('wp_enqueue_scripts', array($this, 'enqueue_dashboard_profile_map'), 20);
         }
 
         /**
@@ -114,6 +115,77 @@ if (!class_exists('Directorist_Custom_Code')) {
         {
             // Replace 'your-plugin-name' with the actual name of your plugin's folder.
             wp_enqueue_style('directorist-custom-style', DIRECTORIST_CUSTOM_CODE_URI . 'assets/css/main.css', array(), '2.0');
+        }
+
+        /**
+         * Address autocomplete + lat/lng on user dashboard profile tab only.
+         */
+        public function enqueue_dashboard_profile_map()
+        {
+            if (!function_exists('get_directorist_option')) {
+                return;
+            }
+
+            $dashboard_page_id = absint(get_directorist_option('user_dashboard'));
+            if (!$dashboard_page_id || !is_page($dashboard_page_id)) {
+                return;
+            }
+
+            $map_type = get_directorist_option('select_listing_map', 'google');
+            if (!in_array($map_type, array('google', 'openstreet'), true)) {
+                $map_type = 'google';
+            }
+
+            $handle = 'dcc-dashboard-profile-address';
+
+            wp_enqueue_style(
+                'dcc-dashboard-profile-address',
+                DIRECTORIST_CUSTOM_CODE_URI . 'assets/css/dashboard-profile-address.css',
+                array(),
+                '2.0.1'
+            );
+
+            wp_enqueue_script(
+                $handle,
+                DIRECTORIST_CUSTOM_CODE_URI . 'assets/js/dashboard-profile-address.js',
+                array('jquery'),
+                '2.0.1',
+                true
+            );
+
+            $restricted = get_directorist_option('restricted_countries');
+            if (!is_array($restricted)) {
+                $restricted = array_filter(array_map('trim', explode(',', (string) $restricted)));
+            }
+
+            wp_localize_script(
+                $handle,
+                'dccDashboardAddress',
+                array(
+                    'mapType'            => $map_type,
+                    'googleApiKey'       => (string) get_directorist_option('map_api_key'),
+                    'countryRestriction' => (bool) get_directorist_option('country_restriction'),
+                    'restrictedCountries' => array_values($restricted),
+                )
+            );
+
+            if ($map_type === 'google') {
+                $key = trim((string) get_directorist_option('map_api_key'));
+                if ($key === '') {
+                    return;
+                }
+                $google_url = sprintf(
+                    'https://maps.googleapis.com/maps/api/js?loading=async&libraries=places&callback=dccDashboardAddressGoogleInit&key=%s',
+                    rawurlencode($key)
+                );
+                wp_enqueue_script(
+                    'dcc-google-maps-places',
+                    esc_url_raw($google_url),
+                    array($handle),
+                    null,
+                    true
+                );
+            }
         }
 
         /**
