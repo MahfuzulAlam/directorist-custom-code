@@ -118,17 +118,13 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
                                 <div class="directorist-form-group">
 
-                                    <label for="latitude"><?php esc_html_e( 'Latitude', 'directorist-custom-code' ); ?></label>
-
-                                    <input class="directorist-form-element" id="latitude" type="text" name="user[latitude]" value="<?php echo esc_attr( get_user_meta( $dashboard->id, 'latitude', true ) ); ?>" inputmode="decimal" autocomplete="off">
+                                    <input class="directorist-form-element" id="latitude" type="hidden" name="user[latitude]" value="<?php echo esc_attr( get_user_meta( $dashboard->id, 'latitude', true ) ); ?>" inputmode="decimal" autocomplete="off">
 
                                 </div>
 
                                 <div class="directorist-form-group">
 
-                                    <label for="longitude"><?php esc_html_e( 'Longitude', 'directorist-custom-code' ); ?></label>
-
-                                    <input class="directorist-form-element" id="longitude" type="text" name="user[longitude]" value="<?php echo esc_attr( get_user_meta( $dashboard->id, 'longitude', true ) ); ?>" inputmode="decimal" autocomplete="off">
+                                    <input class="directorist-form-element" id="longitude" type="hidden" name="user[longitude]" value="<?php echo esc_attr( get_user_meta( $dashboard->id, 'longitude', true ) ); ?>" inputmode="decimal" autocomplete="off">
 
                                 </div>
 

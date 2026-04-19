@@ -23,3 +23,43 @@ add_action(
 	2
 );
 
+
+if ( ! function_exists( 'directorist_listing_form_geo_defaults' ) ) {
+	/**
+	 * Prefill listing form when the listing has no address/coords saved.
+	 * Front-end: current user meta. Admin: listing post author meta.
+	 *
+	 * @param int $post_id Listing post ID (add_listing_id).
+	 * @return array{address:string,latitude:string,longitude:string}
+	 */
+	function directorist_listing_form_geo_defaults( $post_id ) {
+		$empty = array(
+			'address'   => '',
+			'latitude'  => '',
+			'longitude' => '',
+		);
+
+		$post_id = absint( $post_id );
+		if ( is_admin() ) {
+			if ( ! $post_id ) {
+				return $empty;
+			}
+			$author_id = (int) get_post_field( 'post_author', $post_id );
+		} else {
+			if ( ! is_user_logged_in() ) {
+				return $empty;
+			}
+			$author_id = get_current_user_id();
+		}
+
+		if ( ! $author_id ) {
+			return $empty;
+		}
+
+		return array(
+			'address'   => (string) get_user_meta( $author_id, 'address', true ),
+			'latitude'  => (string) get_user_meta( $author_id, 'latitude', true ),
+			'longitude' => (string) get_user_meta( $author_id, 'longitude', true ),
+		);
+	}
+}

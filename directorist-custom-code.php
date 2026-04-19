@@ -8,7 +8,7 @@
  * Plugin Name:       Directorist - Custom Code
  * Plugin URI:        https://wpwax.com
  * Description:       Best way to implement custom code for directorist plugin
- * Version:           2.0.0
+ * Version:           2.1.0
  * Requires at least: 5.2
  * Author:            wpWax
  * Author URI:        https://wpwax.com
@@ -78,7 +78,8 @@ if (!class_exists('Directorist_Custom_Code')) {
          */
         public function includes()
         {
-            include_once(DIRECTORIST_CUSTOM_CODE_DIR . '/inc/functions.php');
+            require_once DIRECTORIST_CUSTOM_CODE_DIR . '/inc/class-template-loader.php';
+            include_once DIRECTORIST_CUSTOM_CODE_DIR . '/inc/functions.php';
         }
 
         /**
@@ -96,7 +97,7 @@ if (!class_exists('Directorist_Custom_Code')) {
          */
         public function hooks()
         {
-            add_filter('directorist_template', array($this, 'directorist_template'), 10, 2);
+            Directorist_Custom_Code_Template_Loader::register();
         }
 
         /**
@@ -105,7 +106,7 @@ if (!class_exists('Directorist_Custom_Code')) {
         public function enqueue_scripts()
         {
             // Replace 'your-plugin-name' with the actual name of your plugin's folder.
-            wp_enqueue_script('directorist-custom-script', DIRECTORIST_CUSTOM_CODE_URI . 'assets/js/main.js', array('jquery'), '2.0', true);
+            wp_enqueue_script('directorist-custom-script', DIRECTORIST_CUSTOM_CODE_URI . 'assets/js/main.js', array('jquery'), '2.1.0', true);
         }
 
         /**
@@ -114,7 +115,7 @@ if (!class_exists('Directorist_Custom_Code')) {
         public function enqueue_styles()
         {
             // Replace 'your-plugin-name' with the actual name of your plugin's folder.
-            wp_enqueue_style('directorist-custom-style', DIRECTORIST_CUSTOM_CODE_URI . 'assets/css/main.css', array(), '2.0');
+            wp_enqueue_style('directorist-custom-style', DIRECTORIST_CUSTOM_CODE_URI . 'assets/css/main.css', array(), '2.1.0');
         }
 
         /**
@@ -189,45 +190,13 @@ if (!class_exists('Directorist_Custom_Code')) {
         }
 
         /**
-         * Template Exists
+         * Whether this plugin ships an override for the given Directorist template slug.
+         *
+         * @param string $template_file Relative path without .php, e.g. listing-form/fields/map.
          */
         public function template_exists($template_file)
         {
-            $file = DIRECTORIST_CUSTOM_CODE_DIR . '/templates/' . $template_file . '.php';
-
-            if (file_exists($file)) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-        /**
-         * Get Template
-         */
-        public function get_template($template_file, $args = array())
-        {
-            if (is_array($args)) {
-                extract($args);
-            }
-            $data = $args;
-
-            if (isset($args['form'])) $listing_form = $args['form'];
-
-            $file = DIRECTORIST_CUSTOM_CODE_DIR . '/templates/' . $template_file . '.php';
-
-            if ($this->template_exists($template_file)) {
-                include $file;
-            }
-        }
-
-        /**
-         * Directorist Template
-         */
-        public function directorist_template($template, $field_data)
-        {
-            if ($this->template_exists($template)) $template = $this->get_template($template, $field_data);
-            return $template;
+            return Directorist_Custom_Code_Template_Loader::extension_has($template_file);
         }
     }
 
@@ -263,6 +232,3 @@ if (!class_exists('Directorist_Custom_Code')) {
         Directorist_Custom_Code(); // get the plugin running
     }
 }
-
-
-?>

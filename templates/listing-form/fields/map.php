@@ -1,0 +1,98 @@
+<?php
+/**
+ * @author  wpWax
+ * @since   6.6
+ * @version 8.6
+ */
+
+if ( ! defined( 'ABSPATH' ) ) exit;
+
+$p_id               = $listing_form->add_listing_id;
+$address            = get_post_meta( $p_id, '_address', true );
+$select_listing_map = get_directorist_option( 'select_listing_map', 'google' );
+$saved_manual_lat   = get_post_meta( $p_id, '_manual_lat', true );
+$saved_manual_lng   = get_post_meta( $p_id, '_manual_lng', true );
+$geo_defaults       = directorist_listing_form_geo_defaults( $p_id );
+
+$manual_lat = $saved_manual_lat;
+$manual_lng = $saved_manual_lng;
+if ( empty( $manual_lat ) && ! empty( $geo_defaults['latitude'] ) ) {
+	$manual_lat = $geo_defaults['latitude'];
+}
+if ( empty( $manual_lng ) && ! empty( $geo_defaults['longitude'] ) ) {
+	$manual_lng = $geo_defaults['longitude'];
+}
+
+$default_latitude   = get_directorist_option( 'default_latitude', '40.7127753' );
+$default_longitude  = get_directorist_option( 'default_longitude', '-74.0059728' );
+$latitude           = ! empty( $manual_lat ) ? $manual_lat : $default_latitude;
+$longitude          = ! empty( $manual_lng ) ? $manual_lng : $default_longitude;
+$hide_map           = ! empty( get_post_meta( $p_id, '_hide_map', true ) ) ? true : false;
+
+$map_data = $listing_form->get_map_data();
+$map_data['manual_lat'] = ! empty( $saved_manual_lat ) ? $saved_manual_lat : ( ! empty( $geo_defaults['latitude'] ) ? $geo_defaults['latitude'] : '' );
+$map_data['manual_lng'] = ! empty( $saved_manual_lng ) ? $saved_manual_lng : ( ! empty( $geo_defaults['longitude'] ) ? $geo_defaults['longitude'] : '' );
+if ( empty( $map_data['manual_lat'] ) ) {
+	$map_data['default_latitude'] = $latitude;
+}
+if ( empty( $map_data['manual_lng'] ) ) {
+	$map_data['default_longitude'] = $longitude;
+}
+
+Directorist\Helper::add_hidden_data_to_dom( 'map_data', $map_data );
+
+// Get conditional logic attributes using centralized method
+$conditional_logic_attr = $listing_form->get_conditional_logic_attributes( $data );
+?>
+
+<div class="directorist-form-group directorist-form-map-field"<?php echo $conditional_logic_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Already escaped in get_conditional_logic_attributes() ?>>
+
+    <div class="directorist-form-map-field__wrapper">
+
+        <div class="directorist-form-map-field__maps"><div id="osm"><div id="gmap">
+            <div id="gmap_full_screen_button">
+                <span class="fullscreen-enable"><?php directorist_icon( 'fas fa-expand' ); ?></span>
+                <span class="fullscreen-disable"><?php directorist_icon( 'fas fa-compress' ); ?></span>
+            </div>
+        </div></div></div>
+
+        <?php if ( 'google' == $select_listing_map ) : ?>
+
+            <small class="map_drag_info"><?php directorist_icon( 'las la-info-circle' ); ?> <?php esc_html_e( 'You can drag pinpoint to place the correct address manually.', 'directorist' ); ?></small>
+
+        <?php endif; ?>
+
+        <div class="directorist-map-coordinate directorist-checkbox">
+
+            <input type="checkbox" name="manual_coordinate" value="1" id="manual_coordinate">
+
+            <label for="manual_coordinate" class="directorist-checkbox__label"><?php echo esc_attr( $data['lat_long'] );?></label>
+
+        </div>
+
+    </div>
+
+
+    <div class="directorist-map-coordinates">
+        <div class="directorist-form-group">
+            <label for="manual_lat"> <?php esc_html_e( 'Latitude', 'directorist' ); ?></label>
+            <input type="text" name="manual_lat" id="manual_lat" value="<?php echo esc_attr( $latitude ); ?>" class="directorist-form-element directory_field" placeholder="<?php esc_attr_e( 'Enter Latitude eg. 24.89904', 'directorist' ); ?>"/>
+        </div>
+
+        <div class="directorist-form-group">
+            <label for="manual_lng"> <?php esc_html_e( 'Longitude', 'directorist' ); ?> </label>
+            <input type="text" name="manual_lng" id="manual_lng" value="<?php echo esc_attr( $longitude ); ?>" class="directorist-form-element directory_field" placeholder="<?php esc_attr_e( 'Enter Longitude eg. 91.87198', 'directorist' ); ?>"/>
+        </div>
+
+        <div class="directorist-form-group directorist-map-coordinates__generate">
+            <button class="directorist-btn directorist-btn-sm" id="generate_admin_map" type="button"><?php esc_html_e( 'Generate on Map', 'directorist' ); ?></button>
+        </div>
+
+    </div>
+
+    <div class="directorist-checkbox directorist-hide-map-option">
+        <input type="checkbox" name="hide_map" value="1" id="hide_map"<?php checked( $hide_map ); ?>>
+        <label for="hide_map" class="directorist-checkbox__label"><?php esc_html_e( ' Hide Map', 'directorist' ); ?> </label>
+    </div>
+
+</div>
