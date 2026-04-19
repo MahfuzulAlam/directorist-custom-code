@@ -1,196 +1,182 @@
 <?php
-
-/** 
- * @package  Directorist - Custom Code
- */
-
 /**
  * Plugin Name:       Directorist - Custom Code
- * Plugin URI:        https://wpwax.com
- * Description:       Best way to implement custom code for directorist plugin
- * Version:           2.0.0
+ * Plugin URI:        https://wpxplore.com
+ * Description:       Best way to implement custom code for Directorist plugin.
+ * Version:           3.0.0
  * Requires at least: 5.2
- * Author:            wpWax
- * Author URI:        https://wpwax.com
+ * Author:            wpXplore
+ * Author URI:        https://wpxplore.com
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       directorist-custom-code
  * Domain Path:       /languages
+ *
+ * @package Directorist_Custom_Code
  */
 
-/* This is an extension for Directorist plugin. It helps using custom code and template overriding of Directorist plugin.*/
-
-/**
- * If this file is called directly, abrot!!!
- */
-if (!defined('ABSPATH')) {
-    exit;                      // Exit if accessed
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
-if (!class_exists('Directorist_Custom_Code')) {
+if ( ! class_exists( 'Directorist_Custom_Code' ) ) {
+	/**
+	 * Main plugin bootstrap.
+	 */
+	final class Directorist_Custom_Code {
+		/**
+		 * Singleton instance.
+		 *
+		 * @var Directorist_Custom_Code|null
+		 */
+		private static $instance = null;
 
-    final class Directorist_Custom_Code
-    {
-        /**
-         * Instance
-         */
-        private static $instance;
+		/**
+		 * Get the singleton instance.
+		 *
+		 * @return Directorist_Custom_Code
+		 */
+		public static function instance() {
+			if ( ! isset( self::$instance ) || ! ( self::$instance instanceof self ) ) {
+				self::$instance = new self();
+				self::$instance->init();
+			}
 
-        /**
-         * Instance
-         */
-        public static function instance()
-        {
-            if (!isset(self::$instance) && !(self::$instance instanceof Directorist_Custom_Code)) {
-                self::$instance = new Directorist_Custom_Code;
-                self::$instance->init();
-            }
-            return self::$instance;
-        }
+			return self::$instance;
+		}
 
-        /**
-         * Init
-         */
-        public function init()
-        {
-            $this->define_constant();
-            $this->includes();
-            $this->enqueues();
-            $this->hooks();
-        }
+		/**
+		 * Initialize plugin hooks and dependencies.
+		 *
+		 * @return void
+		 */
+		private function init() {
+			$this->define_constants();
+			$this->includes();
+			$this->enqueue_assets();
+			$this->register_template_loader();
+		}
 
-        /**
-         * Define
-         */
-        public function define_constant()
-        {
-            if ( !defined( 'DIRECTORIST_CUSTOM_CODE_URI' ) ) {
-                define( 'DIRECTORIST_CUSTOM_CODE_URI', plugin_dir_url( __FILE__ ) );
-            }
+		/**
+		 * Define plugin constants.
+		 *
+		 * @return void
+		 */
+		private function define_constants() {
+			if ( ! defined( 'DIRECTORIST_CUSTOM_CODE_URI' ) ) {
+				define( 'DIRECTORIST_CUSTOM_CODE_URI', plugin_dir_url( __FILE__ ) );
+			}
 
-            if ( !defined( 'DIRECTORIST_CUSTOM_CODE_DIR' ) ) {
-                define( 'DIRECTORIST_CUSTOM_CODE_DIR', plugin_dir_path( __FILE__ ) );
-            }
-        }
+			if ( ! defined( 'DIRECTORIST_CUSTOM_CODE_DIR' ) ) {
+				define( 'DIRECTORIST_CUSTOM_CODE_DIR', plugin_dir_path( __FILE__ ) );
+			}
 
-        /**
-         * Included Files
-         */
-        public function includes()
-        {
-            include_once(DIRECTORIST_CUSTOM_CODE_DIR . '/inc/functions.php');
-        }
+			if ( ! defined( 'DIRECTORIST_CUSTOM_CODE_VERSION' ) ) {
+				define( 'DIRECTORIST_CUSTOM_CODE_VERSION', '3.0.0' );
+			}
+		}
 
-        /**
-         * Enqueues
-         */
-        public function enqueues()
-        {
-            add_action('wp_enqueue_scripts', array($this, 'enqueue_styles'));
-            add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
-        }
+		/**
+		 * Load required files.
+		 *
+		 * @return void
+		 */
+		private function includes() {
+			require_once DIRECTORIST_CUSTOM_CODE_DIR . 'inc/class-template-loader.php';
+			require_once DIRECTORIST_CUSTOM_CODE_DIR . 'inc/functions.php';
+		}
 
-        /**
-         * Hooks
-         */
-        public function hooks()
-        {
-            add_filter('directorist_template', array($this, 'directorist_template'), 10, 2);
-        }
+		/**
+		 * Register asset hooks.
+		 *
+		 * @return void
+		 */
+		private function enqueue_assets() {
+			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_styles' ) );
+			add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+		}
 
-        /**
-         *  Enqueue JS file
-         */
-        public function enqueue_scripts()
-        {
-            // Replace 'your-plugin-name' with the actual name of your plugin's folder.
-            wp_enqueue_script('directorist-custom-script', DIRECTORIST_CUSTOM_CODE_URI . 'assets/js/main.js', array('jquery'), '2.0', true);
-        }
+		/**
+		 * Register template override loading.
+		 *
+		 * @return void
+		 */
+		private function register_template_loader() {
+			Directorist_Custom_Code_Template_Loader::register();
+		}
 
-        /**
-         *  Enqueue CSS file
-         */
-        public function enqueue_styles()
-        {
-            // Replace 'your-plugin-name' with the actual name of your plugin's folder.
-            wp_enqueue_style('directorist-custom-style', DIRECTORIST_CUSTOM_CODE_URI . 'assets/css/main.css', array(), '2.0');
-        }
+		/**
+		 * Enqueue frontend scripts.
+		 *
+		 * @return void
+		 */
+		public function enqueue_scripts() {
+			wp_enqueue_script(
+				'directorist-custom-script',
+				DIRECTORIST_CUSTOM_CODE_URI . 'assets/js/main.js',
+				array( 'jquery' ),
+				DIRECTORIST_CUSTOM_CODE_VERSION,
+				true
+			);
+		}
 
-        /**
-         * Template Exists
-         */
-        public function template_exists($template_file)
-        {
-            $file = DIRECTORIST_CUSTOM_CODE_DIR . '/templates/' . $template_file . '.php';
-
-            if (file_exists($file)) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-        /**
-         * Get Template
-         */
-        public function get_template($template_file, $args = array())
-        {
-            if (is_array($args)) {
-                extract($args);
-            }
-            $data = $args;
-
-            if (isset($args['form'])) $listing_form = $args['form'];
-
-            $file = DIRECTORIST_CUSTOM_CODE_DIR . '/templates/' . $template_file . '.php';
-
-            if ($this->template_exists($template_file)) {
-                include $file;
-            }
-        }
-
-        /**
-         * Directorist Template
-         */
-        public function directorist_template($template, $field_data)
-        {
-            if ($this->template_exists($template)) $template = $this->get_template($template, $field_data);
-            return $template;
-        }
-    }
-
-    if (!function_exists('directorist_is_plugin_active')) {
-        function directorist_is_plugin_active($plugin)
-        {
-            return in_array($plugin, (array) get_option('active_plugins', array()), true) || directorist_is_plugin_active_for_network($plugin);
-        }
-    }
-
-    if (!function_exists('directorist_is_plugin_active_for_network')) {
-        function directorist_is_plugin_active_for_network($plugin)
-        {
-            if (!is_multisite()) {
-                return false;
-            }
-
-            $plugins = get_site_option('active_sitewide_plugins');
-            if (isset($plugins[$plugin])) {
-                return true;
-            }
-
-            return false;
-        }
-    }
-
-    function Directorist_Custom_Code()
-    {
-        return Directorist_Custom_Code::instance();
-    }
-
-    if (directorist_is_plugin_active('directorist/directorist-base.php')) {
-        Directorist_Custom_Code(); // get the plugin running
-    }
+		/**
+		 * Enqueue frontend styles.
+		 *
+		 * @return void
+		 */
+		public function enqueue_styles() {
+			wp_enqueue_style(
+				'directorist-custom-style',
+				DIRECTORIST_CUSTOM_CODE_URI . 'assets/css/main.css',
+				array(),
+				DIRECTORIST_CUSTOM_CODE_VERSION
+			);
+		}
+	}
 }
 
+if ( ! function_exists( 'directorist_custom_code_is_plugin_active' ) ) {
+	/**
+	 * Check whether a plugin is active on the current site or network.
+	 *
+	 * @param string $plugin Plugin path relative to the plugins directory.
+	 * @return bool
+	 */
+	function directorist_custom_code_is_plugin_active( $plugin ) {
+		return in_array( $plugin, (array) get_option( 'active_plugins', array() ), true ) || directorist_custom_code_is_plugin_active_for_network( $plugin );
+	}
+}
 
-?>
+if ( ! function_exists( 'directorist_custom_code_is_plugin_active_for_network' ) ) {
+	/**
+	 * Check whether a plugin is network-activated.
+	 *
+	 * @param string $plugin Plugin path relative to the plugins directory.
+	 * @return bool
+	 */
+	function directorist_custom_code_is_plugin_active_for_network( $plugin ) {
+		if ( ! is_multisite() ) {
+			return false;
+		}
+
+		$plugins = (array) get_site_option( 'active_sitewide_plugins', array() );
+
+		return isset( $plugins[ $plugin ] );
+	}
+}
+
+if ( ! function_exists( 'directorist_custom_code' ) ) {
+	/**
+	 * Start the plugin.
+	 *
+	 * @return Directorist_Custom_Code
+	 */
+	function directorist_custom_code() {
+		return Directorist_Custom_Code::instance();
+	}
+}
+
+if ( directorist_custom_code_is_plugin_active( 'directorist/directorist-base.php' ) ) {
+	directorist_custom_code();
+}
