@@ -63,3 +63,48 @@ if ( ! function_exists( 'directorist_listing_form_geo_defaults' ) ) {
 		);
 	}
 }
+
+if ( ! function_exists( 'directorist_listing_form_profile_contact_defaults' ) ) {
+	/**
+	 * Prefill listing email / phone / website from the same sources as the Directorist profile tab
+	 * (wp_users + atbdp_phone meta). Front-end: current user. Admin: listing author when editing.
+	 *
+	 * @param int $post_id Listing post ID (add_listing_id).
+	 * @return array{email:string,phone:string,website:string}
+	 */
+	function directorist_listing_form_profile_contact_defaults( $post_id ) {
+		$empty = array(
+			'email'   => '',
+			'phone'   => '',
+			'website' => '',
+		);
+
+		$post_id = absint( $post_id );
+		if ( is_admin() ) {
+			if ( ! $post_id ) {
+				return $empty;
+			}
+			$author_id = (int) get_post_field( 'post_author', $post_id );
+		} else {
+			if ( ! is_user_logged_in() ) {
+				return $empty;
+			}
+			$author_id = get_current_user_id();
+		}
+
+		if ( ! $author_id ) {
+			return $empty;
+		}
+
+		$userdata = get_userdata( $author_id );
+		if ( ! $userdata ) {
+			return $empty;
+		}
+
+		return array(
+			'email'   => (string) $userdata->user_email,
+			'phone'   => (string) get_user_meta( $author_id, 'atbdp_phone', true ),
+			'website' => (string) $userdata->user_url,
+		);
+	}
+}
