@@ -16,8 +16,16 @@ add_action(
 	static function ( $user_id, $data ) {
 		$latitude  = isset( $data['latitude'] ) ? sanitize_text_field( trim( wp_unslash( $data['latitude'] ) ) ) : '';
 		$longitude = isset( $data['longitude'] ) ? sanitize_text_field( trim( wp_unslash( $data['longitude'] ) ) ) : '';
+		$default_categories = array();
+
+		if ( isset( $data['default_categories'] ) ) {
+			$default_categories = (array) wp_unslash( $data['default_categories'] );
+			$default_categories = array_filter( array_map( 'absint', $default_categories ) );
+		}
+
 		update_user_meta( $user_id, 'latitude', $latitude );
 		update_user_meta( $user_id, 'longitude', $longitude );
+		update_user_meta( $user_id, 'default_categories', $default_categories );
 	},
 	10,
 	2

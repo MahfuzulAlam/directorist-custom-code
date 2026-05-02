@@ -40,3 +40,8 @@
 .dcc-profile-address-suggestions__list li:last-child .dcc-profile-address-suggestions__item {
   border-bottom: 0;
 }
+
+.select2-container--default .select2-search--inline .select2-search__field {
+  height: 30px !important;
+  margin-bottom: 10px !important;
+}
