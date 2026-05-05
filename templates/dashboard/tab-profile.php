@@ -9,24 +9,6 @@ use \Directorist\Helper;
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-$default_categories_taxonomy = defined( 'ATBDP_CATEGORY' ) ? ATBDP_CATEGORY : 'ATBDP_CATGORY';
-if ( ! taxonomy_exists( $default_categories_taxonomy ) ) {
-	$default_categories_taxonomy = 'at_biz_dir-category';
-}
-
-$default_categories_selected = get_user_meta( $dashboard->id, 'default_categories', true );
-if ( ! is_array( $default_categories_selected ) ) {
-	$default_categories_selected = ! empty( $default_categories_selected ) ? explode( ',', (string) $default_categories_selected ) : array();
-}
-$default_categories_selected = array_filter( array_map( 'absint', $default_categories_selected ) );
-
-$default_categories_terms = get_terms(
-	array(
-		'taxonomy'   => $default_categories_taxonomy,
-		'hide_empty' => false,
-	)
-);
-
 $default_locations_taxonomy = defined( 'ATBDP_LOCATION' ) ? ATBDP_LOCATION : 'at_biz_dir-location';
 if ( ! taxonomy_exists( $default_locations_taxonomy ) ) {
 	$default_locations_taxonomy = 'at_biz_dir-location';
@@ -149,26 +131,6 @@ $default_locations_terms = get_terms(
                                     <label for="address"><?php esc_html_e( 'Address', 'directorist' ); ?></label>
 
                                     <input class="directorist-form-element" id="address" type="text" name="user[address]" value="<?php echo esc_attr( $dashboard->user_info( 'address' ) ); ?>">
-
-                                </div>
-
-                                <div class="directorist-form-group">
-
-                                    <label for="default_categories"><?php esc_html_e( 'Default categories', 'directorist-custom-code' ); ?></label>
-
-                                    <select class="directorist-form-element select-basic" id="default_categories" name="user[default_categories][]" multiple data-placeholder="<?php esc_attr_e( 'Select default categories', 'directorist-custom-code' ); ?>">
-										<?php
-										if ( ! is_wp_error( $default_categories_terms ) && ! empty( $default_categories_terms ) ) :
-											foreach ( $default_categories_terms as $term ) :
-												?>
-												<option value="<?php echo esc_attr( $term->term_id ); ?>" <?php selected( in_array( (int) $term->term_id, $default_categories_selected, true ) ); ?>>
-													<?php echo esc_html( $term->name ); ?>
-												</option>
-												<?php
-											endforeach;
-										endif;
-										?>
-                                    </select>
 
                                 </div>
 
