@@ -17,15 +17,22 @@ add_action(
 		$latitude  = isset( $data['latitude'] ) ? sanitize_text_field( trim( wp_unslash( $data['latitude'] ) ) ) : '';
 		$longitude = isset( $data['longitude'] ) ? sanitize_text_field( trim( wp_unslash( $data['longitude'] ) ) ) : '';
 		$default_categories = array();
+		$default_locations  = array();
 
 		if ( isset( $data['default_categories'] ) ) {
 			$default_categories = (array) wp_unslash( $data['default_categories'] );
 			$default_categories = array_filter( array_map( 'absint', $default_categories ) );
 		}
 
+		if ( isset( $data['default_locations'] ) ) {
+			$default_locations = (array) wp_unslash( $data['default_locations'] );
+			$default_locations = array_filter( array_map( 'absint', $default_locations ) );
+		}
+
 		update_user_meta( $user_id, 'latitude', $latitude );
 		update_user_meta( $user_id, 'longitude', $longitude );
 		update_user_meta( $user_id, 'default_categories', $default_categories );
+		update_user_meta( $user_id, 'default_locations', $default_locations );
 	},
 	10,
 	2

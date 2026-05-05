@@ -26,6 +26,24 @@ $default_categories_terms = get_terms(
 		'hide_empty' => false,
 	)
 );
+
+$default_locations_taxonomy = defined( 'ATBDP_LOCATION' ) ? ATBDP_LOCATION : 'at_biz_dir-location';
+if ( ! taxonomy_exists( $default_locations_taxonomy ) ) {
+	$default_locations_taxonomy = 'at_biz_dir-location';
+}
+
+$default_locations_selected = get_user_meta( $dashboard->id, 'default_locations', true );
+if ( ! is_array( $default_locations_selected ) ) {
+	$default_locations_selected = ! empty( $default_locations_selected ) ? explode( ',', (string) $default_locations_selected ) : array();
+}
+$default_locations_selected = array_filter( array_map( 'absint', $default_locations_selected ) );
+
+$default_locations_terms = get_terms(
+	array(
+		'taxonomy'   => $default_locations_taxonomy,
+		'hide_empty' => false,
+	)
+);
 ?>
 
 <form action="#" id="user_profile_form" method="post">
@@ -144,6 +162,26 @@ $default_categories_terms = get_terms(
 											foreach ( $default_categories_terms as $term ) :
 												?>
 												<option value="<?php echo esc_attr( $term->term_id ); ?>" <?php selected( in_array( (int) $term->term_id, $default_categories_selected, true ) ); ?>>
+													<?php echo esc_html( $term->name ); ?>
+												</option>
+												<?php
+											endforeach;
+										endif;
+										?>
+                                    </select>
+
+                                </div>
+
+                                <div class="directorist-form-group">
+
+                                    <label for="default_locations"><?php esc_html_e( 'Default Location', 'directorist-custom-code' ); ?></label>
+
+                                    <select class="directorist-form-element select-basic" id="default_locations" name="user[default_locations][]" multiple data-placeholder="<?php esc_attr_e( 'Select default locations', 'directorist-custom-code' ); ?>">
+										<?php
+										if ( ! is_wp_error( $default_locations_terms ) && ! empty( $default_locations_terms ) ) :
+											foreach ( $default_locations_terms as $term ) :
+												?>
+												<option value="<?php echo esc_attr( $term->term_id ); ?>" <?php selected( in_array( (int) $term->term_id, $default_locations_selected, true ) ); ?>>
 													<?php echo esc_html( $term->name ); ?>
 												</option>
 												<?php
