@@ -40,6 +40,21 @@
     };
   }
 
+  function initDefaultLocationsSelect2() {
+    var $defaultLocations = $('#default_locations');
+    if (!$defaultLocations.length || typeof $.fn.select2 !== 'function') {
+      return;
+    }
+    if ($defaultLocations.hasClass('select2-hidden-accessible')) {
+      return;
+    }
+    $defaultLocations.select2({
+      width: '100%',
+      placeholder: $defaultLocations.attr('data-placeholder') || '',
+      allowClear: true,
+    });
+  }
+
   function initOpenStreet(fields) {
     var $box = $('#dcc-profile-address-suggestions');
     if (!$box.length) {
@@ -157,6 +172,8 @@
     if (!cfg) {
       return;
     }
+
+    initDefaultLocationsSelect2();
 
     var fields = getFields();
     if (!fields) {
