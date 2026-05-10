@@ -1,5 +1,20 @@
 # Directorist Custom Code
 
+## Download and install (from GitHub)
+
+1. Open this repository on GitHub.
+2. Click the green **Code** button.
+3. Choose **Download ZIP** and save the file to your computer.
+4. In your WordPress admin, go to **Plugins → Add New → Upload Plugin**.
+5. Click **Choose File**, select the ZIP you downloaded, then **Install Now**.
+6. Click **Activate Plugin** once installation finishes.
+
+**Requirements:** [Directorist](https://wordpress.org/plugins/directorist/) should be installed and active (or compatible with your setup) before or after you activate this extension.
+
+**ZIP folder name:** GitHub ZIPs usually contain a folder like `directorist-custom-code-main`. WordPress installs whatever folder is inside the archive. If the plugin does not activate or load correctly, extract the ZIP on your computer, rename the inner folder to `directorist-custom-code`, zip that folder again, and upload the new ZIP—or upload via FTP/SFTP into `wp-content/plugins/directorist-custom-code/`.
+
+---
+
 `Directorist Custom Code` is a developer-focused extension for keeping Directorist customizations outside the main Directorist plugin.
 
 Use it when you want to:

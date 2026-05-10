@@ -10,8 +10,9 @@ use \Directorist\Helper;
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 $id = get_the_ID();
-
+$global_price_suffix = isset( $data[ 'original_field' ][ 'suffix' ] ) && ! empty( $data[ 'original_field' ][ 'suffix' ] ) ? $data[ 'original_field' ][ 'suffix' ] : '';
 $price_suffix = get_post_meta( $id, '_price_suffix', true );
+$price_suffix = $price_suffix ? $price_suffix : $global_price_suffix;
 if ( ! Helper::has_price_range( $id ) && ! Helper::has_price( $id ) ) {
     return;
 }

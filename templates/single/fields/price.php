@@ -10,7 +10,10 @@ use \Directorist\Helper;
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 $id = $listing->id;
+$field_data = directorist_custom_get_pricing_field_data( $id );
+$global_price_suffix = isset( $field_data[ 'suffix' ] ) && ! empty( $field_data[ 'suffix' ] )? $field_data[ 'suffix' ] : '';
 $price_suffix = get_post_meta( $id, '_price_suffix', true );
+$price_suffix = $price_suffix ? $price_suffix : $global_price_suffix;
 if ( ! Helper::has_price_range( $id ) && ! Helper::has_price( $id ) ) {
     return;
 }

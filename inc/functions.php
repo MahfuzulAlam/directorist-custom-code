@@ -69,3 +69,46 @@ add_action( 'save_post', function( $post_id ) {
 		update_post_meta( $post_id, '_price_suffix', $price_suffix );
 	}
 } );
+
+
+/**
+ * Load the pricing widget config from directory term meta `submission_form_fields`.
+ *
+ * Stored as serialized term meta; WordPress returns an array via get_term_meta().
+ *
+ * @param int $listing_id Listing post ID. Use 0 to use the default directory (if available).
+ *
+ * @return array The `fields['pricing']` array (labels, pricing_type, modules, etc.) or empty array.
+ */
+if ( ! function_exists( 'directorist_custom_get_pricing_field_data' ) ) {
+	function directorist_custom_get_pricing_field_data( $listing_id = 0 ) {
+		$listing_id   = absint( $listing_id );
+		$directory_id = 0;
+
+		if ( 0 === $listing_id ) {
+			if ( function_exists( 'directorist_get_default_directory' ) ) {
+				$directory_id = (int) directorist_get_default_directory( 'id' );
+			}
+		} elseif ( function_exists( 'directorist_get_listings_directory_type' ) ) {
+			$directory_id = (int) directorist_get_listings_directory_type( $listing_id );
+		}
+
+		if ( 0 === $directory_id ) {
+			return array();
+		}
+
+		$submission_form = get_term_meta( $directory_id, 'submission_form_fields', true );
+
+		if ( ! is_array( $submission_form ) ) {
+			return array();
+		}
+
+		$fields = isset( $submission_form['fields'] ) ? $submission_form['fields'] : array();
+
+		if ( ! is_array( $fields ) || empty( $fields['pricing'] ) || ! is_array( $fields['pricing'] ) ) {
+			return array();
+		}
+
+		return $fields['pricing'];
+	}
+}
