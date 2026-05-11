@@ -12,71 +12,57 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 
-add_filter( 'atbdp_single_listing_content_widgets', function ( $widgets ) {
-	$widgets['category'] = [
+add_filter( 'atbdp_single_listing_other_fields_widget', function ( $widgets ) {
+	$widgets['custom_category'] = [
+		'type'          => 'widget',
+		'label'         => __( 'Category', 'directorist' ),
+		'icon'          => 'la la-tags', // Uses an appropriate "tags" icon for category
 		'options' => [
+			'label'   => [
+				'type'  => 'text',
+				'label' => __( 'Label', 'directorist' ),
+				'value' => 'Category',
+			],
 			'icon' => [
 				'type' => 'icon',
-				'label' => 'Icon',
-				'value' => 'la la-money',
+				'label' => __( 'Icon', 'directorist' ),
+				'value' => 'la la-tags', // "tags" icon
 			],
 		],
 	];
-	$widgets['location'] = [
+	$widgets['custom_location'] = [
+		'type'          => 'widget',
+		'label'         => __( 'Location', 'directorist' ),
+		'icon'          => 'la la-map-marker', // Uses an appropriate "map marker" icon for location
 		'options' => [
+			'label'   => [
+				'type'  => 'text',
+				'label' => __( 'Label', 'directorist' ),
+				'value' => 'Location',
+			],
 			'icon' => [
 				'type' => 'icon',
-				'label' => 'Icon',
-				'value' => 'la la-money',
+				'label' => __( 'Icon', 'directorist' ),
+				'value' => 'la la-map-marker', // "map marker" icon
 			],
 		],
 	];
-	$widgets['pricing'] = [
+	$widgets['custom_pricing'] = [
+		'type'          => 'widget',
+		'label'         => __( 'Pricing', 'directorist' ),
+		'icon'          => 'la la-money-bill', // Keep this icon as it is appropriate
 		'options' => [
+			'label'   => [
+				'type'  => 'text',
+				'label' => __( 'Label', 'directorist' ),
+				'value' => 'Pricing',
+			],
 			'icon' => [
 				'type' => 'icon',
-				'label' => 'Icon',
-				'value' => 'la la-money',
+				'label' => __( 'Icon', 'directorist' ),
+				'value' => 'la la-money-bill',
 			],
 		],
 	];
 	return $widgets;
 } );
-
-
-
-add_filter( 'directorist_single_item_template', function ( $template, $field_data ) {
-	e_var_dump( $field_data );
-	// if ( ! function_exists( 'extension_path' ) ) {
-	// 	// Attempt to include class-template-loader.php if not loaded.
-	// 	$template_loader = WP_PLUGIN_DIR . '/directorist-custom-code/inc/class-template-loader.php';
-	// 	if ( file_exists( $template_loader ) ) {
-	// 		require_once $template_loader;
-	// 	}
-	// }
-
-	// if ( function_exists( 'extension_path' ) ) {
-	// 	if ( $field_data['name'] === 'category' ) {
-	// 		return extension_path( 'templates/single/fields/custom/category.php' );
-	// 	}
-	// 	if ( $field_data['name'] === 'location' ) {
-	// 		return extension_path( 'templates/single/fields/custom/location.php' );
-	// 	}
-	// 	if ( $field_data['name'] === 'pricing' ) {
-	// 		return extension_path( 'templates/single/fields/custom/pricing.php' );
-	// 	}
-	// } else {
-	// 	// Fallback to original relative paths if extension_path is unavailable.
-	// 	if ( $field_data['name'] === 'category' ) {
-	// 		return 'templates/single/fields/custom/category.php';
-	// 	}
-	// 	if ( $field_data['name'] === 'location' ) {
-	// 		return 'templates/single/fields/custom/location.php';
-	// 	}
-	// 	if ( $field_data['name'] === 'pricing' ) {
-	// 		return 'templates/single/fields/custom/pricing.php';
-	// 	}
-	// }
-
-	return $template;
-}, 10, 2 );
