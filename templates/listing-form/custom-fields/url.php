@@ -16,7 +16,7 @@ $field_url_label = get_post_meta( $p_id, '_' . $data['field_key'] . '_label' , t
 
     <?php $listing_form->field_label_template( $data );?>
 
-    <input type="text" name="<?php echo esc_attr( $data['field_key'] ); ?>_label" id="<?php echo esc_attr( $data['field_key'] ); ?>_label" class="directorist-form-element" value="<?php echo esc_attr( $field_url_label ); ?>" placeholder="<?php echo esc_attr( $data['label_placeholder'] ); ?>">
+    <input type="text" name="<?php echo esc_attr( $data['field_key'] ); ?>_label" id="<?php echo esc_attr( $data['field_key'] ); ?>_label" class="directorist-form-element" value="<?php echo esc_attr( $field_url_label ); ?>" placeholder="<?php echo esc_attr( $data['label_placeholder'] ); ?>" style="margin-bottom:10px">
 
     <input type="url" name="<?php echo esc_attr( $data['field_key'] ); ?>" id="<?php echo esc_attr( $data['field_key'] ); ?>" class="directorist-form-element" value="<?php echo esc_attr( $data['value'] ); ?>" placeholder="<?php echo esc_attr( $data['placeholder'] ); ?>" <?php $listing_form->required( $data ); ?>>
 
