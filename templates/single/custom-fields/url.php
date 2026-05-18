@@ -6,7 +6,9 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
-$link_text = isset( $data['form_data']['link_text'] ) && !empty( $data['form_data']['link_text'] ) ?  $data['form_data']['link_text'] : ''; 
+$link_text_placeholder = isset( $data['form_data']['link_text'] ) && !empty( $data['form_data']['link_text'] ) ?  $data['form_data']['link_text'] : '';
+$link_text_label = get_post_meta( $data[ 'listing_id' ], '_' . $data['form_data']['field_key'] . '_label', true );
+$link_text = $link_text_label && ! empty( $link_text_label ) ? $link_text_label: $link_text_placeholder;
 ?>
 
 <div class="directorist-single-info directorist-single-info-url">
