@@ -19,13 +19,7 @@ if ( ! is_array( $default_locations_selected ) ) {
 	$default_locations_selected = ! empty( $default_locations_selected ) ? explode( ',', (string) $default_locations_selected ) : array();
 }
 $default_locations_selected = array_filter( array_map( 'absint', $default_locations_selected ) );
-
-$default_locations_terms = get_terms(
-	array(
-		'taxonomy'   => $default_locations_taxonomy,
-		'hide_empty' => false,
-	)
-);
+$default_locations_selected = array_slice( $default_locations_selected, 0, 1 );
 ?>
 
 <form action="#" id="user_profile_form" method="post">
@@ -138,17 +132,10 @@ $default_locations_terms = get_terms(
 
                                     <label for="default_locations"><?php esc_html_e( 'Default Location', 'directorist-custom-code' ); ?></label>
 
-                                    <select class="directorist-form-element select-basic" id="default_locations" name="user[default_locations][]" multiple data-placeholder="<?php esc_attr_e( 'Select default locations', 'directorist-custom-code' ); ?>">
+                                    <select class="directorist-form-element select-basic" id="default_locations" name="user[default_locations]" data-placeholder="<?php esc_attr_e( 'Select default location', 'directorist-custom-code' ); ?>" required>
 										<?php
-										if ( ! is_wp_error( $default_locations_terms ) && ! empty( $default_locations_terms ) ) :
-											foreach ( $default_locations_terms as $term ) :
-												?>
-												<option value="<?php echo esc_attr( $term->term_id ); ?>" <?php selected( in_array( (int) $term->term_id, $default_locations_selected, true ) ); ?>>
-													<?php echo esc_html( $term->name ); ?>
-												</option>
-												<?php
-											endforeach;
-										endif;
+										echo '<option value=""></option>';
+										echo directorist_custom_code_location_options_html( $default_locations_taxonomy, $default_locations_selected ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in helper.
 										?>
                                     </select>
 

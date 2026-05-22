@@ -61,7 +61,7 @@ $current_ids = array_map(
 
 $current_labels = array_map(
     function( $term ) {
-        return $term->name;
+        return directorist_custom_code_get_location_path( $term );
     }, $current_terms 
 );
 
@@ -80,24 +80,10 @@ $conditional_logic_attr = $listing_form->get_conditional_logic_attributes( $data
 
         <?php
         if ( $data['type'] !== 'multiple' ) {
-            echo '<option value="">' . esc_attr( $placeholder ) . '</option>';
+            echo '<option value="">' . esc_html( $placeholder ) . '</option>';
         }
         if ( ! $lazy_load ) {
-            $query_args = array(
-                'parent'             => 0,
-                'term_id'            => 0,
-                'hide_empty'         => 0,
-                'orderby'            => 'name',
-                'order'              => 'asc',
-                'show_count'         => 0,
-                'single_only'        => 0,
-                'pad_counts'         => true,
-                'immediate_category' => 0,
-                'active_term_id'     => 0,
-                'ancestors'          => array(),
-            );
-            $locations_field = add_listing_category_location_filter( $listing_form->get_current_listing_type(), $query_args, ATBDP_LOCATION, $location_ids_for_options );
-            echo directorist_kses( $locations_field, 'form_input' );
+            echo directorist_custom_code_location_options_html( ATBDP_LOCATION, $location_ids_for_options, $listing_form->get_current_listing_type() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in helper.
         }
         ?>
 
