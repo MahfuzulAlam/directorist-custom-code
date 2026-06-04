@@ -1,1 +1,8 @@
 /* Add you custom css here */
+
+.directorist-single-info-url
+.directorist-single-info__value
+a
+{
+    color: #258383 !important;
+}
