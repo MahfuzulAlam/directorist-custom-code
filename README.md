@@ -1,262 +1,306 @@
-# Directorist Custom Code
+# Directorist Custom Category List Shortcode
 
-`Directorist Custom Code` is a developer-focused extension for keeping Directorist customizations outside the main Directorist plugin.
-
-Use it when you want to:
-
-- write project-specific PHP for Directorist
-- add custom hooks, filters, and integrations
-- override Directorist templates without touching core plugin files
-- keep CSS and JavaScript changes in one dedicated extension
-
-This approach is update-safe compared to editing files inside the Directorist plugin directly.
-
-## What This Extension Loads
-
-When Directorist is active, this extension loads:
-
-- `inc/functions.php`
-  Use this file for custom PHP logic.
-- `templates/`
-  Use this directory for Directorist template overrides.
-- `assets/css/main.css`
-  Use this file for custom frontend styles.
-- `assets/js/main.js`
-  Use this file for custom frontend JavaScript.
-
-## Recommended Folder Structure
+This WordPress plugin adds a custom Directorist shortcode:
 
 ```text
-wp-content/plugins/directorist-custom-code/
-|- assets/
-|  |- css/main.css
-|  `- js/main.js
-|- inc/
-|  |- class-template-loader.php
-|  `- functions.php
-|- templates/
-`- directorist-custom-code.php
+[directorist_category_list]
 ```
 
-## Developer Workflow
+Use it to display Directorist parent categories with their child categories in a clean responsive grid. Each parent category includes a collapse/expand button, and category names link to their Directorist category archive pages.
 
-Use this extension in three layers:
+## Features
 
-1. Put business logic and integrations in `inc/functions.php`.
-2. Put markup changes in `templates/`.
-3. Put presentation and behavior changes in `assets/css/main.css` and `assets/js/main.js`.
+- Displays Directorist parent categories.
+- Displays child categories under each parent.
+- Expand/collapse control for parent categories that have child categories.
+- Responsive column layout.
+- Optional listing counts.
+- Optional empty-category hiding.
+- Limit total parent categories.
+- Limit child categories per parent.
+- Display selected parent categories by ID, slug, or a mixed list.
+- Choose whether child category lists are open or closed by default.
 
-This keeps logic, markup, and styling separated and makes maintenance easier after Directorist updates.
+## Requirements
 
-## 1. Writing Custom Code
+- WordPress installed and running.
+- Directorist plugin installed and activated.
+- This plugin must be activated after Directorist is active.
+- PHP 7.4 or newer is recommended.
+- A WordPress theme that supports shortcodes in pages, posts, widgets, or template content.
 
-The main entry point for PHP customization is:
+## Download From GitHub
+
+1. Open the GitHub repository page for this plugin.
+2. Click `Code`.
+3. Click `Download ZIP`.
+4. Save the ZIP file to your computer.
+
+## Install From WordPress Admin
+
+1. Log in to your WordPress dashboard.
+2. Go to `Plugins > Add New`.
+3. Click `Upload Plugin`.
+4. Choose the downloaded ZIP file.
+5. Click `Install Now`.
+6. Click `Activate Plugin`.
+
+If WordPress says the ZIP does not contain a valid plugin, unzip the downloaded file first and make sure the plugin files are inside the top-level plugin folder. The folder should contain:
 
 ```text
-wp-content/plugins/directorist-custom-code/inc/functions.php
+directorist-custom-code.php
+README.md
+inc/
+assets/
+templates/
 ```
 
-This file is loaded automatically when the extension boots, so it is the right place to add:
+Then zip that plugin folder again and upload it.
 
-- WordPress actions and filters
-- Directorist actions and filters
-- helper functions
-- integrations with other plugins or APIs
-- extra includes for larger customization files
+## Install With FTP or File Manager
 
-### Basic Example
-
-```php
-<?php
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
-add_action( 'init', 'myproject_directorist_custom_setup' );
-
-function myproject_directorist_custom_setup() {
-	// Register your custom behavior here.
-	// Example: add actions, filters, shortcodes, REST callbacks, etc.
-}
-```
-
-### Organizing Larger Customizations
-
-If your customization grows, keep `inc/functions.php` as a loader and split logic into additional files:
-
-```php
-<?php
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
-
-require_once DIRECTORIST_CUSTOM_CODE_DIR . 'inc/custom/listing-hooks.php';
-require_once DIRECTORIST_CUSTOM_CODE_DIR . 'inc/custom/search-hooks.php';
-require_once DIRECTORIST_CUSTOM_CODE_DIR . 'inc/custom/dashboard-hooks.php';
-```
-
-That structure is easier to maintain than putting all custom logic in a single file.
-
-### Good Use Cases for `inc/functions.php`
-
-- change how Directorist data is processed before save
-- add or remove actions around listing forms
-- extend search or archive behavior
-- connect Directorist data with third-party services
-- register helper functions used by custom templates
-- conditionally enqueue additional assets for Directorist pages
-
-### Naming Recommendations
-
-To avoid conflicts, always use your own prefix for:
-
-- functions
-- classes
-- constants
-- option keys
-- custom hooks
-
-Example:
-
-```php
-function myproject_directorist_sync_listing_meta() {
-	// Custom code.
-}
-```
-
-Avoid generic names such as:
-
-- `helper_function()`
-- `custom_code()`
-- `listing_data()`
-
-### Best Practices for Custom PHP
-
-- Do not edit Directorist core plugin files.
-- Keep custom functions prefixed.
-- Validate and sanitize incoming data before saving it.
-- Escape output when rendering HTML.
-- Keep one responsibility per function where possible.
-- Split large customizations into separate include files.
-
-## 2. Overriding Templates
-
-This extension can override Directorist templates from its own `templates/` directory.
-
-The rule is simple:
-
-> Copy the Directorist template into this extension and keep the same relative path.
-
-### Override Path Rule
-
-If the original Directorist template is:
+1. Download the plugin ZIP from GitHub.
+2. Unzip it on your computer.
+3. Upload the plugin folder to:
 
 ```text
-wp-content/plugins/directorist/templates/single/fields/address.php
+wp-content/plugins/
 ```
 
-Your override should be:
+4. The final path should look like:
 
 ```text
-wp-content/plugins/directorist-custom-code/templates/single/fields/address.php
+wp-content/plugins/directorist-custom-code/directorist-custom-code.php
 ```
 
-### How Template Resolution Works
+5. Log in to WordPress admin.
+6. Go to `Plugins`.
+7. Activate `Directorist - Custom Code`.
 
-This extension checks for templates in the following order:
+## Basic Usage
 
-1. `directorist-custom-code/templates/...`
-2. child theme `directorist/...`
-3. parent theme `directorist/...`
-4. default Directorist template
-
-That means if the same template exists in both this extension and your theme, the version inside this extension will be used first.
-
-### Template Override Workflow
-
-1. Find the original template inside the Directorist plugin.
-2. Copy that file into `directorist-custom-code/templates/`.
-3. Keep the same relative directory structure.
-4. Modify only the parts you need.
-5. Test the output after Directorist updates.
-
-### Example
-
-To customize the single listing address field:
-
-1. Locate the original file in Directorist.
-2. Create this file:
+Add this shortcode to any WordPress page, post, shortcode block, or widget area:
 
 ```text
-wp-content/plugins/directorist-custom-code/templates/single/fields/address.php
+[directorist_category_list]
 ```
 
-3. Paste the original template content.
-4. Edit the markup, classes, or display logic as needed.
+Default behavior:
 
-### Template Override Tips
+- Shows parent categories.
+- Shows all child categories.
+- Uses 2 columns on desktop.
+- Shows listing counts.
+- Does not hide empty categories.
+- Opens child category lists by default.
+- Shows no collapse button when a parent category has no child categories.
 
-- Only override templates you actually need to change.
-- Keep your changes minimal so future updates are easier to compare.
-- Review overrides after updating Directorist.
-- Preserve escaping and security checks from the original template.
-- If a template uses variables passed by Directorist, keep those variable names intact unless you fully understand the impact.
+## Shortcode Attributes
 
-## When to Use Custom Code vs Template Overrides
+| Attribute | Default | Description |
+| --- | --- | --- |
+| `columns` | `2` | Number of desktop columns. Supports `1` to `6`. Mobile always displays 1 column. |
+| `number` | `0` | Number of parent categories to display. Use `0` for all. |
+| `category_num` | empty | Alias for `number`. |
+| `category_number` | empty | Alias for `number`. |
+| `number_of_category` | empty | Alias for `number`. |
+| `max_child` | `0` | Maximum child categories to display under each parent. Use `0` for all. |
+| `child_number` | empty | Alias for `max_child`. |
+| `child_num` | empty | Alias for `max_child`. |
+| `max_children` | empty | Alias for `max_child`. |
+| `display_count` | `yes` | Show listing counts. Accepts `yes`, `no`, `true`, `false`, `1`, `0`. |
+| `hide_empty` | `no` | Hide categories with no listings. Accepts `yes`, `no`, `true`, `false`, `1`, `0`. |
+| `default_state` | `open` | Initial child category state. Use `open` or `closed`. Parent categories without children never show a collapse button. |
+| `parent_ids` | empty | Comma-separated parent category IDs to display. |
+| `parent_slugs` | empty | Comma-separated parent category slugs to display. |
+| `parents` | empty | Comma-separated mixed parent IDs and slugs. |
 
-Use `inc/functions.php` when you need to change logic:
+## Examples
 
-- saving behavior
-- filtering data
-- adding hooks
-- changing queries
-- integrating services
+### Display All Parent and Child Categories
 
-Use `templates/` when you need to change markup:
+```text
+[directorist_category_list]
+```
 
-- layout
-- HTML structure
-- template-specific output
-- element order
-- display wrappers and classes
+### Display in 3 Columns
 
-In many real projects you will use both:
+```text
+[directorist_category_list columns="3"]
+```
 
-- add logic in `inc/functions.php`
-- render the final output through a template override
+### Display Only 6 Parent Categories
 
-## Frontend Assets
+```text
+[directorist_category_list number="6"]
+```
 
-This extension also loads:
+Equivalent aliases:
 
-- `assets/css/main.css`
-- `assets/js/main.js`
+```text
+[directorist_category_list category_num="6"]
+[directorist_category_list category_number="6"]
+[directorist_category_list number_of_category="6"]
+```
 
-Use them for small Directorist-specific UI adjustments, such as:
+### Display Maximum 4 Child Categories Per Parent
 
-- custom listing card styles
-- single listing UI tweaks
-- form interactions
-- directory page enhancements
+```text
+[directorist_category_list max_child="4"]
+```
 
-## Safe Customization Checklist
+Equivalent aliases:
 
-Before shipping a customization:
+```text
+[directorist_category_list child_number="4"]
+[directorist_category_list child_num="4"]
+[directorist_category_list max_children="4"]
+```
 
-- keep all PHP in `inc/functions.php` or included files
-- keep all template overrides inside `templates/`
-- prefix your custom function names
-- sanitize inputs and escape outputs
-- avoid modifying the Directorist plugin directly
-- re-test custom templates after Directorist updates
+### Hide Listing Counts
 
-## Summary
+```text
+[directorist_category_list display_count="no"]
+```
 
-Use this extension as your custom layer on top of Directorist:
+### Hide Empty Categories
 
-- `inc/functions.php` for PHP logic
-- `templates/` for template overrides
-- `assets/css/main.css` for styles
-- `assets/js/main.js` for scripts
+```text
+[directorist_category_list hide_empty="yes"]
+```
 
-If you keep all Directorist customization inside this extension, your project stays cleaner, safer, and easier to maintain.
+### Make Child Categories Closed by Default
+
+```text
+[directorist_category_list default_state="closed"]
+```
+
+### Make Child Categories Open by Default
+
+```text
+[directorist_category_list default_state="open"]
+```
+
+### Display Specific Parent Categories by ID
+
+```text
+[directorist_category_list parent_ids="12,18,25"]
+```
+
+### Display Specific Parent Categories by Slug
+
+```text
+[directorist_category_list parent_slugs="transport,services,technique-installation"]
+```
+
+### Display Specific Parents With Mixed IDs and Slugs
+
+```text
+[directorist_category_list parents="12,transport,25,services"]
+```
+
+### Common Full Example
+
+```text
+[directorist_category_list columns="2" number="6" max_child="5" display_count="yes" hide_empty="no" default_state="open"]
+```
+
+### Filtered Full Example
+
+```text
+[directorist_category_list columns="3" parent_slugs="transport,services" max_child="4" display_count="yes" hide_empty="yes" default_state="closed"]
+```
+
+## Notes About Collapse Behavior
+
+The collapse button only appears when a parent category has at least one visible child category.
+
+If a parent category has no child categories, or if all child categories are hidden by `hide_empty="yes"`, the parent category displays as a simple category block without a collapse button.
+
+Use this attribute to control the initial state:
+
+```text
+default_state="open"
+```
+
+or:
+
+```text
+default_state="closed"
+```
+
+## Notes About Counts
+
+When Directorist count helpers are available, the shortcode uses Directorist listing counts. Parent category counts include listings from child categories, matching Directorist behavior.
+
+If `display_count="no"` is used, counts are hidden from the output.
+
+If `hide_empty="yes"` is used:
+
+- empty parent categories are not displayed
+- empty child categories are not displayed
+
+## Styling
+
+The shortcode styles are located in:
+
+```text
+assets/css/main.css
+```
+
+The expand/collapse behavior is located in:
+
+```text
+assets/js/main.js
+```
+
+The shortcode PHP is located in:
+
+```text
+inc/functions.php
+```
+
+## Troubleshooting
+
+### The shortcode does not show anything
+
+Check that:
+
+- Directorist is installed and activated.
+- This plugin is installed and activated.
+- You have Directorist categories created.
+- The category slugs or IDs used in the shortcode are correct.
+
+### Empty categories are missing
+
+Check whether your shortcode uses:
+
+```text
+hide_empty="yes"
+```
+
+Change it to:
+
+```text
+hide_empty="no"
+```
+
+### The layout does not look correct
+
+Clear your site cache and browser cache. If your theme overrides button, link, or grid styles strongly, adjust the shortcode CSS in:
+
+```text
+assets/css/main.css
+```
+
+## Updating
+
+To update the plugin from GitHub:
+
+1. Download the latest ZIP from GitHub.
+2. Deactivate the current plugin in WordPress.
+3. Replace the old plugin folder in `wp-content/plugins/`.
+4. Activate the plugin again.
+5. Clear site cache if needed.
+
+Do not edit the main Directorist plugin files directly. Keep custom code in this plugin so Directorist can be updated safely.
