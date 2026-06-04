@@ -1,17 +1,20 @@
 /* Add you custom css here */
 
 .directorist-custom-category-list {
-	align-items: start;
-	display: grid;
-	grid-template-columns: repeat(var(--directorist-custom-category-list-columns, 2), minmax(0, 1fr));
-	gap: 0;
+	column-count: var(--directorist-custom-category-list-columns, 2);
+	column-gap: 26px;
 	width: 100%;
 }
 
 .directorist-custom-category-list__card {
 	background: #eeeeee;
 	border-radius: 12px;
+	break-inside: avoid;
+	display: inline-block;
+	margin: 0 0 26px;
 	overflow: hidden;
+	page-break-inside: avoid;
+	width: 100%;
 }
 
 .directorist-custom-category-list__header {
@@ -21,7 +24,8 @@
 	padding: 12px 18px 6px;
 }
 
-.directorist-custom-category-list__card--no-children .directorist-custom-category-list__header {
+.directorist-custom-category-list__card--no-children .directorist-custom-category-list__header,
+.directorist-custom-category-list__card.is-closed .directorist-custom-category-list__header {
 	padding-bottom: 12px;
 }
 
@@ -121,7 +125,11 @@
 
 @media (max-width: 767px) {
 	.directorist-custom-category-list {
-		grid-template-columns: 1fr;
-		gap: 0;
+		column-count: 1;
+		column-gap: 0;
+	}
+
+	.directorist-custom-category-list__card {
+		margin-bottom: 16px;
 	}
 }

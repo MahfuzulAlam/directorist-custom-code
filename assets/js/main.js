@@ -7,6 +7,7 @@ jQuery(document).ready(function ($) {
     var $toggle = $(this);
     var targetId = $toggle.attr("aria-controls");
     var target = targetId ? document.getElementById(targetId) : null;
+    var $card = $toggle.closest(".directorist-custom-category-list__card");
     var expanded = $toggle.attr("aria-expanded") === "true";
 
     if (!target) {
@@ -15,5 +16,6 @@ jQuery(document).ready(function ($) {
 
     $toggle.attr("aria-expanded", expanded ? "false" : "true");
     target.hidden = expanded;
+    $card.toggleClass("is-open", !expanded).toggleClass("is-closed", expanded);
   });
 });
