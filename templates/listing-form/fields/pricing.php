@@ -63,8 +63,8 @@ $conditional_logic_attr = $listing_form->get_conditional_logic_attributes( $data
 
     <?php if ( $data['pricing_type'] === 'price_unit_range' ) { ?>
         <div class="directory_price_unit_range_field">
-            <input class="directorist-form-element directory_field directory_pricing_field" type="number" name="min_price" placeholder="Minimum Price" value="<?php echo ( $min_price ); ?>">
-            <input class="directorist-form-element directory_field directory_pricing_field " type="number" name="max_price" placeholder="Maximum Price" value="<?php echo ( $max_price ); ?>">
+            <input class="directorist-form-element directory_field directory_pricing_field" type="number" name="min_price" placeholder="Minimum Price" value="<?php echo ( $min_price ); ?>" step="any">
+            <input class="directorist-form-element directory_field directory_pricing_field " type="number" name="max_price" placeholder="Maximum Price" value="<?php echo ( $max_price ); ?>" step="any">
         </div>
     <?php } ?>
 </div>
