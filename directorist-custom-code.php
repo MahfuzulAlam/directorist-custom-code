@@ -5,7 +5,7 @@
  */
 
 /**
- * Plugin Name:       Directorist - Custom Code
+ * Plugin Name:       Directorist - Custom Code for GrowToGive
  * Plugin URI:        https://wpxplore.com
  * Description:       Best way to implement custom code for directorist plugin
  * Version:           3.0.0
