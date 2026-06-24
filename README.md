@@ -1,25 +1,26 @@
-# Directorist Custom Category List Shortcode
+# Directorist - Taxonomy List
 
-This WordPress plugin adds a custom Directorist shortcode:
+Directorist - Taxonomy List version `3.0.0` adds custom Directorist category and location shortcodes:
 
 ```text
 [directorist_category_list]
+[directorist_location_list]
 ```
 
-Use it to display Directorist parent categories with their child categories in a clean responsive grid. Each parent category includes a collapse/expand button, and category names link to their Directorist category archive pages.
+Use them to display Directorist parent terms with their direct child terms in a clean responsive grid. Each parent term includes a collapse/expand button, and term names link to the appropriate Directorist category or location page.
 
 ## Features
 
-- Displays Directorist parent categories.
-- Displays child categories under each parent.
-- Expand/collapse control for parent categories that have child categories.
+- Displays Directorist parent categories or locations.
+- Displays direct child terms under each parent.
+- Expand/collapse control for parent terms that have visible children.
 - Responsive column layout.
 - Optional listing counts.
-- Optional empty-category hiding.
-- Limit total parent categories.
-- Limit child categories per parent.
-- Display selected parent categories by ID, slug, or a mixed list.
-- Choose whether child category lists are open or closed by default.
+- Optional empty-term hiding.
+- Limit total parent terms.
+- Limit child terms per parent.
+- Display selected parent terms by ID, slug, or a mixed list.
+- Choose whether child term lists are open or closed by default.
 
 ## Requirements
 
@@ -75,7 +76,7 @@ wp-content/plugins/directorist-custom-code/directorist-custom-code.php
 
 5. Log in to WordPress admin.
 6. Go to `Plugins`.
-7. Activate `Directorist - Custom Code`.
+7. Activate `Directorist - Taxonomy List`.
 
 ## Basic Usage
 
@@ -85,17 +86,23 @@ Add this shortcode to any WordPress page, post, shortcode block, or widget area:
 [directorist_category_list]
 ```
 
+For locations, use:
+
+```text
+[directorist_location_list]
+```
+
 Default behavior:
 
-- Shows parent categories.
-- Shows all child categories.
+- Shows parent categories or locations.
+- Shows all direct child terms.
 - Uses 2 columns on desktop.
 - Shows listing counts.
-- Does not hide empty categories.
-- Opens child category lists by default.
-- Shows no collapse button when a parent category has no child categories.
+- Does not hide empty categories or locations.
+- Opens child term lists by default.
+- Shows no collapse button when a parent term has no visible children.
 
-## Shortcode Attributes
+## Category Shortcode Attributes
 
 | Attribute | Default | Description |
 | --- | --- | --- |
@@ -114,6 +121,28 @@ Default behavior:
 | `parent_ids` | empty | Comma-separated parent category IDs to display. |
 | `parent_slugs` | empty | Comma-separated parent category slugs to display. |
 | `parents` | empty | Comma-separated mixed parent IDs and slugs. |
+
+## Location Shortcode Attributes
+
+`[directorist_location_list]` supports the same behavior and shared attributes as the category shortcode. Its parent-number aliases use location terminology:
+
+| Attribute | Default | Description |
+| --- | --- | --- |
+| `columns` | `2` | Number of desktop columns. Supports `1` to `6`. Mobile always displays 1 column. |
+| `number` | `0` | Number of parent locations to display. Use `0` for all. |
+| `location_num` | empty | Alias for `number`. |
+| `location_number` | empty | Alias for `number`. |
+| `number_of_location` | empty | Alias for `number`. |
+| `max_child` | `0` | Maximum child locations to display under each parent. Use `0` for all. |
+| `child_number` | empty | Alias for `max_child`. |
+| `child_num` | empty | Alias for `max_child`. |
+| `max_children` | empty | Alias for `max_child`. |
+| `display_count` | `yes` | Show listing counts. Accepts `yes`, `no`, `true`, `false`, `1`, `0`. |
+| `hide_empty` | `no` | Hide locations with no listings. Accepts `yes`, `no`, `true`, `false`, `1`, `0`. |
+| `default_state` | `open` | Initial child location state. Use `open` or `closed`. |
+| `parent_ids` | empty | Comma-separated parent location IDs to display. |
+| `parent_slugs` | empty | Comma-separated parent location slugs to display. |
+| `parents` | empty | Comma-separated mixed parent location IDs and slugs. |
 
 ## Examples
 
@@ -211,11 +240,47 @@ Equivalent aliases:
 [directorist_category_list columns="3" parent_slugs="transport,services" max_child="4" display_count="yes" hide_empty="yes" default_state="closed"]
 ```
 
+## Location Examples
+
+### Display All Parent and Child Locations
+
+```text
+[directorist_location_list]
+```
+
+### Display Only 6 Parent Locations in 3 Columns
+
+```text
+[directorist_location_list columns="3" number="6"]
+```
+
+Equivalent parent-number aliases:
+
+```text
+[directorist_location_list location_num="6"]
+[directorist_location_list location_number="6"]
+[directorist_location_list number_of_location="6"]
+```
+
+### Display Selected Locations and Limit Children
+
+```text
+[directorist_location_list parent_slugs="dhaka,chattogram" max_child="4"]
+```
+
+### Common Full Location Example
+
+```text
+[directorist_location_list columns="2" number="6" max_child="5" display_count="yes" hide_empty="no" default_state="open"]
+```
+
+All shared controls shown in the category examples work identically with `directorist_location_list`.
+
 ## Notes About Collapse Behavior
 
-The collapse button only appears when a parent category has at least one visible child category.
+The collapse button only appears when a parent category or location has at least one visible child term.
 
-If a parent category has no child categories, or if all child categories are hidden by `hide_empty="yes"`, the parent category displays as a simple category block without a collapse button.
+If a parent term has no children, or if all children are hidden by `hide_empty="yes"`, it displays as a simple block without a collapse button.
 
 Use this attribute to control the initial state:
 
@@ -231,7 +296,7 @@ default_state="closed"
 
 ## Code Structure
 
-The shortcode is class based and organized like this:
+The shortcodes are class based and organized like this:
 
 ```text
 wp-content/plugins/directorist-custom-code/
@@ -239,6 +304,7 @@ wp-content/plugins/directorist-custom-code/
 |- inc/
 |  |- functions.php
 |  |- class-category-list-shortcode.php
+|  |- class-location-list-shortcode.php
 |  `- class-template-loader.php
 |- assets/
 |  |- css/main.css
@@ -247,16 +313,18 @@ wp-content/plugins/directorist-custom-code/
 `- README.md
 ```
 
-Main shortcode class:
+Main shortcode classes:
 
 ```php
 Directorist_Custom_Code_Category_List_Shortcode
+Directorist_Custom_Code_Location_List_Shortcode
 ```
 
 Class file:
 
 ```text
 inc/class-category-list-shortcode.php
+inc/class-location-list-shortcode.php
 ```
 
 The shortcode class is loaded from:
@@ -280,7 +348,7 @@ The class handles:
 
 ## CSS Classes
 
-These classes are available for design customization:
+Category classes are listed below. The location shortcode exposes the same suffixes under the `.directorist-custom-location-list` namespace; for example, `.directorist-custom-location-list__card`, `.directorist-custom-location-list__toggle`, and `.directorist-custom-location-list__count`.
 
 | Class | Purpose |
 | --- | --- |
@@ -307,6 +375,8 @@ These classes are available for design customization:
 
 Use these filters in a child theme, custom plugin, or this plugin's `inc/functions.php`.
 
+The location shortcode provides matching filters using the `directorist_custom_location_list_` prefix. Its term-specific filters are `directorist_custom_location_list_location_name`, `directorist_custom_location_list_location_link`, and `directorist_custom_location_list_location_count`.
+
 | Filter | What it customizes |
 | --- | --- |
 | `directorist_custom_category_list_shortcode_defaults` | Default shortcode attributes. |
@@ -327,6 +397,8 @@ Use these filters in a child theme, custom plugin, or this plugin's `inc/functio
 | `directorist_custom_category_list_shortcode_output` | Final shortcode HTML output. |
 
 ## PHP Actions
+
+The location shortcode provides matching actions using the `directorist_custom_location_list_` prefix.
 
 | Action | Where it runs |
 | --- | --- |
@@ -486,14 +558,14 @@ When customizing output with hooks:
 
 ## Notes About Counts
 
-When Directorist count helpers are available, the shortcode uses Directorist listing counts. Parent category counts include listings from child categories, matching Directorist behavior.
+When Directorist count helpers are available, each shortcode uses its matching Directorist listing count helper. Parent category and location counts include listings from child terms, matching Directorist behavior.
 
 If `display_count="no"` is used, counts are hidden from the output.
 
 If `hide_empty="yes"` is used:
 
-- empty parent categories are not displayed
-- empty child categories are not displayed
+- empty parent categories or locations are not displayed
+- empty child terms are not displayed
 
 ## Styling
 
@@ -509,10 +581,12 @@ The expand/collapse behavior is located in:
 assets/js/main.js
 ```
 
-The shortcode PHP is located in:
+The shortcode registration and PHP classes are located in:
 
 ```text
 inc/functions.php
+inc/class-category-list-shortcode.php
+inc/class-location-list-shortcode.php
 ```
 
 ## Troubleshooting
@@ -523,8 +597,8 @@ Check that:
 
 - Directorist is installed and activated.
 - This plugin is installed and activated.
-- You have Directorist categories created.
-- The category slugs or IDs used in the shortcode are correct.
+- You have Directorist categories or locations created.
+- The category or location slugs/IDs used in the shortcode are correct.
 
 ### Empty categories are missing
 

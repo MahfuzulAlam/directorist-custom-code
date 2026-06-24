@@ -1,6 +1,6 @@
 <?php
 /**
- * Template resolution for Directorist – Custom Code.
+ * Template resolution for Directorist - Taxonomy List.
  *
  * Cascade (first match wins):
  * 1. This plugin: templates/{template_name}.php

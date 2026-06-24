@@ -12,5 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once DIRECTORIST_CUSTOM_CODE_DIR . 'inc/class-category-list-shortcode.php';
+require_once DIRECTORIST_CUSTOM_CODE_DIR . 'inc/class-location-list-shortcode.php';
 
 Directorist_Custom_Code_Category_List_Shortcode::instance();
+Directorist_Custom_Code_Location_List_Shortcode::instance();

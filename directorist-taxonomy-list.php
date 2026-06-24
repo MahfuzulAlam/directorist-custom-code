@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name:       Directorist - Custom Code
+ * Plugin Name:       Directorist - Taxonomy List
  * Plugin URI:        https://wpxplore.com
- * Description:       Best way to implement custom code for Directorist plugin.
+ * Description:       Display Directorist categories and locations in responsive taxonomy lists.
  * Version:           3.0.0
  * Requires at least: 5.2
  * Author:            wpXplore
