@@ -7,18 +7,18 @@ Directorist - Taxonomy List version `3.0.0` adds custom Directorist category and
 [directorist_location_list]
 ```
 
-Use them to display Directorist parent terms with their direct child terms in a clean responsive grid. Each parent term includes a collapse/expand button, and term names link to the appropriate Directorist category or location page.
+Use them to display Directorist taxonomy terms up to 3 levels deep in a clean responsive grid. Each top-level parent term includes a collapse/expand button, and term names link to the appropriate Directorist category or location page.
 
 ## Features
 
 - Displays Directorist parent categories or locations.
-- Displays direct child terms under each parent.
+- Displays child and grandchild terms under each parent.
 - Expand/collapse control for parent terms that have visible children.
 - Responsive column layout.
 - Optional listing counts.
 - Optional empty-term hiding.
 - Limit total parent terms.
-- Limit child terms per parent.
+- Limit child terms per parent or child term level.
 - Display selected parent terms by ID, slug, or a mixed list.
 - Choose whether child term lists are open or closed by default.
 
@@ -49,7 +49,7 @@ Use them to display Directorist parent terms with their direct child terms in a 
 If WordPress says the ZIP does not contain a valid plugin, unzip the downloaded file first and make sure the plugin files are inside the top-level plugin folder. The folder should contain:
 
 ```text
-directorist-custom-code.php
+directorist-taxonomy-list.php
 README.md
 inc/
 assets/
@@ -71,7 +71,7 @@ wp-content/plugins/
 4. The final path should look like:
 
 ```text
-wp-content/plugins/directorist-custom-code/directorist-custom-code.php
+wp-content/plugins/directorist-custom-code/directorist-taxonomy-list.php
 ```
 
 5. Log in to WordPress admin.
@@ -95,7 +95,7 @@ For locations, use:
 Default behavior:
 
 - Shows parent categories or locations.
-- Shows all direct child terms.
+- Shows child and grandchild terms up to 3 taxonomy levels.
 - Uses 2 columns on desktop.
 - Shows listing counts.
 - Does not hide empty categories or locations.
@@ -111,13 +111,13 @@ Default behavior:
 | `category_num` | empty | Alias for `number`. |
 | `category_number` | empty | Alias for `number`. |
 | `number_of_category` | empty | Alias for `number`. |
-| `max_child` | `0` | Maximum child categories to display under each parent. Use `0` for all. |
+| `max_child` | `0` | Maximum child categories to display under each parent or child term level. Use `0` for all. |
 | `child_number` | empty | Alias for `max_child`. |
 | `child_num` | empty | Alias for `max_child`. |
 | `max_children` | empty | Alias for `max_child`. |
 | `display_count` | `yes` | Show listing counts. Accepts `yes`, `no`, `true`, `false`, `1`, `0`. |
 | `hide_empty` | `no` | Hide categories with no listings. Accepts `yes`, `no`, `true`, `false`, `1`, `0`. |
-| `default_state` | `open` | Initial child category state. Use `open` or `closed`. Parent categories without children never show a collapse button. |
+| `default_state` | `open` | Initial child category state for each top-level parent card. Use `open` or `closed`. Parent categories without children never show a collapse button. |
 | `parent_ids` | empty | Comma-separated parent category IDs to display. |
 | `parent_slugs` | empty | Comma-separated parent category slugs to display. |
 | `parents` | empty | Comma-separated mixed parent IDs and slugs. |
@@ -133,20 +133,20 @@ Default behavior:
 | `location_num` | empty | Alias for `number`. |
 | `location_number` | empty | Alias for `number`. |
 | `number_of_location` | empty | Alias for `number`. |
-| `max_child` | `0` | Maximum child locations to display under each parent. Use `0` for all. |
+| `max_child` | `0` | Maximum child locations to display under each parent or child term level. Use `0` for all. |
 | `child_number` | empty | Alias for `max_child`. |
 | `child_num` | empty | Alias for `max_child`. |
 | `max_children` | empty | Alias for `max_child`. |
 | `display_count` | `yes` | Show listing counts. Accepts `yes`, `no`, `true`, `false`, `1`, `0`. |
 | `hide_empty` | `no` | Hide locations with no listings. Accepts `yes`, `no`, `true`, `false`, `1`, `0`. |
-| `default_state` | `open` | Initial child location state. Use `open` or `closed`. |
+| `default_state` | `open` | Initial child location state for each top-level parent card. Use `open` or `closed`. |
 | `parent_ids` | empty | Comma-separated parent location IDs to display. |
 | `parent_slugs` | empty | Comma-separated parent location slugs to display. |
 | `parents` | empty | Comma-separated mixed parent location IDs and slugs. |
 
 ## Examples
 
-### Display All Parent and Child Categories
+### Display All Parent, Child, and Grandchild Categories
 
 ```text
 [directorist_category_list]
@@ -172,7 +172,7 @@ Equivalent aliases:
 [directorist_category_list number_of_category="6"]
 ```
 
-### Display Maximum 4 Child Categories Per Parent
+### Display Maximum 4 Child Categories Per Level
 
 ```text
 [directorist_category_list max_child="4"]
@@ -242,7 +242,7 @@ Equivalent aliases:
 
 ## Location Examples
 
-### Display All Parent and Child Locations
+### Display All Parent, Child, and Grandchild Locations
 
 ```text
 [directorist_location_list]
@@ -262,7 +262,7 @@ Equivalent parent-number aliases:
 [directorist_location_list number_of_location="6"]
 ```
 
-### Display Selected Locations and Limit Children
+### Display Selected Locations and Limit Children Per Level
 
 ```text
 [directorist_location_list parent_slugs="dhaka,chattogram" max_child="4"]
@@ -278,9 +278,9 @@ All shared controls shown in the category examples work identically with `direct
 
 ## Notes About Collapse Behavior
 
-The collapse button only appears when a parent category or location has at least one visible child term.
+The collapse button only appears when a top-level parent category or location has at least one visible child term.
 
-If a parent term has no children, or if all children are hidden by `hide_empty="yes"`, it displays as a simple block without a collapse button.
+If a parent term has no children, or if all children are hidden by `hide_empty="yes"`, it displays as a simple block without a collapse button. Grandchildren are displayed nested under their direct child term and are included inside the same top-level collapse area.
 
 Use this attribute to control the initial state:
 
@@ -300,9 +300,10 @@ The shortcodes are class based and organized like this:
 
 ```text
 wp-content/plugins/directorist-custom-code/
-|- directorist-custom-code.php
+|- directorist-taxonomy-list.php
 |- inc/
 |  |- functions.php
+|  |- class-taxonomy-list-shortcode.php
 |  |- class-category-list-shortcode.php
 |  |- class-location-list-shortcode.php
 |  `- class-template-loader.php
@@ -318,11 +319,13 @@ Main shortcode classes:
 ```php
 Directorist_Custom_Code_Category_List_Shortcode
 Directorist_Custom_Code_Location_List_Shortcode
+Directorist_Custom_Code_Taxonomy_List_Shortcode
 ```
 
 Class file:
 
 ```text
+inc/class-taxonomy-list-shortcode.php
 inc/class-category-list-shortcode.php
 inc/class-location-list-shortcode.php
 ```
@@ -333,18 +336,20 @@ The shortcode class is loaded from:
 inc/functions.php
 ```
 
-The class handles:
+The shared taxonomy class handles:
 
 - shortcode registration
 - shortcode attribute defaults
 - attribute sanitization and normalization
-- parent category queries
-- child category queries
-- category count output
-- category links
+- parent term queries
+- child and grandchild term queries
+- term count output
+- term links
 - accessible collapse button output
 - CSS class filtering
 - markup actions and filters
+
+The category and location classes only provide taxonomy-specific configuration, Directorist count helpers, Directorist permalink helpers, hook prefixes, and shortcode aliases.
 
 ## CSS Classes
 
@@ -369,6 +374,10 @@ Category classes are listed below. The location shortcode exposes the same suffi
 | `.directorist-custom-category-list__children-list` | Child category list. |
 | `.directorist-custom-category-list__child` | Child category list item. |
 | `.directorist-custom-category-list__child-link` | Child category link. |
+| `.directorist-custom-category-list__children--level-3` | Grandchild category container. |
+| `.directorist-custom-category-list__children-list--level-3` | Grandchild category list. |
+| `.directorist-custom-category-list__child--level-3` | Grandchild category list item. |
+| `.directorist-custom-category-list__child-link--level-3` | Grandchild category link. |
 | `.directorist-custom-category-list__count` | Category listing count. |
 
 ## PHP Filters
@@ -384,8 +393,8 @@ The location shortcode provides matching filters using the `directorist_custom_l
 | `directorist_custom_category_list_taxonomy` | Taxonomy used by the shortcode. |
 | `directorist_custom_category_list_parent_args` | `get_terms()` arguments for parent categories. |
 | `directorist_custom_category_list_parent_terms` | Parent terms before rendering. |
-| `directorist_custom_category_list_child_args` | `get_terms()` arguments for child categories. |
-| `directorist_custom_category_list_child_terms` | Child terms before rendering. |
+| `directorist_custom_category_list_child_args` | `get_terms()` arguments for child and grandchild categories. Receives the current level as the fifth argument. |
+| `directorist_custom_category_list_child_terms` | Child or grandchild terms before rendering. Receives the current level as the fifth argument. |
 | `directorist_custom_category_list_category_name` | Parent or child category display name. |
 | `directorist_custom_category_list_category_link` | Parent or child category link URL. |
 | `directorist_custom_category_list_category_count` | Listing count value. |
@@ -454,6 +463,8 @@ child_item
 child_link
 count
 ```
+
+Child-related class contexts include `$context['level']`, where direct children are level `2` and grandchildren are level `3`.
 
 ## Customization Examples
 
@@ -585,6 +596,7 @@ The shortcode registration and PHP classes are located in:
 
 ```text
 inc/functions.php
+inc/class-taxonomy-list-shortcode.php
 inc/class-category-list-shortcode.php
 inc/class-location-list-shortcode.php
 ```

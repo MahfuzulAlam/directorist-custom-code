@@ -11,6 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once DIRECTORIST_CUSTOM_CODE_DIR . 'inc/class-taxonomy-list-shortcode.php';
 require_once DIRECTORIST_CUSTOM_CODE_DIR . 'inc/class-category-list-shortcode.php';
 require_once DIRECTORIST_CUSTOM_CODE_DIR . 'inc/class-location-list-shortcode.php';
 
