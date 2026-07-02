@@ -369,7 +369,7 @@ if ( ! class_exists( 'Directorist_Custom_Code_Taxonomy_List_Shortcode' ) ) {
 			ob_start();
 			do_action( $this->get_hook_prefix() . '_before_parent', $parent, $children, $atts, $taxonomy );
 			?>
-			<section class="<?php echo esc_attr( $card_classes ); ?>" data-directorist-taxonomy-list-card>
+			<section class="<?php echo esc_attr( $card_classes ); ?>" data-directorist-taxonomy-list-card data-directorist-taxonomy-list-item>
 				<?php $this->render_header( $parent, $has_children, $item_id, $atts, $taxonomy, $context ); ?>
 				<?php if ( $has_children ) : ?>
 					<?php $this->render_children( $parent, $children, $item_id, $atts, $taxonomy, $context, 2 ); ?>
@@ -426,9 +426,10 @@ if ( ! class_exists( 'Directorist_Custom_Code_Taxonomy_List_Shortcode' ) ) {
 			$children_context['term']  = $parent;
 			$children_context['level'] = $level;
 			$is_direct_child           = 2 === $level;
+			$is_collapsible_list       = '' !== $item_id;
 			$children_classes          = $this->get_classes( 'children', array( $base . '__children', $base . '__children--level-' . $level ), $children_context );
 			$list_classes              = $this->get_classes( 'children_list', array( $base . '__children-list', $base . '__children-list--level-' . $level ), $children_context );
-			$children_attrs            = $is_direct_child ? sprintf( ' id="%s"%s', esc_attr( $item_id ), $atts['default_open'] ? '' : ' hidden' ) : '';
+			$children_attrs            = $is_collapsible_list ? sprintf( ' id="%s"%s', esc_attr( $item_id ), $atts['default_open'] ? '' : ' hidden' ) : '';
 			?>
 			<div class="<?php echo esc_attr( $children_classes ); ?>"<?php echo $children_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 				<?php
@@ -477,15 +478,34 @@ if ( ! class_exists( 'Directorist_Custom_Code_Taxonomy_List_Shortcode' ) ) {
 
 			$child_context['children']     = $grandchildren;
 			$child_context['has_children'] = ! empty( $grandchildren );
-			$item_classes                  = $this->get_classes( 'child_item', array( $base . '__child', $base . '__child--level-' . $level ), $child_context );
+			$grandchild_list_id            = $child_context['has_children'] ? $base . '-' . $this->render_index . '-' . (int) $child->term_id : '';
+			$item_classes                  = $this->get_classes(
+				'child_item',
+				array(
+					$base . '__child',
+					$base . '__child--level-' . $level,
+					$child_context['has_children'] ? $base . '__child--has-children' : $base . '__child--no-children',
+					$child_context['has_children'] && $atts['default_open'] ? 'is-open' : '',
+					$child_context['has_children'] && ! $atts['default_open'] ? 'is-closed' : '',
+				),
+				$child_context
+			);
+			$header_classes                = $this->get_classes( 'child_header', array( $base . '__child-header', $base . '__child-header--level-' . $level ), $child_context );
 			$link_classes                  = $this->get_classes( 'child_link', array( $base . '__child-link', $base . '__child-link--level-' . $level ), $child_context );
 			?>
-			<li class="<?php echo esc_attr( $item_classes ); ?>">
-				<a class="<?php echo esc_attr( $link_classes ); ?>" href="<?php echo esc_url( $this->get_term_link( $child, $atts, $taxonomy ) ); ?>">
-					<?php echo esc_html( $this->get_term_name( $child, $atts, $taxonomy ) ); ?><?php echo $this->get_count_html( $child, $atts, $taxonomy ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-				</a>
+			<li class="<?php echo esc_attr( $item_classes ); ?>"<?php echo $child_context['has_children'] ? ' data-directorist-taxonomy-list-item' : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+				<div class="<?php echo esc_attr( $header_classes ); ?>">
+					<a class="<?php echo esc_attr( $link_classes ); ?>" href="<?php echo esc_url( $this->get_term_link( $child, $atts, $taxonomy ) ); ?>">
+						<?php echo esc_html( $this->get_term_name( $child, $atts, $taxonomy ) ); ?><?php echo $this->get_count_html( $child, $atts, $taxonomy ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+					</a>
+					<?php if ( ! empty( $grandchildren ) ) : ?>
+						<button type="button" class="<?php echo esc_attr( $this->get_classes( 'child_toggle', array( $base . '__toggle', $base . '__child-toggle', $base . '__child-toggle--level-' . $level ), $child_context ) ); ?>" aria-expanded="<?php echo esc_attr( $atts['default_open'] ? 'true' : 'false' ); ?>" aria-controls="<?php echo esc_attr( $grandchild_list_id ); ?>" aria-label="<?php echo esc_attr( $this->get_toggle_label( $child, $atts, $taxonomy ) ); ?>" data-directorist-taxonomy-list-toggle>
+							<span class="<?php echo esc_attr( $this->get_classes( 'child_icon', array( $base . '__icon', $base . '__child-icon' ), $child_context ) ); ?>" aria-hidden="true"></span>
+						</button>
+					<?php endif; ?>
+				</div>
 				<?php if ( ! empty( $grandchildren ) ) : ?>
-					<?php $this->render_children( $child, $grandchildren, '', $atts, $taxonomy, $child_context, $level + 1 ); ?>
+					<?php $this->render_children( $child, $grandchildren, $grandchild_list_id, $atts, $taxonomy, $child_context, $level + 1 ); ?>
 				<?php endif; ?>
 			</li>
 			<?php

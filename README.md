@@ -13,14 +13,14 @@ Use them to display Directorist taxonomy terms up to 3 levels deep in a clean re
 
 - Displays Directorist parent categories or locations.
 - Displays child and grandchild terms under each parent.
-- Expand/collapse control for parent terms that have visible children.
+- Expand/collapse control for parent terms and second-level terms that have visible children.
 - Responsive column layout.
 - Optional listing counts.
 - Optional empty-term hiding.
 - Limit total parent terms.
 - Limit child terms per parent or child term level.
 - Display selected parent terms by ID, slug, or a mixed list.
-- Choose whether child term lists are open or closed by default.
+- Choose whether child and grandchild term lists are open or closed by default.
 
 ## Requirements
 
@@ -99,8 +99,8 @@ Default behavior:
 - Uses 2 columns on desktop.
 - Shows listing counts.
 - Does not hide empty categories or locations.
-- Opens child term lists by default.
-- Shows no collapse button when a parent term has no visible children.
+- Opens child and grandchild term lists by default.
+- Shows no collapse button when a parent or second-level term has no visible children.
 
 ## Category Shortcode Attributes
 
@@ -117,7 +117,7 @@ Default behavior:
 | `max_children` | empty | Alias for `max_child`. |
 | `display_count` | `yes` | Show listing counts. Accepts `yes`, `no`, `true`, `false`, `1`, `0`. |
 | `hide_empty` | `no` | Hide categories with no listings. Accepts `yes`, `no`, `true`, `false`, `1`, `0`. |
-| `default_state` | `open` | Initial child category state for each top-level parent card. Use `open` or `closed`. Parent categories without children never show a collapse button. |
+| `default_state` | `open` | Initial child and grandchild category state. Use `open` or `closed`. Terms without children never show a collapse button. |
 | `parent_ids` | empty | Comma-separated parent category IDs to display. |
 | `parent_slugs` | empty | Comma-separated parent category slugs to display. |
 | `parents` | empty | Comma-separated mixed parent IDs and slugs. |
@@ -139,7 +139,7 @@ Default behavior:
 | `max_children` | empty | Alias for `max_child`. |
 | `display_count` | `yes` | Show listing counts. Accepts `yes`, `no`, `true`, `false`, `1`, `0`. |
 | `hide_empty` | `no` | Hide locations with no listings. Accepts `yes`, `no`, `true`, `false`, `1`, `0`. |
-| `default_state` | `open` | Initial child location state for each top-level parent card. Use `open` or `closed`. |
+| `default_state` | `open` | Initial child and grandchild location state. Use `open` or `closed`. |
 | `parent_ids` | empty | Comma-separated parent location IDs to display. |
 | `parent_slugs` | empty | Comma-separated parent location slugs to display. |
 | `parents` | empty | Comma-separated mixed parent location IDs and slugs. |
@@ -278,9 +278,9 @@ All shared controls shown in the category examples work identically with `direct
 
 ## Notes About Collapse Behavior
 
-The collapse button only appears when a top-level parent category or location has at least one visible child term.
+The collapse button appears when a top-level parent category or location has at least one visible child term, and when a second-level term has at least one visible grandchild term.
 
-If a parent term has no children, or if all children are hidden by `hide_empty="yes"`, it displays as a simple block without a collapse button. Grandchildren are displayed nested under their direct child term and are included inside the same top-level collapse area.
+If a term has no children, or if all children are hidden by `hide_empty="yes"`, it displays as a simple link without a collapse button. Grandchildren are displayed nested under their direct child term and can be collapsed independently from the top-level parent.
 
 Use this attribute to control the initial state:
 
@@ -373,7 +373,10 @@ Category classes are listed below. The location shortcode exposes the same suffi
 | `.directorist-custom-category-list__children` | Child category container. |
 | `.directorist-custom-category-list__children-list` | Child category list. |
 | `.directorist-custom-category-list__child` | Child category list item. |
+| `.directorist-custom-category-list__child-header` | Child category row containing the child link and optional toggle. |
 | `.directorist-custom-category-list__child-link` | Child category link. |
+| `.directorist-custom-category-list__child-toggle` | Collapse/expand button for second-level terms with grandchildren. |
+| `.directorist-custom-category-list__child-icon` | Collapse/expand icon for second-level terms. |
 | `.directorist-custom-category-list__children--level-3` | Grandchild category container. |
 | `.directorist-custom-category-list__children-list--level-3` | Grandchild category list. |
 | `.directorist-custom-category-list__child--level-3` | Grandchild category list item. |
@@ -460,7 +463,10 @@ icon
 children
 children_list
 child_item
+child_header
 child_link
+child_toggle
+child_icon
 count
 ```
 
