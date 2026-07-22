@@ -4,7 +4,7 @@
  *
  * Add project-specific PHP code here.
  *
- * @package Directorist_Custom_Code
+ * @package Directorist_Sawjobs_Custom_Codes
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

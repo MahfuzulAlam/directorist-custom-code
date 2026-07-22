@@ -2,7 +2,7 @@
 /**
  * Frontend user gallery for Directorist authors.
  *
- * @package Directorist_Custom_Code
+ * @package Directorist_Sawjobs_Custom_Codes
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -12,22 +12,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Adds a gallery manager to the dashboard and renders its images on authors.
  */
-final class Directorist_Custom_Code_User_Gallery {
+final class Directorist_Sawjobs_Custom_Codes_User_Gallery {
 
 	/** User meta containing the ordered attachment ID array. */
-	public const META_KEY = '_directorist_custom_code_gallery_images';
+	public const META_KEY = '_directorist_sawjobs_custom_codes_gallery_images';
 
 	/** Default maximum number of gallery images per user. */
 	public const DEFAULT_MAX_IMAGES = 10;
 
 	/** AJAX nonce action. */
-	private const NONCE_ACTION = 'directorist_custom_code_gallery';
+	private const NONCE_ACTION = 'directorist_sawjobs_custom_codes_gallery';
 
 	/** AJAX action used to upload an image. */
-	private const AJAX_UPLOAD_ACTION = 'directorist_custom_code_gallery_upload';
+	private const AJAX_UPLOAD_ACTION = 'directorist_sawjobs_custom_codes_gallery_upload';
 
 	/** AJAX action used to remove an image. */
-	private const AJAX_REMOVE_ACTION = 'directorist_custom_code_gallery_remove';
+	private const AJAX_REMOVE_ACTION = 'directorist_sawjobs_custom_codes_gallery_remove';
 
 	/** Register WordPress and Directorist hooks. */
 	public static function register() {
@@ -56,11 +56,11 @@ final class Directorist_Custom_Code_User_Gallery {
 		$image_ids = self::get_image_ids( $user_id );
 		$max_images = self::get_max_images( $user_id );
 
-		$tabs['dashboard_gallery_images'] = array(
-			'title'   => __( 'Gallery Images', 'directorist-custom-code' ),
+		$tabs['dashboard_sawjobs_gallery_images'] = array(
+			'title'   => __( 'Gallery Images', 'directorist-sawjobs-custom-codes' ),
 			'icon'    => 'las la-images',
 			'content' => \Directorist\Helper::get_template_contents(
-				'dashboard/tab-gallery-images',
+				'dashboard/tab-sawjobs-gallery-images',
 				array(
 					'user_id'    => $user_id,
 					'image_ids'  => $image_ids,
@@ -91,7 +91,7 @@ final class Directorist_Custom_Code_User_Gallery {
 		}
 
 		\Directorist\Helper::get_template(
-			'author/gallery-images',
+			'author/sawjobs-gallery-images',
 			array(
 				'author'    => $author,
 				'user_id'   => $user_id,
@@ -107,33 +107,33 @@ final class Directorist_Custom_Code_User_Gallery {
 		}
 
 		wp_enqueue_style(
-			'directorist-custom-code-gallery',
-			DIRECTORIST_CUSTOM_CODE_URI . 'assets/css/gallery-images.css',
-			array( 'directorist-custom-style' ),
-			DIRECTORIST_CUSTOM_CODE_VERSION
+			'directorist-sawjobs-custom-codes-gallery',
+			DIRECTORIST_SAWJOBS_CUSTOM_CODES_URI . 'assets/css/sawjobs-gallery-images.css',
+			array( 'directorist-sawjobs-custom-codes-style' ),
+			DIRECTORIST_SAWJOBS_CUSTOM_CODES_VERSION
 		);
 
 		wp_enqueue_script(
-			'directorist-custom-code-gallery',
-			DIRECTORIST_CUSTOM_CODE_URI . 'assets/js/gallery-images.js',
+			'directorist-sawjobs-custom-codes-gallery',
+			DIRECTORIST_SAWJOBS_CUSTOM_CODES_URI . 'assets/js/sawjobs-gallery-images.js',
 			array(),
-			DIRECTORIST_CUSTOM_CODE_VERSION,
+			DIRECTORIST_SAWJOBS_CUSTOM_CODES_VERSION,
 			true
 		);
 
 		wp_localize_script(
-			'directorist-custom-code-gallery',
-			'DirectoristCustomGallery',
+			'directorist-sawjobs-custom-codes-gallery',
+			'DirectoristSawjobsGallery',
 			array(
 				'ajaxUrl'       => admin_url( 'admin-ajax.php' ),
 				'nonce'         => is_user_logged_in() ? wp_create_nonce( self::NONCE_ACTION ) : '',
 				'uploadAction'  => self::AJAX_UPLOAD_ACTION,
 				'removeAction'  => self::AJAX_REMOVE_ACTION,
-				'uploadingText' => __( 'Uploading images...', 'directorist-custom-code' ),
-				'tooManyText'   => __( 'Only %d more images can be uploaded.', 'directorist-custom-code' ),
-				'removeLabel'   => __( 'Remove image permanently', 'directorist-custom-code' ),
-				'confirmRemove' => __( 'Remove this image permanently? This also deletes it from the Media Library.', 'directorist-custom-code' ),
-				'genericError'  => __( 'Something went wrong. Please try again.', 'directorist-custom-code' ),
+				'uploadingText' => __( 'Uploading images...', 'directorist-sawjobs-custom-codes' ),
+				'tooManyText'   => __( 'Only %d more images can be uploaded.', 'directorist-sawjobs-custom-codes' ),
+				'removeLabel'   => __( 'Remove image permanently', 'directorist-sawjobs-custom-codes' ),
+				'confirmRemove' => __( 'Remove this image permanently? This also deletes it from the Media Library.', 'directorist-sawjobs-custom-codes' ),
+				'genericError'  => __( 'Something went wrong. Please try again.', 'directorist-sawjobs-custom-codes' ),
 			)
 		);
 	}
@@ -176,7 +176,7 @@ final class Directorist_Custom_Code_User_Gallery {
 		 * @param int $maximum Maximum image count. Default 10.
 		 * @param int $user_id User ID.
 		 */
-		$maximum = apply_filters( 'directorist_custom_code_gallery_max_images', self::DEFAULT_MAX_IMAGES, absint( $user_id ) );
+		$maximum = apply_filters( 'directorist_sawjobs_custom_codes_gallery_max_images', self::DEFAULT_MAX_IMAGES, absint( $user_id ) );
 
 		return max( 1, absint( $maximum ) );
 	}
@@ -196,7 +196,7 @@ final class Directorist_Custom_Code_User_Gallery {
 
 		if ( empty( $_FILES['gallery_image'] ) || ! is_array( $_FILES['gallery_image'] ) ) {
 			wp_send_json_error(
-				array( 'message' => __( 'Please choose an image to upload.', 'directorist-custom-code' ) ),
+				array( 'message' => __( 'Please choose an image to upload.', 'directorist-sawjobs-custom-codes' ) ),
 				400
 			);
 		}
@@ -205,7 +205,7 @@ final class Directorist_Custom_Code_User_Gallery {
 
 		if ( ! empty( $file['error'] ) || empty( $file['tmp_name'] ) || empty( $file['name'] ) ) {
 			wp_send_json_error(
-				array( 'message' => __( 'The selected image could not be uploaded.', 'directorist-custom-code' ) ),
+				array( 'message' => __( 'The selected image could not be uploaded.', 'directorist-sawjobs-custom-codes' ) ),
 				400
 			);
 		}
@@ -217,7 +217,7 @@ final class Directorist_Custom_Code_User_Gallery {
 
 		if ( ! $mime_type || 0 !== strpos( $mime_type, 'image/' ) || ! in_array( $mime_type, $allowed_mimes, true ) ) {
 			wp_send_json_error(
-				array( 'message' => __( 'Only JPG, PNG, GIF, and WebP images are allowed.', 'directorist-custom-code' ) ),
+				array( 'message' => __( 'Only JPG, PNG, GIF, and WebP images are allowed.', 'directorist-sawjobs-custom-codes' ) ),
 				415
 			);
 		}
@@ -226,7 +226,7 @@ final class Directorist_Custom_Code_User_Gallery {
 		require_once ABSPATH . 'wp-admin/includes/media.php';
 		require_once ABSPATH . 'wp-admin/includes/image.php';
 
-		$converted_file = Directorist_Custom_Code_WebP_Converter::convert( $file, $mime_type, $user_id );
+		$converted_file = Directorist_Sawjobs_Custom_Codes_WebP_Converter::convert( $file, $mime_type, $user_id );
 
 		if ( is_wp_error( $converted_file ) ) {
 			wp_send_json_error(
@@ -243,7 +243,7 @@ final class Directorist_Custom_Code_User_Gallery {
 		);
 
 		if ( is_wp_error( $attachment_id ) ) {
-			Directorist_Custom_Code_WebP_Converter::cleanup( $converted_file );
+			Directorist_Sawjobs_Custom_Codes_WebP_Converter::cleanup( $converted_file );
 
 			wp_send_json_error(
 				array( 'message' => $attachment_id->get_error_message() ),
@@ -259,7 +259,7 @@ final class Directorist_Custom_Code_User_Gallery {
 			}
 
 			wp_send_json_error(
-				array( 'message' => __( 'The uploaded file is not a valid image.', 'directorist-custom-code' ) ),
+				array( 'message' => __( 'The uploaded file is not a valid image.', 'directorist-sawjobs-custom-codes' ) ),
 				415
 			);
 		}
@@ -284,11 +284,11 @@ final class Directorist_Custom_Code_User_Gallery {
 		$image_ids[] = $attachment_id;
 		update_user_meta( $user_id, self::META_KEY, array_values( $image_ids ) );
 
-		do_action( 'directorist_custom_code_gallery_image_uploaded', $attachment_id, $user_id, $image_ids );
+		do_action( 'directorist_sawjobs_custom_codes_gallery_image_uploaded', $attachment_id, $user_id, $image_ids );
 
 		wp_send_json_success(
 			array(
-				'message'   => __( 'Image uploaded.', 'directorist-custom-code' ),
+				'message'   => __( 'Image uploaded.', 'directorist-sawjobs-custom-codes' ),
 				'image'     => self::get_image_data( $attachment_id ),
 				'count'     => count( $image_ids ),
 				'maxImages' => $max_images,
@@ -304,7 +304,7 @@ final class Directorist_Custom_Code_User_Gallery {
 
 		if ( ! $attachment_id || ! in_array( $attachment_id, $image_ids, true ) ) {
 			wp_send_json_error(
-				array( 'message' => __( 'This image is not in your gallery.', 'directorist-custom-code' ) ),
+				array( 'message' => __( 'This image is not in your gallery.', 'directorist-sawjobs-custom-codes' ) ),
 				404
 			);
 		}
@@ -313,14 +313,14 @@ final class Directorist_Custom_Code_User_Gallery {
 
 		if ( $attachment && absint( $attachment->post_author ) !== $user_id ) {
 			wp_send_json_error(
-				array( 'message' => __( 'You are not allowed to delete this image.', 'directorist-custom-code' ) ),
+				array( 'message' => __( 'You are not allowed to delete this image.', 'directorist-sawjobs-custom-codes' ) ),
 				403
 			);
 		}
 
 		if ( $attachment && ! wp_delete_attachment( $attachment_id, true ) ) {
 			wp_send_json_error(
-				array( 'message' => __( 'The image could not be deleted.', 'directorist-custom-code' ) ),
+				array( 'message' => __( 'The image could not be deleted.', 'directorist-sawjobs-custom-codes' ) ),
 				500
 			);
 		}
@@ -328,11 +328,11 @@ final class Directorist_Custom_Code_User_Gallery {
 		$image_ids = array_values( array_diff( $image_ids, array( $attachment_id ) ) );
 		update_user_meta( $user_id, self::META_KEY, $image_ids );
 
-		do_action( 'directorist_custom_code_gallery_image_removed', $attachment_id, $user_id, $image_ids );
+		do_action( 'directorist_sawjobs_custom_codes_gallery_image_removed', $attachment_id, $user_id, $image_ids );
 
 		wp_send_json_success(
 			array(
-				'message'   => __( 'Image removed.', 'directorist-custom-code' ),
+				'message'   => __( 'Image removed.', 'directorist-sawjobs-custom-codes' ),
 				'imageId'   => $attachment_id,
 				'count'     => count( $image_ids ),
 				'maxImages' => self::get_max_images( $user_id ),
@@ -343,7 +343,7 @@ final class Directorist_Custom_Code_User_Gallery {
 	/** Return a consistent authentication error for logged-out AJAX requests. */
 	public static function ajax_authentication_required() {
 		wp_send_json_error(
-			array( 'message' => __( 'You must be logged in to manage gallery images.', 'directorist-custom-code' ) ),
+			array( 'message' => __( 'You must be logged in to manage gallery images.', 'directorist-sawjobs-custom-codes' ) ),
 			401
 		);
 	}
@@ -395,7 +395,7 @@ final class Directorist_Custom_Code_User_Gallery {
 			'webp'         => 'image/webp',
 		);
 
-		return (array) apply_filters( 'directorist_custom_code_gallery_allowed_mime_types', $mimes, absint( $user_id ) );
+		return (array) apply_filters( 'directorist_sawjobs_custom_codes_gallery_allowed_mime_types', $mimes, absint( $user_id ) );
 	}
 
 	/** Determine whether the current frontend request can render this feature. */
@@ -427,7 +427,7 @@ final class Directorist_Custom_Code_User_Gallery {
 			}
 		}
 
-		return (bool) apply_filters( 'directorist_custom_code_gallery_enqueue_assets', $is_context );
+		return (bool) apply_filters( 'directorist_sawjobs_custom_codes_gallery_enqueue_assets', $is_context );
 	}
 
 	/**
@@ -439,7 +439,7 @@ final class Directorist_Custom_Code_User_Gallery {
 	private static function limit_message( $maximum ) {
 		return sprintf(
 			/* translators: %d: maximum number of gallery images. */
-			_n( 'You can upload a maximum of %d gallery image.', 'You can upload a maximum of %d gallery images.', $maximum, 'directorist-custom-code' ),
+			_n( 'You can upload a maximum of %d gallery image.', 'You can upload a maximum of %d gallery images.', $maximum, 'directorist-sawjobs-custom-codes' ),
 			$maximum
 		);
 	}

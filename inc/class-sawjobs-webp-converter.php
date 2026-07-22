@@ -2,7 +2,7 @@
 /**
  * WebP conversion service for frontend gallery uploads.
  *
- * @package Directorist_Custom_Code
+ * @package Directorist_Sawjobs_Custom_Codes
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Converts a validated uploaded image into a temporary WebP file.
  */
-final class Directorist_Custom_Code_WebP_Converter {
+final class Directorist_Sawjobs_Custom_Codes_WebP_Converter {
 
 	/** WebP MIME type. */
 	private const MIME_TYPE = 'image/webp';
@@ -34,8 +34,8 @@ final class Directorist_Custom_Code_WebP_Converter {
 	public static function convert( $file, $input_mime, $user_id ) {
 		if ( ! is_array( $file ) || empty( $file['tmp_name'] ) || empty( $file['name'] ) ) {
 			return new WP_Error(
-				'directorist_gallery_webp_missing_file',
-				__( 'The image could not be prepared for WebP conversion.', 'directorist-custom-code' )
+				'directorist_sawjobs_custom_codes_gallery_webp_missing_file',
+				__( 'The image could not be prepared for WebP conversion.', 'directorist-sawjobs-custom-codes' )
 			);
 		}
 
@@ -45,8 +45,8 @@ final class Directorist_Custom_Code_WebP_Converter {
 
 		if ( ! is_readable( $source_path ) ) {
 			return new WP_Error(
-				'directorist_gallery_webp_unreadable_file',
-				__( 'The uploaded image could not be read.', 'directorist-custom-code' )
+				'directorist_sawjobs_custom_codes_gallery_webp_unreadable_file',
+				__( 'The uploaded image could not be read.', 'directorist-sawjobs-custom-codes' )
 			);
 		}
 
@@ -70,8 +70,8 @@ final class Directorist_Custom_Code_WebP_Converter {
 
 		if ( is_wp_error( $editor ) ) {
 			return new WP_Error(
-				'directorist_gallery_webp_editor_unavailable',
-				__( 'This server cannot convert images to WebP.', 'directorist-custom-code' ),
+				'directorist_sawjobs_custom_codes_gallery_webp_editor_unavailable',
+				__( 'This server cannot convert images to WebP.', 'directorist-sawjobs-custom-codes' ),
 				$editor
 			);
 		}
@@ -81,8 +81,8 @@ final class Directorist_Custom_Code_WebP_Converter {
 
 		if ( is_wp_error( $quality_result ) ) {
 			return new WP_Error(
-				'directorist_gallery_webp_quality_error',
-				__( 'The WebP image quality could not be configured.', 'directorist-custom-code' ),
+				'directorist_sawjobs_custom_codes_gallery_webp_quality_error',
+				__( 'The WebP image quality could not be configured.', 'directorist-sawjobs-custom-codes' ),
 				$quality_result
 			);
 		}
@@ -96,8 +96,8 @@ final class Directorist_Custom_Code_WebP_Converter {
 			self::delete_temporary_file( $destination_path );
 
 			return new WP_Error(
-				'directorist_gallery_webp_conversion_failed',
-				__( 'The image could not be converted to WebP.', 'directorist-custom-code' ),
+				'directorist_sawjobs_custom_codes_gallery_webp_conversion_failed',
+				__( 'The image could not be converted to WebP.', 'directorist-sawjobs-custom-codes' ),
 				$saved
 			);
 		}
@@ -109,8 +109,8 @@ final class Directorist_Custom_Code_WebP_Converter {
 			self::delete_temporary_file( $converted_path ? $converted_path : $destination_path );
 
 			return new WP_Error(
-				'directorist_gallery_webp_invalid_output',
-				__( 'The image editor did not create a valid WebP image.', 'directorist-custom-code' )
+				'directorist_sawjobs_custom_codes_gallery_webp_invalid_output',
+				__( 'The image editor did not create a valid WebP image.', 'directorist-sawjobs-custom-codes' )
 			);
 		}
 
@@ -126,7 +126,7 @@ final class Directorist_Custom_Code_WebP_Converter {
 			'size'     => isset( $saved['filesize'] ) ? absint( $saved['filesize'] ) : filesize( $converted_path ),
 		);
 
-		do_action( 'directorist_custom_code_gallery_image_converted_to_webp', $converted_file, $file, $user_id, $quality );
+		do_action( 'directorist_sawjobs_custom_codes_gallery_image_converted_to_webp', $converted_file, $file, $user_id, $quality );
 
 		return $converted_file;
 	}
@@ -158,7 +158,7 @@ final class Directorist_Custom_Code_WebP_Converter {
 		 * @param int   $user_id User ID.
 		 * @param array $file    Original upload file data.
 		 */
-		$quality = apply_filters( 'directorist_custom_code_gallery_webp_quality', self::DEFAULT_QUALITY, $user_id, $file );
+		$quality = apply_filters( 'directorist_sawjobs_custom_codes_gallery_webp_quality', self::DEFAULT_QUALITY, $user_id, $file );
 
 		return min( 100, max( 1, absint( $quality ) ) );
 	}

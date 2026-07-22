@@ -1,6 +1,6 @@
-# Directorist Custom Code
+# Directorist - Custom Codes for Sportsandwellnessjobs
 
-`Directorist Custom Code` is a developer-focused extension for keeping Directorist customizations outside the main Directorist plugin.
+`Directorist - Custom Codes for Sportsandwellnessjobs` is the Sawjobs-specific extension for keeping Directorist customizations outside the main Directorist plugin.
 
 Use it when you want to:
 
@@ -15,36 +15,47 @@ This approach is update-safe compared to editing files inside the Directorist pl
 
 When Directorist is active, this extension loads:
 
-- `inc/functions.php`
+- `inc/sawjobs-functions.php`
   Use this file for custom PHP logic.
 - `templates/`
   Use this directory for Directorist template overrides.
-- `assets/css/main.css`
+- `assets/css/sawjobs-main.css`
   Use this file for custom frontend styles.
-- `assets/js/main.js`
+- `assets/js/sawjobs-main.js`
   Use this file for custom frontend JavaScript.
 
 ## Recommended Folder Structure
 
 ```text
-wp-content/plugins/directorist-custom-code/
+wp-content/plugins/directorist-sawjobs-custom-codes/
 |- assets/
-|  |- css/main.css
-|  `- js/main.js
+|  |- css/
+|  |  |- sawjobs-gallery-images.css
+|  |  `- sawjobs-main.css
+|  `- js/
+|     |- sawjobs-gallery-images.js
+|     `- sawjobs-main.js
 |- inc/
-|  |- class-template-loader.php
-|  `- functions.php
+|  |- class-sawjobs-template-loader.php
+|  |- class-sawjobs-user-gallery.php
+|  |- class-sawjobs-webp-converter.php
+|  `- sawjobs-functions.php
 |- templates/
-`- directorist-custom-code.php
+|  |- author/
+|  |  `- sawjobs-gallery-images.php
+|  |- dashboard/
+|  |  `- tab-sawjobs-gallery-images.php
+|  `- author-contents.php
+`- directorist-sawjobs-custom-codes.php
 ```
 
 ## Developer Workflow
 
 Use this extension in three layers:
 
-1. Put business logic and integrations in `inc/functions.php`.
+1. Put business logic and integrations in `inc/sawjobs-functions.php`.
 2. Put markup changes in `templates/`.
-3. Put presentation and behavior changes in `assets/css/main.css` and `assets/js/main.js`.
+3. Put presentation and behavior changes in `assets/css/sawjobs-main.css` and `assets/js/sawjobs-main.js`.
 
 This keeps logic, markup, and styling separated and makes maintenance easier after Directorist updates.
 
@@ -53,7 +64,7 @@ This keeps logic, markup, and styling separated and makes maintenance easier aft
 The main entry point for PHP customization is:
 
 ```text
-wp-content/plugins/directorist-custom-code/inc/functions.php
+wp-content/plugins/directorist-sawjobs-custom-codes/inc/sawjobs-functions.php
 ```
 
 This file is loaded automatically when the extension boots, so it is the right place to add:
@@ -72,9 +83,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-add_action( 'init', 'myproject_directorist_custom_setup' );
+add_action( 'init', 'sawjobs_directorist_custom_setup' );
 
-function myproject_directorist_custom_setup() {
+function sawjobs_directorist_custom_setup() {
 	// Register your custom behavior here.
 	// Example: add actions, filters, shortcodes, REST callbacks, etc.
 }
@@ -82,7 +93,7 @@ function myproject_directorist_custom_setup() {
 
 ### Organizing Larger Customizations
 
-If your customization grows, keep `inc/functions.php` as a loader and split logic into additional files:
+If your customization grows, keep `inc/sawjobs-functions.php` as a loader and split logic into additional files:
 
 ```php
 <?php
@@ -90,14 +101,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require_once DIRECTORIST_CUSTOM_CODE_DIR . 'inc/custom/listing-hooks.php';
-require_once DIRECTORIST_CUSTOM_CODE_DIR . 'inc/custom/search-hooks.php';
-require_once DIRECTORIST_CUSTOM_CODE_DIR . 'inc/custom/dashboard-hooks.php';
+require_once DIRECTORIST_SAWJOBS_CUSTOM_CODES_DIR . 'inc/custom/listing-hooks.php';
+require_once DIRECTORIST_SAWJOBS_CUSTOM_CODES_DIR . 'inc/custom/search-hooks.php';
+require_once DIRECTORIST_SAWJOBS_CUSTOM_CODES_DIR . 'inc/custom/dashboard-hooks.php';
 ```
 
 That structure is easier to maintain than putting all custom logic in a single file.
 
-### Good Use Cases for `inc/functions.php`
+### Good Use Cases for `inc/sawjobs-functions.php`
 
 - change how Directorist data is processed before save
 - add or remove actions around listing forms
@@ -119,7 +130,7 @@ To avoid conflicts, always use your own prefix for:
 Example:
 
 ```php
-function myproject_directorist_sync_listing_meta() {
+function sawjobs_directorist_sync_listing_meta() {
 	// Custom code.
 }
 ```
@@ -158,14 +169,14 @@ wp-content/plugins/directorist/templates/single/fields/address.php
 Your override should be:
 
 ```text
-wp-content/plugins/directorist-custom-code/templates/single/fields/address.php
+wp-content/plugins/directorist-sawjobs-custom-codes/templates/single/fields/address.php
 ```
 
 ### How Template Resolution Works
 
 This extension checks for templates in the following order:
 
-1. `directorist-custom-code/templates/...`
+1. `directorist-sawjobs-custom-codes/templates/...`
 2. child theme `directorist/...`
 3. parent theme `directorist/...`
 4. default Directorist template
@@ -175,7 +186,7 @@ That means if the same template exists in both this extension and your theme, th
 ### Template Override Workflow
 
 1. Find the original template inside the Directorist plugin.
-2. Copy that file into `directorist-custom-code/templates/`.
+2. Copy that file into `directorist-sawjobs-custom-codes/templates/`.
 3. Keep the same relative directory structure.
 4. Modify only the parts you need.
 5. Test the output after Directorist updates.
@@ -188,7 +199,7 @@ To customize the single listing address field:
 2. Create this file:
 
 ```text
-wp-content/plugins/directorist-custom-code/templates/single/fields/address.php
+wp-content/plugins/directorist-sawjobs-custom-codes/templates/single/fields/address.php
 ```
 
 3. Paste the original template content.
@@ -204,7 +215,7 @@ wp-content/plugins/directorist-custom-code/templates/single/fields/address.php
 
 ## When to Use Custom Code vs Template Overrides
 
-Use `inc/functions.php` when you need to change logic:
+Use `inc/sawjobs-functions.php` when you need to change logic:
 
 - saving behavior
 - filtering data
@@ -222,15 +233,15 @@ Use `templates/` when you need to change markup:
 
 In many real projects you will use both:
 
-- add logic in `inc/functions.php`
+- add logic in `inc/sawjobs-functions.php`
 - render the final output through a template override
 
 ## Frontend Assets
 
 This extension also loads:
 
-- `assets/css/main.css`
-- `assets/js/main.js`
+- `assets/css/sawjobs-main.css`
+- `assets/js/sawjobs-main.js`
 
 Use them for small Directorist-specific UI adjustments, such as:
 
@@ -243,7 +254,7 @@ Use them for small Directorist-specific UI adjustments, such as:
 
 Before shipping a customization:
 
-- keep all PHP in `inc/functions.php` or included files
+- keep all PHP in `inc/sawjobs-functions.php` or included files
 - keep all template overrides inside `templates/`
 - prefix your custom function names
 - sanitize inputs and escape outputs
@@ -254,9 +265,9 @@ Before shipping a customization:
 
 Use this extension as your custom layer on top of Directorist:
 
-- `inc/functions.php` for PHP logic
+- `inc/sawjobs-functions.php` for PHP logic
 - `templates/` for template overrides
-- `assets/css/main.css` for styles
-- `assets/js/main.js` for scripts
+- `assets/css/sawjobs-main.css` for styles
+- `assets/js/sawjobs-main.js` for scripts
 
 If you keep all Directorist customization inside this extension, your project stays cleaner, safer, and easier to maintain.

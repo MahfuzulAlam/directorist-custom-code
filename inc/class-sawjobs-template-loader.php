@@ -1,6 +1,6 @@
 <?php
 /**
- * Template resolution for Directorist – Custom Code.
+ * Template resolution for Directorist – Sawjobs Custom Codes.
  *
  * Cascade (first match wins):
  * 1. This plugin: templates/{template_name}.php
@@ -11,7 +11,7 @@
  * Steps 2–4 are handled by Directorist\Helper::template_path(); this class only
  * prepends step 1 via the directorist_template_file_path filter.
  *
- * @package Directorist_Custom_Code
+ * @package Directorist_Sawjobs_Custom_Codes
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Registers template path filtering.
  */
-final class Directorist_Custom_Code_Template_Loader {
+final class Directorist_Sawjobs_Custom_Codes_Template_Loader {
 
 	public const FILTER_PRIORITY = 5;
 
@@ -43,7 +43,7 @@ final class Directorist_Custom_Code_Template_Loader {
 			return '';
 		}
 
-		return DIRECTORIST_CUSTOM_CODE_DIR . 'templates/' . $template_name . '.php';
+		return DIRECTORIST_SAWJOBS_CUSTOM_CODES_DIR . 'templates/' . $template_name . '.php';
 	}
 
 	/**

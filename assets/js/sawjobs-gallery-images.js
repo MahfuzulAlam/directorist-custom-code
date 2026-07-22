@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  var settings = window.DirectoristCustomGallery || {};
+  var settings = window.DirectoristSawjobsGallery || {};
 
   function messageFromResponse(response) {
     if (response && response.data && response.data.message) {
@@ -83,16 +83,16 @@
     var remove = document.createElement("button");
     var icon = document.createElement("i");
 
-    item.className = "directorist-custom-gallery-dashboard__item";
+    item.className = "directorist-sawjobs-gallery-dashboard__item";
     item.dataset.galleryItem = String(image.id);
 
-    img.className = "directorist-custom-gallery-dashboard__image";
+    img.className = "directorist-sawjobs-gallery-dashboard__image";
     img.src = image.thumbnail || image.full;
     img.alt = image.alt || "";
     img.loading = "lazy";
 
     remove.type = "button";
-    remove.className = "directorist-custom-gallery-dashboard__remove";
+    remove.className = "directorist-sawjobs-gallery-dashboard__remove";
     remove.dataset.galleryRemove = String(image.id);
     remove.setAttribute("aria-label", settings.removeLabel || "Remove image permanently");
 
@@ -287,14 +287,14 @@
       showImage(index);
       modal.classList.add("is-open");
       modal.setAttribute("aria-hidden", "false");
-      document.body.classList.add("directorist-custom-gallery-lightbox-open");
+      document.body.classList.add("directorist-sawjobs-gallery-lightbox-open");
       closeButton.focus();
     }
 
     function closeLightbox() {
       modal.classList.remove("is-open");
       modal.setAttribute("aria-hidden", "true");
-      document.body.classList.remove("directorist-custom-gallery-lightbox-open");
+      document.body.classList.remove("directorist-sawjobs-gallery-lightbox-open");
       modalImage.src = "";
 
       if (previousFocus) {
@@ -345,7 +345,7 @@
   }
 
   function initialize() {
-    document.querySelectorAll(".directorist-custom-gallery-dashboard").forEach(initializeDashboard);
+    document.querySelectorAll(".directorist-sawjobs-gallery-dashboard").forEach(initializeDashboard);
     document.querySelectorAll("[data-author-gallery]").forEach(initializeLightbox);
   }
 
