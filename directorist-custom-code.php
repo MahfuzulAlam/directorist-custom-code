@@ -83,6 +83,8 @@ if ( ! class_exists( 'Directorist_Custom_Code' ) ) {
 		 */
 		private function includes() {
 			require_once DIRECTORIST_CUSTOM_CODE_DIR . 'inc/class-template-loader.php';
+			require_once DIRECTORIST_CUSTOM_CODE_DIR . 'inc/class-webp-converter.php';
+			require_once DIRECTORIST_CUSTOM_CODE_DIR . 'inc/class-user-gallery.php';
 			require_once DIRECTORIST_CUSTOM_CODE_DIR . 'inc/functions.php';
 		}
 
@@ -103,6 +105,7 @@ if ( ! class_exists( 'Directorist_Custom_Code' ) ) {
 		 */
 		private function register_template_loader() {
 			Directorist_Custom_Code_Template_Loader::register();
+			Directorist_Custom_Code_User_Gallery::register();
 		}
 
 		/**
