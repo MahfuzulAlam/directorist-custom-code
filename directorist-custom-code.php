@@ -8,7 +8,7 @@
  * Plugin Name:       Directorist - Custom Code for GrowToGive
  * Plugin URI:        https://wpxplore.com
  * Description:       Best way to implement custom code for directorist plugin
- * Version:           3.0.0
+ * Version:           3.1.0
  * Requires at least: 5.2
  * Author:            wpXplore
  * Author URI:        https://wpxplore.com
@@ -79,6 +79,7 @@ if (!class_exists('Directorist_Custom_Code')) {
         public function includes()
         {
             require_once DIRECTORIST_CUSTOM_CODE_DIR . '/inc/class-template-loader.php';
+            require_once DIRECTORIST_CUSTOM_CODE_DIR . '/inc/class-profile-radius-search.php';
             include_once DIRECTORIST_CUSTOM_CODE_DIR . '/inc/functions.php';
         }
 
@@ -98,6 +99,7 @@ if (!class_exists('Directorist_Custom_Code')) {
         public function hooks()
         {
             Directorist_Custom_Code_Template_Loader::register();
+            Directorist_Custom_Code_Profile_Radius_Search::register();
         }
 
         /**
@@ -106,7 +108,7 @@ if (!class_exists('Directorist_Custom_Code')) {
         public function enqueue_scripts()
         {
             // Replace 'your-plugin-name' with the actual name of your plugin's folder.
-            wp_enqueue_script('directorist-custom-script', DIRECTORIST_CUSTOM_CODE_URI . 'assets/js/main.js', array('jquery'), '3.0.0', true);
+            wp_enqueue_script('directorist-custom-script', DIRECTORIST_CUSTOM_CODE_URI . 'assets/js/main.js', array('jquery'), '3.1.0', true);
         }
 
         /**
@@ -115,7 +117,7 @@ if (!class_exists('Directorist_Custom_Code')) {
         public function enqueue_styles()
         {
             // Replace 'your-plugin-name' with the actual name of your plugin's folder.
-            wp_enqueue_style('directorist-custom-style', DIRECTORIST_CUSTOM_CODE_URI . 'assets/css/main.css', array(), '3.0.0');
+            wp_enqueue_style('directorist-custom-style', DIRECTORIST_CUSTOM_CODE_URI . 'assets/css/main.css', array(), '3.1.0');
         }
 
         /**

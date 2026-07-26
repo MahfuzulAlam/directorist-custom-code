@@ -296,7 +296,6 @@ add_action(
 	2
 );
 
-
 if ( ! function_exists( 'directorist_listing_form_geo_defaults' ) ) {
 	/**
 	 * Prefill listing form when the listing has no address/coords saved.
