@@ -17,6 +17,8 @@ When Directorist is active, this extension loads:
 
 - `inc/functions.php`
   Use this file for custom PHP logic.
+- `inc/class-term-field-shortcode.php`
+  Contains the `[directorist_term_field]` shortcode implementation.
 - `templates/`
   Use this directory for Directorist template overrides.
 - `assets/css/main.css`
@@ -33,6 +35,7 @@ wp-content/plugins/directorist-custom-code/
 |  `- js/main.js
 |- inc/
 |  |- class-template-loader.php
+|  |- class-term-field-shortcode.php
 |  `- functions.php
 |- templates/
 `- directorist-custom-code.php
@@ -47,6 +50,115 @@ Use this extension in three layers:
 3. Put presentation and behavior changes in `assets/css/main.css` and `assets/js/main.js`.
 
 This keeps logic, markup, and styling separated and makes maintenance easier after Directorist updates.
+
+## Directorist Term Field Shortcode
+
+Use `[directorist_term_field]` to display a field from a Directorist category, location, or tag. You can place the shortcode in post or page content, a shortcode block, a compatible widget, or a page-builder shortcode element.
+
+The plugin registers this shortcode automatically when Directorist is active.
+
+### Basic Syntax
+
+```text
+[directorist_term_field slug="term-slug" taxonomy="category" field="description"]
+```
+
+### Parameters
+
+| Parameter | Required | Default | Accepted values | Description |
+|---|---:|---|---|---|
+| `slug` | Context-dependent | Empty | A Directorist term slug, such as `car`, `london`, or `bmw` | Identifies the term. Supply it together with `taxonomy`, or omit both parameters on a Directorist taxonomy archive. |
+| `taxonomy` | Context-dependent | Empty | `category`, `location`, `tag` | Identifies the taxonomy containing the term. Supply it together with `slug`, or omit both parameters when the current Directorist archive supplies the term. |
+| `field` | No | `description` | `description`, `title`, `image` | Selects the term field to render. Unsupported values return no output. |
+
+The taxonomy aliases map directly to Directorist constants:
+
+| Shortcode value | Directorist taxonomy |
+|---|---|
+| `category` | `ATBDP_CATEGORY` |
+| `location` | `ATBDP_LOCATION` |
+| `tag` | `ATBDP_TAGS` |
+
+Attribute values are sanitized before the term is queried. Other taxonomy values are rejected.
+
+### Description Examples
+
+The `description` field is the default. It returns the term description with permitted WordPress post HTML.
+
+```text
+[directorist_term_field slug="car" taxonomy="category" field="description"]
+[directorist_term_field slug="london" taxonomy="location" field="description"]
+[directorist_term_field slug="bmw" taxonomy="tag" field="description"]
+```
+
+Because `description` is the default field, this shorter form produces the same result:
+
+```text
+[directorist_term_field slug="car" taxonomy="category"]
+```
+
+### Title Examples
+
+The `title` field returns the escaped term name as text.
+
+```text
+[directorist_term_field slug="car" taxonomy="category" field="title"]
+[directorist_term_field slug="london" taxonomy="location" field="title"]
+[directorist_term_field slug="bmw" taxonomy="tag" field="title"]
+```
+
+### Image Examples
+
+The `image` field returns the full-size WordPress attachment stored in Directorist's `image` term metadata. The generated image has the CSS class `directorist-term-field__image`.
+
+```text
+[directorist_term_field slug="car" taxonomy="category" field="image"]
+[directorist_term_field slug="london" taxonomy="location" field="image"]
+[directorist_term_field slug="bmw" taxonomy="tag" field="image"]
+```
+
+Directorist provides native image controls for categories and locations. A tag image is returned only when an attachment ID has separately been stored in that tag's `image` term metadata. If the requested term has no image, the shortcode returns no output.
+
+The image uses its Media Library alternative text. When that is empty, the term name is used as the alternative text.
+
+### Using the Current Directorist Archive
+
+On a Directorist category, location, or tag archive, omit both `slug` and `taxonomy`. The shortcode reads Directorist's `atbdp_category`, `atbdp_location`, or `atbdp_tag` query variable to find the current term:
+
+```text
+[directorist_term_field]
+[directorist_term_field field="description"]
+[directorist_term_field field="title"]
+[directorist_term_field field="image"]
+```
+
+If only one of `slug` or `taxonomy` is supplied, the explicit value is not used; the shortcode falls back to the current Directorist taxonomy query variables. Outside a Directorist taxonomy archive, always provide both `slug` and `taxonomy`.
+
+### Empty Output
+
+The shortcode intentionally returns an empty string when:
+
+- the taxonomy or field value is unsupported
+- the requested term does not exist
+- `slug` or `taxonomy` cannot be determined
+- the `image` field is requested but the term has no image attachment
+
+### Customizing the Image Size
+
+Images use the `full` WordPress image size by default. Developers can change it with the `directorist_custom_code_term_field_image_size` filter:
+
+```php
+add_filter(
+	'directorist_custom_code_term_field_image_size',
+	static function ( $size, $term ) {
+		return 'large';
+	},
+	10,
+	2
+);
+```
+
+The filter receives the current image size and the resolved `WP_Term` object.
 
 ## 1. Writing Custom Code
 

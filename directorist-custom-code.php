@@ -55,6 +55,7 @@ if ( ! class_exists( 'Directorist_Custom_Code' ) ) {
 			$this->includes();
 			$this->enqueue_assets();
 			$this->register_template_loader();
+			$this->register_shortcodes();
 		}
 
 		/**
@@ -83,6 +84,7 @@ if ( ! class_exists( 'Directorist_Custom_Code' ) ) {
 		 */
 		private function includes() {
 			require_once DIRECTORIST_CUSTOM_CODE_DIR . 'inc/class-template-loader.php';
+			require_once DIRECTORIST_CUSTOM_CODE_DIR . 'inc/class-term-field-shortcode.php';
 			require_once DIRECTORIST_CUSTOM_CODE_DIR . 'inc/functions.php';
 		}
 
@@ -103,6 +105,15 @@ if ( ! class_exists( 'Directorist_Custom_Code' ) ) {
 		 */
 		private function register_template_loader() {
 			Directorist_Custom_Code_Template_Loader::register();
+		}
+
+		/**
+		 * Register custom shortcodes.
+		 *
+		 * @return void
+		 */
+		private function register_shortcodes() {
+			Directorist_Custom_Code_Term_Field_Shortcode::register();
 		}
 
 		/**
