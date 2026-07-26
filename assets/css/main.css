@@ -1,1 +1,11 @@
 /* Add you custom css here */
+
+.directorist-term-field--sized {
+	box-sizing: border-box;
+}
+
+.directorist-term-field--sized .directorist-term-field__image {
+	display: block;
+	height: auto;
+	max-width: 100%;
+}

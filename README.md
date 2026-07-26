@@ -60,7 +60,7 @@ The plugin registers this shortcode automatically when Directorist is active.
 ### Basic Syntax
 
 ```text
-[directorist_term_field slug="term-slug" taxonomy="category" field="description"]
+[directorist_term_field slug="term-slug" taxonomy="category" field="description" width="600px"]
 ```
 
 ### Parameters
@@ -70,6 +70,7 @@ The plugin registers this shortcode automatically when Directorist is active.
 | `slug` | Context-dependent | Empty | A Directorist term slug, such as `car`, `london`, or `bmw` | Identifies the term. Supply it together with `taxonomy`, or omit both parameters on a Directorist taxonomy archive. |
 | `taxonomy` | Context-dependent | Empty | `category`, `location`, `tag` | Identifies the taxonomy containing the term. Supply it together with `slug`, or omit both parameters when the current Directorist archive supplies the term. |
 | `field` | No | `description` | `description`, `title`, `image` | Selects the term field to render. Unsupported values return no output. |
+| `width` | No | Empty | A unitless pixel value, `auto`, or a positive CSS length using `px`, `%`, `em`, `rem`, `vw`, `vh`, `vmin`, `vmax`, or `ch` | Applies the requested width to a responsive wrapper around any field output. |
 
 The taxonomy aliases map directly to Directorist constants:
 
@@ -81,6 +82,20 @@ The taxonomy aliases map directly to Directorist constants:
 
 Attribute values are sanitized before the term is queried. Other taxonomy values are rejected.
 
+### Content Width
+
+The optional `width` parameter works with `description`, `title`, and `image`. A unitless number is interpreted as pixels, while supported CSS units are preserved:
+
+```text
+[directorist_term_field slug="car" taxonomy="category" field="description" width="700"]
+[directorist_term_field slug="london" taxonomy="location" field="title" width="50%"]
+[directorist_term_field slug="bmw" taxonomy="tag" field="image" width="30rem"]
+```
+
+These examples produce widths of `700px`, `50%`, and `30rem`. The wrapper also receives `max-width: 100%` so fixed widths do not overflow their parent on smaller screens.
+
+When `width` is empty or invalid, no width wrapper is added and the original field markup is returned unchanged.
+
 ### Description Examples
 
 The `description` field is the default. It returns the term description with permitted WordPress post HTML.
@@ -88,7 +103,7 @@ The `description` field is the default. It returns the term description with per
 ```text
 [directorist_term_field slug="car" taxonomy="category" field="description"]
 [directorist_term_field slug="london" taxonomy="location" field="description"]
-[directorist_term_field slug="bmw" taxonomy="tag" field="description"]
+[directorist_term_field slug="bmw" taxonomy="tag" field="description" width="100%"]
 ```
 
 Because `description` is the default field, this shorter form produces the same result:
@@ -103,7 +118,7 @@ The `title` field returns the escaped term name as text.
 
 ```text
 [directorist_term_field slug="car" taxonomy="category" field="title"]
-[directorist_term_field slug="london" taxonomy="location" field="title"]
+[directorist_term_field slug="london" taxonomy="location" field="title" width="480px"]
 [directorist_term_field slug="bmw" taxonomy="tag" field="title"]
 ```
 
@@ -112,7 +127,7 @@ The `title` field returns the escaped term name as text.
 The `image` field returns the full-size WordPress attachment stored in Directorist's `image` term metadata. The generated image has the CSS class `directorist-term-field__image`.
 
 ```text
-[directorist_term_field slug="car" taxonomy="category" field="image"]
+[directorist_term_field slug="car" taxonomy="category" field="image" width="320px"]
 [directorist_term_field slug="london" taxonomy="location" field="image"]
 [directorist_term_field slug="bmw" taxonomy="tag" field="image"]
 ```
@@ -129,7 +144,7 @@ On a Directorist category, location, or tag archive, omit both `slug` and `taxon
 [directorist_term_field]
 [directorist_term_field field="description"]
 [directorist_term_field field="title"]
-[directorist_term_field field="image"]
+[directorist_term_field field="image" width="50%"]
 ```
 
 If only one of `slug` or `taxonomy` is supplied, the explicit value is not used; the shortcode falls back to the current Directorist taxonomy query variables. Outside a Directorist taxonomy archive, always provide both `slug` and `taxonomy`.

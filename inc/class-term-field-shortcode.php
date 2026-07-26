@@ -43,6 +43,7 @@ if ( ! class_exists( 'Directorist_Custom_Code_Term_Field_Shortcode' ) ) {
 					'slug'     => '',
 					'taxonomy' => '',
 					'field'    => 'description',
+					'width'    => '',
 				),
 				is_array( $atts ) ? $atts : array(),
 				self::SHORTCODE
@@ -58,21 +59,26 @@ if ( ! class_exists( 'Directorist_Custom_Code_Term_Field_Shortcode' ) ) {
 				return '';
 			}
 
+			$output = '';
+
 			switch ( $field ) {
 				case 'title':
-					$title = get_term_field( 'name', $term, $term->taxonomy, 'display' );
-
-					return is_wp_error( $title ) ? '' : esc_html( $title );
+					$title  = get_term_field( 'name', $term, $term->taxonomy, 'display' );
+					$output = is_wp_error( $title ) ? '' : esc_html( $title );
+					break;
 
 				case 'image':
-					return self::render_image( $term );
+					$output = self::render_image( $term );
+					break;
 
 				case 'description':
 				default:
 					$description = get_term_field( 'description', $term, $term->taxonomy, 'display' );
-
-					return is_wp_error( $description ) ? '' : wp_kses_post( $description );
+					$output      = is_wp_error( $description ) ? '' : wp_kses_post( $description );
+					break;
 			}
+
+			return self::apply_content_width( $output, $field, $atts['width'] );
 		}
 
 		/**
@@ -141,6 +147,68 @@ if ( ! class_exists( 'Directorist_Custom_Code_Term_Field_Shortcode' ) ) {
 			);
 
 			return $image ? wp_kses_post( $image ) : '';
+		}
+
+		/**
+		 * Wrap shortcode output in a safely sized container.
+		 *
+		 * @param string $output Rendered field output.
+		 * @param string $field  Rendered field name.
+		 * @param mixed  $width  Requested content width.
+		 * @return string
+		 */
+		private static function apply_content_width( $output, $field, $width ) {
+			if ( '' === $output ) {
+				return '';
+			}
+
+			$width = self::normalize_width( $width );
+			if ( '' === $width ) {
+				return $output;
+			}
+
+			$style = safecss_filter_attr( 'width: ' . $width . '; max-width: 100%;' );
+			if ( '' === $style ) {
+				return $output;
+			}
+
+			return sprintf(
+				'<div class="%1$s" style="%2$s">%3$s</div>',
+				esc_attr( 'directorist-term-field directorist-term-field--' . $field . ' directorist-term-field--sized' ),
+				esc_attr( $style ),
+				$output
+			);
+		}
+
+		/**
+		 * Normalize a shortcode width to a restricted CSS length.
+		 *
+		 * Unitless values are treated as pixels. Supported units are px, percent,
+		 * em, rem, vw, vh, vmin, vmax, and ch.
+		 *
+		 * @param mixed $width Requested content width.
+		 * @return string
+		 */
+		private static function normalize_width( $width ) {
+			if ( ! is_scalar( $width ) ) {
+				return '';
+			}
+
+			$width = strtolower( trim( (string) $width ) );
+			if ( '' === $width || 'auto' === $width ) {
+				return $width;
+			}
+
+			$number_pattern = '(?:\d+(?:\.\d+)?|\.\d+)';
+			if ( preg_match( '/^' . $number_pattern . '$/D', $width ) ) {
+				return $width . 'px';
+			}
+
+			if ( preg_match( '/^(?:0|' . $number_pattern . '(?:px|%|em|rem|vw|vh|vmin|vmax|ch))$/D', $width ) ) {
+				return $width;
+			}
+
+			return '';
 		}
 
 		/**
