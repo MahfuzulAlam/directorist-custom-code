@@ -3,7 +3,7 @@
  * Plugin Name:       Directorist - Custom Code
  * Plugin URI:        https://wpxplore.com
  * Description:       Best way to implement custom code for Directorist plugin.
- * Version:           3.0.0
+ * Version:           3.1.0
  * Requires at least: 5.2
  * Author:            wpXplore
  * Author URI:        https://wpxplore.com
@@ -72,7 +72,7 @@ if ( ! class_exists( 'Directorist_Custom_Code' ) ) {
 			}
 
 			if ( ! defined( 'DIRECTORIST_CUSTOM_CODE_VERSION' ) ) {
-				define( 'DIRECTORIST_CUSTOM_CODE_VERSION', '3.0.0' );
+				define( 'DIRECTORIST_CUSTOM_CODE_VERSION', '3.1.0' );
 			}
 		}
 

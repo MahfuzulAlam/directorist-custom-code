@@ -35,6 +35,11 @@ wp-content/plugins/directorist-custom-code/
 |  |- class-template-loader.php
 |  `- functions.php
 |- templates/
+|  `- listing-form/
+|     `- custom-fields/
+|        |- checkbox.php
+|        |- radio.php
+|        `- select.php
 `- directorist-custom-code.php
 ```
 
@@ -201,6 +206,30 @@ wp-content/plugins/directorist-custom-code/templates/single/fields/address.php
 - Review overrides after updating Directorist.
 - Preserve escaping and security checks from the original template.
 - If a template uses variables passed by Directorist, keep those variable names intact unless you fully understand the impact.
+
+### Alphabetical Custom-Field Options
+
+This extension includes overrides for these Directorist listing-form custom fields:
+
+- checkbox
+- radio
+- select
+
+Their options are displayed alphabetically by the visible option label. Sorting is
+case-insensitive, accent-normalized, and natural, so `Option 2` appears before
+`Option 10`.
+
+The overrides affect display order only. Directorist option values, saved listing
+data, required-field handling, conditional logic, and checked or selected states
+remain unchanged.
+
+The relevant override files are:
+
+```text
+templates/listing-form/custom-fields/checkbox.php
+templates/listing-form/custom-fields/radio.php
+templates/listing-form/custom-fields/select.php
+```
 
 ## When to Use Custom Code vs Template Overrides
 
