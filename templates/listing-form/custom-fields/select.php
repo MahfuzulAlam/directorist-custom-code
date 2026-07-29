@@ -2,7 +2,7 @@
 /**
  * Listing form custom select field.
  *
- * Overrides Directorist's template to display options alphabetically.
+ * Overrides Directorist's template to support optional alphabetical sorting.
  *
  * @package Directorist_Custom_Code
  */
@@ -12,8 +12,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 $directorist_custom_code_conditional_logic_attr = $listing_form->get_conditional_logic_attributes( $data );
-$directorist_custom_code_options                = directorist_custom_code_sort_field_options(
-	isset( $data['options'] ) ? $data['options'] : array()
+$directorist_custom_code_options                = directorist_custom_code_maybe_sort_field_options(
+	isset( $data['options'] ) ? $data['options'] : array(),
+	$data
 );
 ?>
 <div class="directorist-form-group directorist-custom-field-select"<?php echo $directorist_custom_code_conditional_logic_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped internally by Directorist. ?>>

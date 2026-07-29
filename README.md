@@ -215,9 +215,20 @@ This extension includes overrides for these Directorist listing-form custom fiel
 - radio
 - select
 
-Their options are displayed alphabetically by the visible option label. Sorting is
-case-insensitive, accent-normalized, and natural, so `Option 2` appears before
-`Option 10`.
+It also includes overrides for these search-form custom fields:
+
+- checkbox
+- radio
+- select
+
+Each field has an **Alphabetical sorting** switch in its Directory Builder
+settings. The switch is available independently in both the Add Listing Form and
+Search Form builders and is disabled by default.
+
+When enabled, options are displayed alphabetically by the visible option label.
+Sorting is case-insensitive, accent-normalized, and natural, so `Option 2`
+appears before `Option 10`. When disabled, the builder's original option order is
+preserved.
 
 The overrides affect display order only. Directorist option values, saved listing
 data, required-field handling, conditional logic, and checked or selected states
@@ -229,6 +240,9 @@ The relevant override files are:
 templates/listing-form/custom-fields/checkbox.php
 templates/listing-form/custom-fields/radio.php
 templates/listing-form/custom-fields/select.php
+templates/search-form/custom-fields/checkbox.php
+templates/search-form/custom-fields/radio.php
+templates/search-form/custom-fields/select.php
 ```
 
 ## When to Use Custom Code vs Template Overrides
