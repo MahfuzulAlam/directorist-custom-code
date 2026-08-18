@@ -1,6 +1,6 @@
 <?php
 /**
- * Default Directorist searches around the current user's profile address.
+ * Limit Directorist searches to the current user's profile location by default.
  *
  * @package Directorist_Custom_Code
  */
@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'Directorist_Custom_Code_Profile_Radius_Search' ) ) {
 	/**
-	 * Adds the current user's saved profile coordinates to Directorist queries.
+	 * Adds the current user's saved profile location to Directorist queries.
 	 */
 	final class Directorist_Custom_Code_Profile_Radius_Search {
 		/**
@@ -30,16 +30,17 @@ if ( ! class_exists( 'Directorist_Custom_Code_Profile_Radius_Search' ) ) {
 		}
 
 		/**
-		 * Default Directorist results around the logged-in user's profile.
+		 * Apply profile location defaults to Directorist results.
 		 *
 		 * An existing geo query or visitor-selected search location takes precedence.
-		 * The fallback requires address, latitude, and longitude on the user profile.
+		 * A valid default location limits results to that taxonomy term. A complete
+		 * profile address and coordinates also limit results to the default radius.
 		 *
 		 * @param array $args Directorist/WP_Query arguments.
 		 * @return array
 		 */
 		public static function filter_query_arguments( $args ) {
-			if ( ! is_array( $args ) || ! is_user_logged_in() ) {
+			if ( ! is_array( $args ) ) {
 				return $args;
 			}
 
@@ -47,28 +48,62 @@ if ( ! class_exists( 'Directorist_Custom_Code_Profile_Radius_Search' ) ) {
 				return $args;
 			}
 
-			if ( ! empty( $args['atbdp_geo_query'] ) || self::has_explicit_search_location() ) {
+			$location_taxonomy  = directorist_custom_code_location_taxonomy();
+			$args               = self::add_requested_location_id_query( $args, $location_taxonomy );
+
+			if ( ! is_user_logged_in() ) {
 				return $args;
 			}
 
-			$user_id   = get_current_user_id();
-			$address   = trim( (string) get_user_meta( $user_id, 'address', true ) );
-			$latitude  = get_user_meta( $user_id, 'latitude', true );
-			$longitude = get_user_meta( $user_id, 'longitude', true );
+			$user_id            = get_current_user_id();
+			$defaults           = directorist_custom_code_get_profile_search_location_defaults( $user_id );
+			$profile_components = directorist_custom_code_get_profile_search_request_components( $defaults );
+			$profile_request    = ! empty( $profile_components );
 
-			if (
-				'' === $address ||
-				! self::is_valid_coordinate( $latitude, -90, 90 ) ||
-				! self::is_valid_coordinate( $longitude, -180, 180 )
-			) {
+			if ( directorist_custom_code_has_explicit_search_location( $defaults, $profile_components ) ) {
+				return $args;
+			}
+
+			$has_location_query = self::has_taxonomy_query( $args, $location_taxonomy );
+
+			if ( $profile_request ) {
+				if (
+					( $has_location_query && ! in_array( 'taxonomy', $profile_components, true ) ) ||
+					( ! empty( $args['atbdp_geo_query'] ) && ! in_array( 'address', $profile_components, true ) )
+				) {
+					return $args;
+				}
+
+				$apply_taxonomy = in_array( 'taxonomy', $profile_components, true );
+				$apply_address  = in_array( 'address', $profile_components, true );
+			} else {
+				if ( ! empty( $args['atbdp_geo_query'] ) || $has_location_query ) {
+					return $args;
+				}
+
+				$apply_taxonomy = ! empty( $defaults['location_id'] );
+				$apply_address  = ! empty( $defaults['address'] );
+			}
+
+			if ( $apply_taxonomy && ! $has_location_query ) {
+				$args = self::add_location_taxonomy_query( $args, $defaults['location_id'], $location_taxonomy );
+			}
+
+			if ( ! $apply_address ) {
+				return $args;
+			}
+
+			$args = self::remove_profile_address_meta_query( $args, $defaults['address'] );
+
+			if ( empty( $defaults['has_geo'] ) ) {
 				return $args;
 			}
 
 			$args['atbdp_geo_query'] = array(
 				'lat_field'    => '_manual_lat',
 				'lng_field'    => '_manual_lng',
-				'latitude'     => (float) $latitude,
-				'longitude'    => (float) $longitude,
+				'latitude'     => (float) $defaults['latitude'],
+				'longitude'    => (float) $defaults['longitude'],
 				'min_distance' => 0,
 				'max_distance' => self::DEFAULT_RADIUS_MILES,
 				'units'        => 'miles',
@@ -78,28 +113,93 @@ if ( ! class_exists( 'Directorist_Custom_Code_Profile_Radius_Search' ) ) {
 		}
 
 		/**
-		 * Check whether the current request contains a visitor-selected location.
+		 * Add a valid loc_id request to query arguments when Directorist has not.
 		 *
-		 * @return bool
+		 * @param array  $args     Directorist/WP_Query arguments.
+		 * @param string $taxonomy Location taxonomy name.
+		 * @return array
 		 */
-		private static function has_explicit_search_location() {
-			$location_keys = array(
-				'address',
-				'cityLat',
-				'cityLng',
-				'zip',
-				'zip_cityLat',
-				'zip_cityLng',
-				'in_loc',
+		private static function add_requested_location_id_query( $args, $taxonomy ) {
+			if (
+				'' !== directorist_custom_code_get_request_scalar( 'in_loc' ) ||
+				self::has_taxonomy_query( $args, $taxonomy )
+			) {
+				return $args;
+			}
+
+			$location_ids = wp_parse_id_list( directorist_custom_code_get_request_scalar( 'loc_id' ) );
+			$location_id  = ! empty( $location_ids ) ? (int) reset( $location_ids ) : 0;
+			$location     = $location_id ? get_term( $location_id, $taxonomy ) : null;
+
+			if ( ! $location || is_wp_error( $location ) ) {
+				return $args;
+			}
+
+			return self::add_location_taxonomy_query( $args, $location->term_id, $taxonomy );
+		}
+
+		/**
+		 * Add a location taxonomy clause while preserving an existing query group.
+		 *
+		 * @param array  $args        Directorist/WP_Query arguments.
+		 * @param int    $location_id Location term ID.
+		 * @param string $taxonomy    Location taxonomy name.
+		 * @return array
+		 */
+		private static function add_location_taxonomy_query( $args, $location_id, $taxonomy ) {
+			$location_query = array(
+				'taxonomy'         => $taxonomy,
+				'field'            => 'term_id',
+				'terms'            => array( (int) $location_id ),
+				'include_children' => true,
 			);
 
-			foreach ( $location_keys as $key ) {
-				if ( ! isset( $_REQUEST[ $key ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only frontend search context.
+			if ( empty( $args['tax_query'] ) || ! is_array( $args['tax_query'] ) ) {
+				$args['tax_query'] = array( $location_query );
+			} else {
+				$args['tax_query'] = array(
+					'relation' => 'AND',
+					$args['tax_query'],
+					$location_query,
+				);
+			}
+
+			return $args;
+		}
+
+		/**
+		 * Check whether query arguments already contain a taxonomy clause.
+		 *
+		 * @param array  $args     Directorist/WP_Query arguments.
+		 * @param string $taxonomy Taxonomy name.
+		 * @return bool
+		 */
+		private static function has_taxonomy_query( $args, $taxonomy ) {
+			if ( empty( $args['tax_query'] ) || ! is_array( $args['tax_query'] ) ) {
+				return false;
+			}
+
+			return self::tax_query_contains_taxonomy( $args['tax_query'], $taxonomy );
+		}
+
+		/**
+		 * Recursively inspect a possibly nested taxonomy query.
+		 *
+		 * @param array  $tax_query Taxonomy query group or clause.
+		 * @param string $taxonomy  Taxonomy name.
+		 * @return bool
+		 */
+		private static function tax_query_contains_taxonomy( $tax_query, $taxonomy ) {
+			if ( isset( $tax_query['taxonomy'] ) && $taxonomy === $tax_query['taxonomy'] ) {
+				return true;
+			}
+
+			foreach ( $tax_query as $key => $clause ) {
+				if ( 'relation' === $key || ! is_array( $clause ) ) {
 					continue;
 				}
 
-				$value = wp_unslash( $_REQUEST[ $key ] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only frontend search context.
-				if ( is_array( $value ) ? ! empty( array_filter( $value ) ) : '' !== trim( (string) $value ) ) {
+				if ( self::tax_query_contains_taxonomy( $clause, $taxonomy ) ) {
 					return true;
 				}
 			}
@@ -108,26 +208,29 @@ if ( ! class_exists( 'Directorist_Custom_Code_Profile_Radius_Search' ) ) {
 		}
 
 		/**
-		 * Determine whether a value is a valid latitude or longitude.
+		 * Remove Directorist's address-text clause for an unchanged profile default.
 		 *
-		 * @param mixed $value Coordinate value.
-		 * @param float $min   Minimum accepted value.
-		 * @param float $max   Maximum accepted value.
-		 * @return bool
+		 * @param array  $args    Directorist/WP_Query arguments.
+		 * @param string $address Profile address.
+		 * @return array
 		 */
-		private static function is_valid_coordinate( $value, $min, $max ) {
-			if ( ! is_scalar( $value ) ) {
-				return false;
+		private static function remove_profile_address_meta_query( $args, $address ) {
+			if (
+				empty( $args['meta_query']['_address'] ) ||
+				! is_array( $args['meta_query']['_address'] ) ||
+				'_address' !== ( $args['meta_query']['_address']['key'] ?? '' ) ||
+				$address !== ( $args['meta_query']['_address']['value'] ?? '' )
+			) {
+				return $args;
 			}
 
-			$value = trim( (string) $value );
-			if ( '' === $value || ! is_numeric( $value ) ) {
-				return false;
+			unset( $args['meta_query']['_address'] );
+
+			if ( empty( array_diff_key( $args['meta_query'], array( 'relation' => true ) ) ) ) {
+				unset( $args['meta_query'] );
 			}
 
-			$value = (float) $value;
-
-			return $value >= $min && $value <= $max;
+			return $args;
 		}
 	}
 }

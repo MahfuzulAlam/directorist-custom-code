@@ -132,12 +132,17 @@ $default_locations_selected = array_slice( $default_locations_selected, 0, 1 );
 
                                     <label for="default_locations"><?php esc_html_e( 'Default Location', 'directorist-custom-code' ); ?></label>
 
-                                    <select class="directorist-form-element select-basic" id="default_locations" name="user[default_locations]" data-placeholder="<?php esc_attr_e( 'Select default location', 'directorist-custom-code' ); ?>" required>
+                                    <select class="directorist-form-element select-basic" id="default_locations" name="user[default_locations]" data-placeholder="<?php esc_attr_e( 'Select default location', 'directorist-custom-code' ); ?>">
 										<?php
 										echo '<option value=""></option>';
 										echo directorist_custom_code_location_options_html( $default_locations_taxonomy, $default_locations_selected ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in helper.
 										?>
                                     </select>
+
+                                    <div class="dcc-profile-location-actions">
+                                        <button type="button" class="directorist-btn directorist-btn-sm directorist-btn-light" id="dcc-clear-profile-location" aria-describedby="dcc-clear-profile-location-help" data-cleared-message="<?php esc_attr_e( 'Location fields cleared. Save changes to apply.', 'directorist-custom-code' ); ?>"><?php esc_html_e( 'Clear location', 'directorist-custom-code' ); ?></button>
+                                        <span class="dcc-profile-location-actions__help" id="dcc-clear-profile-location-help" role="status"><?php esc_html_e( 'Clears the default location, address, and coordinates. Save changes to apply.', 'directorist-custom-code' ); ?></span>
+                                    </div>
 
                                 </div>
 

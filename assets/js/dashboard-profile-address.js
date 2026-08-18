@@ -35,28 +35,57 @@
     }
     return {
       $address: $address,
+      $defaultLocations: $form.find('#default_locations'),
       $lat: $form.find('#latitude'),
       $lng: $form.find('#longitude'),
     };
   }
 
-  function initDefaultLocationsSelect2() {
-    var $defaultLocations = $('#default_locations');
-    if (!$defaultLocations.length || typeof $.fn.select2 !== 'function') {
+  function clearProfileLocationFields(fields) {
+    fields.$address.val('').trigger('input').trigger('change');
+    fields.$lat.val('').trigger('change');
+    fields.$lng.val('').trigger('change');
+    $('#dcc-profile-address-suggestions').empty().hide();
+
+    var $clear = $('#dcc-clear-profile-location');
+    var clearedMessage = $clear.attr('data-cleared-message');
+    if (clearedMessage) {
+      $('#dcc-clear-profile-location-help').text(clearedMessage);
+    }
+  }
+
+  function initProfileLocationClear(fields) {
+    var $clear = $('#dcc-clear-profile-location');
+    var $help = $('#dcc-clear-profile-location-help');
+    var defaultHelpMessage = $help.text();
+    var previousDefaultLocation = fields.$defaultLocations.val();
+    if (!$clear.length) {
       return;
     }
-    if ($defaultLocations.hasClass('select2-hidden-accessible')) {
-      return;
-    }
-    $defaultLocations.select2({
-      width: '100%',
-      placeholder: $defaultLocations.attr('data-placeholder') || '',
-      allowClear: true,
+
+    fields.$defaultLocations.on('change.dccProfileAddrClear', function () {
+      var currentDefaultLocation = $(this).val();
+      if (previousDefaultLocation && !currentDefaultLocation) {
+        clearProfileLocationFields(fields);
+      } else if (currentDefaultLocation && defaultHelpMessage) {
+        $help.text(defaultHelpMessage);
+      }
+      previousDefaultLocation = currentDefaultLocation;
+    });
+
+    $clear.on('click.dccProfileAddr', function () {
+      if (fields.$defaultLocations.length && fields.$defaultLocations.val()) {
+        fields.$defaultLocations.val('').trigger('change');
+        return;
+      }
+
+      clearProfileLocationFields(fields);
     });
   }
 
   function initOpenStreet(fields) {
     var $box = $('#dcc-profile-address-suggestions');
+    var request = null;
     if (!$box.length) {
       $box = $('<div id="dcc-profile-address-suggestions" class="dcc-profile-address-suggestions" aria-live="polite"></div>');
       fields.$address.closest('.directorist-form-group').append($box);
@@ -68,7 +97,7 @@
         $box.empty().hide();
         return;
       }
-      $.ajax({
+      var currentRequest = $.ajax({
         url: 'https://nominatim.openstreetmap.org/search',
         type: 'GET',
         dataType: 'json',
@@ -103,10 +132,27 @@
         error: function () {
           $box.empty().hide();
         },
+        complete: function () {
+          if (request === currentRequest) {
+            request = null;
+          }
+        },
       });
+      request = currentRequest;
     }, 750);
 
-    fields.$address.on('input.dccProfileAddr', runSearch);
+    fields.$address.on('input.dccProfileAddr', function () {
+      if (request) {
+        request.abort();
+        request = null;
+      }
+
+      if ($(this).val().trim().length < 3) {
+        $box.empty().hide();
+      }
+
+      runSearch();
+    });
 
     $box.on('click.dccProfileAddr', '.dcc-profile-address-suggestions__item', function (e) {
       e.preventDefault();
@@ -173,12 +219,12 @@
       return;
     }
 
-    initDefaultLocationsSelect2();
-
     var fields = getFields();
     if (!fields) {
       return;
     }
+
+    initProfileLocationClear(fields);
 
     if (cfg.mapType === 'openstreet') {
       initOpenStreet(fields);

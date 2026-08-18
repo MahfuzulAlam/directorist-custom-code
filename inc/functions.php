@@ -8,6 +8,85 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+if ( ! function_exists( 'directorist_custom_code_get_request_scalar' ) ) {
+	/**
+	 * Return a sanitized scalar value from the current request.
+	 *
+	 * @param string $key Request key.
+	 * @return string
+	 */
+	function directorist_custom_code_get_request_scalar( $key ) {
+		if ( ! isset( $_REQUEST[ $key ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only frontend search context.
+			return '';
+		}
+
+		$value = wp_unslash( $_REQUEST[ $key ] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only frontend search context.
+
+		return is_scalar( $value ) ? sanitize_text_field( (string) $value ) : '';
+	}
+}
+
+if ( ! function_exists( 'directorist_custom_code_has_explicit_search_location' ) ) {
+	/**
+	 * Determine whether the current request already specifies a search location.
+	 *
+	 * @param array|null $profile_defaults   Resolved profile defaults, if already available.
+	 * @param array|null $profile_components Unchanged profile-derived request components.
+	 * @return bool
+	 */
+	function directorist_custom_code_has_explicit_search_location( $profile_defaults = null, $profile_components = null ) {
+		if ( null === $profile_defaults ) {
+			$profile_defaults = is_user_logged_in() ? directorist_custom_code_get_profile_search_location_defaults( get_current_user_id() ) : array();
+		}
+
+		if ( null === $profile_components ) {
+			$profile_components = directorist_custom_code_get_profile_search_request_components( $profile_defaults );
+		}
+
+		$location_state = directorist_custom_code_get_search_location_state();
+		$location_keys  = array(
+			'address',
+			'cityLat',
+			'cityLng',
+			'zip',
+			'zip_cityLat',
+			'zip_cityLng',
+			'in_loc',
+			'loc_id',
+		);
+
+		foreach ( $location_keys as $key ) {
+			if ( 'in_loc' === $key && in_array( 'taxonomy', $profile_components, true ) ) {
+				continue;
+			}
+
+			if ( in_array( $key, array( 'address', 'cityLat', 'cityLng' ), true ) && in_array( 'address', $profile_components, true ) ) {
+				continue;
+			}
+
+			if ( ! isset( $_REQUEST[ $key ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only frontend search context.
+				continue;
+			}
+
+			$value = wp_unslash( $_REQUEST[ $key ] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only frontend search context.
+			if ( is_array( $value ) ? ! empty( array_filter( $value ) ) : '' !== trim( (string) $value ) ) {
+				return true;
+			}
+		}
+
+		$archive_location = get_query_var( 'atbdp_location' );
+		if ( is_scalar( $archive_location ) && '' !== trim( (string) $archive_location ) ) {
+			return true;
+		}
+
+		if ( in_array( $location_state, array( 'cleared', 'custom' ), true ) ) {
+			return true;
+		}
+
+		return '' !== $location_state && empty( $profile_components );
+	}
+}
+
 if ( ! function_exists( 'directorist_custom_code_location_taxonomy' ) ) {
 	/**
 	 * Return the active Directorist location taxonomy slug.
@@ -18,6 +97,152 @@ if ( ! function_exists( 'directorist_custom_code_location_taxonomy' ) ) {
 		$taxonomy = defined( 'ATBDP_LOCATION' ) ? ATBDP_LOCATION : 'at_biz_dir-location';
 
 		return taxonomy_exists( $taxonomy ) ? $taxonomy : 'at_biz_dir-location';
+	}
+}
+
+if ( ! function_exists( 'directorist_custom_code_is_valid_coordinate' ) ) {
+	/**
+	 * Determine whether a value is a valid latitude or longitude.
+	 *
+	 * @param mixed $value Coordinate value.
+	 * @param float $min   Minimum accepted value.
+	 * @param float $max   Maximum accepted value.
+	 * @return bool
+	 */
+	function directorist_custom_code_is_valid_coordinate( $value, $min, $max ) {
+		if ( ! is_scalar( $value ) ) {
+			return false;
+		}
+
+		$value = trim( (string) $value );
+		if ( '' === $value || ! is_numeric( $value ) ) {
+			return false;
+		}
+
+		$value = (float) $value;
+
+		return $value >= $min && $value <= $max;
+	}
+}
+
+if ( ! function_exists( 'directorist_custom_code_get_profile_search_location_defaults' ) ) {
+	/**
+	 * Return the valid search-location defaults saved on a user profile.
+	 *
+	 * @param int $user_id User ID.
+	 * @return array{location_id:int,address:string,latitude:string,longitude:string,has_geo:bool}
+	 */
+	function directorist_custom_code_get_profile_search_location_defaults( $user_id ) {
+		$defaults   = array(
+			'location_id' => 0,
+			'address'     => '',
+			'latitude'    => '',
+			'longitude'   => '',
+			'has_geo'     => false,
+		);
+		$user_id    = absint( $user_id );
+
+		if ( ! $user_id ) {
+			return $defaults;
+		}
+
+		$taxonomy     = directorist_custom_code_location_taxonomy();
+		$location_ids = wp_parse_id_list( get_user_meta( $user_id, 'default_locations', true ) );
+		$location_id  = ! empty( $location_ids ) ? (int) reset( $location_ids ) : 0;
+		$location     = $location_id ? get_term( $location_id, $taxonomy ) : null;
+		$address      = get_user_meta( $user_id, 'address', true );
+		$latitude     = get_user_meta( $user_id, 'latitude', true );
+		$longitude    = get_user_meta( $user_id, 'longitude', true );
+		$address      = is_scalar( $address ) ? sanitize_text_field( trim( (string) $address ) ) : '';
+		$latitude     = is_scalar( $latitude ) ? sanitize_text_field( trim( (string) $latitude ) ) : '';
+		$longitude    = is_scalar( $longitude ) ? sanitize_text_field( trim( (string) $longitude ) ) : '';
+		$has_geo      = '' !== $address &&
+			directorist_custom_code_is_valid_coordinate( $latitude, -90, 90 ) &&
+			directorist_custom_code_is_valid_coordinate( $longitude, -180, 180 );
+
+		if ( $location && ! is_wp_error( $location ) ) {
+			$defaults['location_id'] = (int) $location->term_id;
+		}
+
+		if ( '' !== $address ) {
+			$defaults['address'] = $address;
+		}
+
+		if ( $has_geo ) {
+			$defaults['latitude']  = $latitude;
+			$defaults['longitude'] = $longitude;
+			$defaults['has_geo']   = true;
+		}
+
+		return $defaults;
+	}
+}
+
+if ( ! function_exists( 'directorist_custom_code_get_search_location_state' ) ) {
+	/**
+	 * Return the normalized state submitted by the custom location search field.
+	 *
+	 * @return string
+	 */
+	function directorist_custom_code_get_search_location_state() {
+		$state = directorist_custom_code_get_request_scalar( 'dcc_profile_location_state' );
+
+		if ( in_array( $state, array( 'cleared', 'custom' ), true ) ) {
+			return $state;
+		}
+
+		$requested_components = array_filter( array_map( 'trim', explode( ',', $state ) ) );
+		$components           = array();
+
+		foreach ( array( 'taxonomy', 'address' ) as $component ) {
+			if ( in_array( $component, $requested_components, true ) ) {
+				$components[] = $component;
+			}
+		}
+
+		return implode( ',', $components );
+	}
+}
+
+if ( ! function_exists( 'directorist_custom_code_get_profile_search_request_components' ) ) {
+	/**
+	 * Return profile-derived location components that remain unchanged in the request.
+	 *
+	 * @param array $defaults Profile search-location defaults.
+	 * @return string[]
+	 */
+	function directorist_custom_code_get_profile_search_request_components( $defaults = array() ) {
+		$state      = directorist_custom_code_get_search_location_state();
+		$components = array();
+
+		if ( empty( $defaults ) || in_array( $state, array( '', 'cleared', 'custom' ), true ) ) {
+			return $components;
+		}
+
+		$state_components = explode( ',', $state );
+		$location_ids      = wp_parse_id_list( directorist_custom_code_get_request_scalar( 'in_loc' ) );
+		$location_id       = ! empty( $location_ids ) ? (int) reset( $location_ids ) : 0;
+
+		if (
+			in_array( 'taxonomy', $state_components, true ) &&
+			! empty( $defaults['location_id'] ) &&
+			$location_id === (int) $defaults['location_id'] &&
+			'' === directorist_custom_code_get_request_scalar( 'loc_id' )
+		) {
+			$components[] = 'taxonomy';
+		}
+
+		if (
+			in_array( 'address', $state_components, true ) &&
+			! empty( $defaults['address'] ) &&
+			directorist_custom_code_get_request_scalar( 'address' ) === $defaults['address'] &&
+			directorist_custom_code_get_request_scalar( 'cityLat' ) === $defaults['latitude'] &&
+			directorist_custom_code_get_request_scalar( 'cityLng' ) === $defaults['longitude']
+		) {
+			$components[] = 'address';
+		}
+
+		return $components;
 	}
 }
 

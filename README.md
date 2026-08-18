@@ -58,11 +58,12 @@ Vendors often enter the same **business address**, **map pin**, **email**, **pho
    Custom listing form field templates read that saved profile data. When a listing field is **still empty**, it is **prefilled** from the logged-in user’s profile (on the front end) or from the listing author when editing in the admin—same pattern as Directorist’s own profile storage (`user_email`, `user_url`, `atbdp_phone`, address meta, etc.).
 
 3. **Listings and search results**  
-   Logged-in visitors who have a complete saved profile address (address, latitude, and longitude) see listings within **25 miles** of that address by default. Logged-out visitors are unaffected. A location or radius explicitly selected in the search form takes precedence over the profile default.
+   Logged-in visitors see their saved taxonomy location and address preselected in the search form until they choose another location. Results are limited to the saved location (including child locations), and a complete profile address, latitude, and longitude limits results to **25 miles** of that address. Logged-out visitors are unaffected. A location or radius explicitly selected in the search form takes precedence over the profile defaults.
 
 ### Address and map
 
 - On **My Profile**, the vendor picks an address from the **autocomplete** (Google Places or OpenStreetMap/Nominatim-style behavior, depending on Directorist’s **Select Listing Map** option).
+- **Clear location** resets the profile’s default location, address, latitude, and longitude together when the profile is saved.
 - Values are stored on the **user** so they persist across listings.
 - On **Add Listing**, **Address** and **Map** fields can show those defaults when the listing has not already saved its own values—so the vendor does not have to search for the same location again and again.
 - On listing and search-result pages, the same saved coordinates provide a default 25-mile radius when the visitor has not selected another search location.

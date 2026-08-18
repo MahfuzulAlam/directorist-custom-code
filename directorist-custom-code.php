@@ -8,7 +8,7 @@
  * Plugin Name:       Directorist - Custom Code for GrowToGive
  * Plugin URI:        https://wpxplore.com
  * Description:       Best way to implement custom code for directorist plugin
- * Version:           3.1.0
+ * Version:           3.1.1
  * Requires at least: 5.2
  * Author:            wpXplore
  * Author URI:        https://wpxplore.com
@@ -108,7 +108,7 @@ if (!class_exists('Directorist_Custom_Code')) {
         public function enqueue_scripts()
         {
             // Replace 'your-plugin-name' with the actual name of your plugin's folder.
-            wp_enqueue_script('directorist-custom-script', DIRECTORIST_CUSTOM_CODE_URI . 'assets/js/main.js', array('jquery'), '3.1.0', true);
+            wp_enqueue_script('directorist-custom-script', DIRECTORIST_CUSTOM_CODE_URI . 'assets/js/main.js', array('jquery'), '3.1.1', true);
         }
 
         /**
@@ -145,14 +145,14 @@ if (!class_exists('Directorist_Custom_Code')) {
                 'dcc-dashboard-profile-address',
                 DIRECTORIST_CUSTOM_CODE_URI . 'assets/css/dashboard-profile-address.css',
                 array(),
-                '2.0.1'
+                '2.0.2'
             );
 
             wp_enqueue_script(
                 $handle,
                 DIRECTORIST_CUSTOM_CODE_URI . 'assets/js/dashboard-profile-address.js',
                 array('jquery'),
-                '2.0.1',
+                '2.0.2',
                 true
             );
 

@@ -41,6 +41,20 @@
   border-bottom: 0;
 }
 
+.dcc-profile-location-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.dcc-profile-location-actions__help {
+  color: var(--directorist-color-light-gray, #6b7280);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
 .select2-container--default .select2-search--inline .select2-search__field {
   height: 30px !important;
   margin-bottom: 10px !important;
