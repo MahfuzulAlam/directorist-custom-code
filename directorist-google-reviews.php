@@ -8,7 +8,7 @@
  * Plugin Name:       Directorist - Google Reviews
  * Plugin URI:        https://wpwax.com
  * Description:       Best way to implement custom code for directorist plugin
- * Version:           2.1.0
+ * Version:           3.1.0
  * Requires at least: 5.2
  * Author:            wpWax
  * Author URI:        https://wpwax.com
@@ -55,6 +55,7 @@ if (!class_exists('Directorist_Google_Reviews')) {
         {
             $this->define_constant();
             $this->includes();
+            $this->boot();
             $this->enqueues();
             $this->hooks();
         }
@@ -65,7 +66,7 @@ if (!class_exists('Directorist_Google_Reviews')) {
         public function define_constant()
         {
             if (!defined('DIRECTORIST_GOOGLE_REVIEWS_VERSION')) {
-                define('DIRECTORIST_GOOGLE_REVIEWS_VERSION', '2.1.0');
+                define('DIRECTORIST_GOOGLE_REVIEWS_VERSION', '3.1.0');
             }
 
             if (!defined('DIRECTORIST_GOOGLE_REVIEWS_URI')) {
@@ -87,7 +88,25 @@ if (!class_exists('Directorist_Google_Reviews')) {
         public function includes()
         {
             include_once(DIRECTORIST_GOOGLE_REVIEWS_DIR . '/inc/functions.php');
+            include_once(DIRECTORIST_GOOGLE_REVIEWS_DIR . '/inc/class-install.php');
+            include_once(DIRECTORIST_GOOGLE_REVIEWS_DIR . '/inc/class-reviews-table.php');
+            include_once(DIRECTORIST_GOOGLE_REVIEWS_DIR . '/inc/class-places-api.php');
+            include_once(DIRECTORIST_GOOGLE_REVIEWS_DIR . '/inc/class-sync.php');
             include_once(DIRECTORIST_GOOGLE_REVIEWS_DIR . '/inc/class-custom-field.php');
+            include_once(DIRECTORIST_GOOGLE_REVIEWS_DIR . '/inc/class-listing-hooks.php');
+        }
+
+        /**
+         * Boot the services that need to be live on every request.
+         */
+        public function boot()
+        {
+            DGR_Install::maybe_install();
+
+            $sync = new DGR_Sync();
+
+            new DGR_Custom_Field($sync);
+            new DGR_Listing_Hooks($sync);
         }
 
         /**
@@ -204,6 +223,11 @@ if (!class_exists('Directorist_Google_Reviews')) {
     {
         return Directorist_Google_Reviews::instance();
     }
+
+    register_activation_hook(__FILE__, function () {
+        include_once plugin_dir_path(__FILE__) . 'inc/class-install.php';
+        DGR_Install::install();
+    });
 
     if (directorist_is_plugin_active('directorist/directorist-base.php')) {
         Directorist_Google_Reviews(); // get the plugin running

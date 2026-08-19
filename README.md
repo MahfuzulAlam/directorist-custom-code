@@ -9,17 +9,21 @@
 
 - Integrates Google Reviews into Directorist listings
 - Autocomplete Google Places field in Add Listing form
-- Two independent single-listing fields: **Google Rating** (summary bar) and **Google Reviews** (cards)
-- Rating summary bar with the overall score, star rating and total review count
-- Star-only reviews (no written comment) render as compact rating cards rather than being dropped
+- **Reviews are stored in a custom database table** — pages render from the database, not from the Google API
+- Automatic refresh every 7 days; between refreshes the API is never called
+- **Changing the Google place on a listing resyncs everything immediately on save** — reviews table and post meta both
+- Stored data is cleaned up when a listing is deleted
+- Average rating and total review count stored in listing post meta
+- Three independent single-listing fields (summary bar, compact stats, review cards)
 - Responsive review cards with reviewer avatar, star rating, relative date and a *Read more* toggle
-- Reviews with written text shown first, then most recent, with a configurable display limit
-- Results cached in a transient, so listing pages do not call the Places API on every view
+- Reviews with written text shown first, then most recent
+- Star-only reviews (no written comment) render as compact rating cards rather than being dropped
 - Inherits the site's Directorist theme colours through CSS custom properties
-- Flexible display via drag-and-drop Single Listing Layout builder
-- Easy customization with CSS classes
+- Easy customization with CSS classes and filters
 
-> ℹ️ A single Google Place Details request returns **at most 5 reviews**. The plugin requests both sort modes (`most_relevant` and `newest`), which return different sets, and merges them — so up to **10** reviews are available and the display limit of 6 is reachable. Reviews that have text are ordered first, then most recent.
+> ℹ️ A single Google Place Details request returns **at most 5 reviews**. The plugin requests both sort modes (`most_relevant` and `newest`), which return different sets, and merges them — so up to **10** reviews are available and the default store limit of 6 is reachable. Reviews that have text are ordered first, then most recent.
+
+📘 Full technical reference: **[DOCUMENTATION.md](DOCUMENTATION.md)**
 
 ---
 
@@ -51,10 +55,12 @@ git clone --branch google/reviews https://github.com/MahfuzulAlam/directorist-cu
 
 ### ✅ 1. Enable Google Maps in Directorist
 
-- Go to: **Directorist → Settings → Listings → Map**
-- Select the "Google Pap" and enter your **Google Maps API Key**
+- Go to: **Directorist → Settings → Directory → Map**
+- Set **Provider** to *Google Map* and paste your **Google Maps API key**
 
-📷 [Screenshot](https://prnt.sc/cn7vRLiGWCMq)
+![Setting the map provider to Google Map and entering the API key](assets/img/doc/settings_directory_map_api-key.png)
+
+The plugin reads this same key — there is no separate key to configure.
 
 ### ✅ 2. Enable Required Google APIs
 
@@ -72,41 +78,56 @@ From the [Google Cloud Console](https://console.cloud.google.com/), make sure th
 ### 📌 Add Listing Form
 
 1. Go to: **Directorist → Directory Builder → Add Listing Form**
-2. Add the **Google Place** field
+2. Drag the **Google Place** field into any section
 3. Save changes
 
-📷 [Screenshot](https://prnt.sc/Pszx0AVXSIVs)
+![Adding the Google Place field to the Add Listing Form](assets/img/doc/directory-builder_add-listing-form.png)
 
-### 🧩 Single Listing Layout
+This is the field listing owners use to search for their business. Everything
+else the plugin displays is derived from the place they pick here.
 
-The plugin adds **two independent fields**, so the rating and the reviews can be
-placed in different sections of the layout:
+### 🧩 Single Page Layout
+
+The plugin adds **three independent fields**, so the rating, the stats and the
+reviews can each be placed wherever you want them:
 
 | Field | Group in the builder | Renders |
 | --- | --- | --- |
-| **Google Rating** | Other Fields | The summary bar — average score, stars, review count, *View on Google* |
+| **Google Rating** | Other Fields | Summary bar — average score, stars, review count, *View on Google* |
+| **Google Rating & Total Reviews** | Other Fields | Two compact stat tiles: average rating and total review count |
 | **Google Reviews** | Preset Fields | The review cards |
 
-1. Go to: **Directorist → Directory Builder → Single Listing Layout**
-2. Create a new section
-3. Add the **Google Rating** and/or **Google Reviews** field
+All three read from local storage — none of them call the Google API directly.
+
+1. Go to: **Directorist → Directory Builder → Single Page Layout**
+2. Create a new section (the example below uses one called *Google Reviews*)
+3. Drag in any combination of the three fields
 4. Save changes
 
-📷 [Screenshot](https://prnt.sc/hIp0T-rnswWr)
+![The three Google fields placed in a Single Page Layout section](assets/img/doc/directory-builder_single-listing_google-review-rating-fields.png)
+
+> 💡 **Google Reviews** sits under *Preset Fields*; the two rating fields sit
+> under *Other Fields*. See [DOCUMENTATION.md § 8](DOCUMENTATION.md#8-single-listing-fields)
+> for why they are in different groups.
 
 ---
 
 ## 📊 Output Preview
 
 ### Add Listing Page:
-Users can search for a business and select it from the Google suggestions.
+Listing owners type a business name and pick it from the Google suggestions:
 
-📷 [Screenshot](https://prnt.sc/TSAX6qwMKg9P)
+![The Google Place field showing Google Places autocomplete suggestions](assets/img/doc/frontend_add-listing-form.png)
 
 ### Single Listing Page:
-Google Reviews will appear for the selected place.
+All three fields rendered together — the stat tiles, the summary bar and the
+review cards:
 
-📷 [Screenshot](https://prnt.sc/jJc_y6gJeMAr)
+![The three Google fields rendered on a single listing page](assets/img/doc/frontend_single_google-review-fields.png)
+
+Star colour follows your theme: it inherits `--directorist-color-star`, which is
+why the stars above are orange rather than Google yellow. Override
+`--dgr-star` to change it independently.
 
 ---
 
@@ -156,31 +177,55 @@ Add your styles via `Appearance → Customize → Additional CSS` or your theme'
 ## 🔧 Developer Filters
 
 ```php
-// Maximum reviews rendered (Google returns at most 5). Default: 6
+// Reviews kept per listing in the database. Default: 6
+add_filter( 'dgr_reviews_store_limit', function() { return 4; } );
+
+// Reviews rendered on the page. Default: 6
 add_filter( 'dgr_reviews_display_limit', function() { return 3; } );
 
+// How long stored data stays fresh, in seconds. Default: 7 days
+add_filter( 'dgr_refresh_interval', function() { return WEEK_IN_SECONDS * 2; } );
+
 // Primary sort: 'most_relevant' or 'newest'. Default: 'most_relevant'
-//
-// Heads up: many Google reviews are a star rating with no written comment. On a
-// busy place the *newest* reviews are often all star-only, so 'most_relevant'
-// is the default because it returns the ones that actually contain text.
 add_filter( 'dgr_reviews_sort', function() { return 'newest'; } );
 
 // Request both sort modes and merge them. Default: true
-//
-// This is what allows more than 5 cards: one request is capped at 5 reviews,
-// but the two sort modes return different sets. Costs 2 Places requests per
-// place per cache period instead of 1. Set false to keep it to a single call.
+// This is what allows more than 5 reviews — one request is capped at 5, but
+// the two sort modes return different sets.
 add_filter( 'dgr_merge_review_sorts', '__return_false' );
 
-// How long a Places response is cached, in seconds. Default: 12 hours
-add_filter( 'dgr_place_cache_ttl', function() { return DAY_IN_SECONDS; } );
+// Sync immediately when a listing's Google place changes. Default: true
+// With this off, the old data is still purged on save, but the refresh waits
+// for the next page view.
+add_filter( 'dgr_sync_on_place_change', '__return_false' );
 ```
 
-Template overrides still work — copy either template into your theme:
+Action fired after a listing is refreshed from Google:
 
-- `your-theme/directorist-google-reviews/single-listing.php` — review cards
-- `your-theme/directorist-google-reviews/rating-summary.php` — rating summary bar
+```php
+add_action( 'dgr_listing_synced', function( $listing_id, $place_id, $place ) {
+    // $place: rating, user_ratings_total, url, reviews
+}, 10, 3 );
+```
+
+---
+
+## 🗄 Where the data lives
+
+| What | Where |
+| --- | --- |
+| Reviews | Custom table `{prefix}dgr_google_reviews` |
+| Average rating | Post meta `_dgr_rating` |
+| Total reviews | Post meta `_dgr_reviews_total` |
+| Last sync time | Post meta `_dgr_synced_at` (UTC datetime) |
+| Google Maps URL | Post meta `_dgr_place_url` |
+| Synced place ID | Post meta `_dgr_place_id` |
+
+When an owner picks a different place on the Add Listing form, the stored
+reviews and meta for the old place are dropped and refetched on save — see
+[DOCUMENTATION.md § 5](DOCUMENTATION.md#5-save-time-sync).
+
+See [DOCUMENTATION.md](DOCUMENTATION.md) for the full schema and refresh logic.
 
 ---
 
