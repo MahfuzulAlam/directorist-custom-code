@@ -7,7 +7,7 @@
  * only arranges them in a scroll-snap track with arrow and dot controls.
  * Reads stored data only — it never calls the Google API.
  *
- * @author  wpWax
+ * @author  wpXplore
  * @since   3.2
  * @version 3.2
  *

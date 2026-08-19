@@ -3,7 +3,7 @@
 /**
  * Google Rating — standalone summary bar.
  *
- * @author  wpWax
+ * @author  wpXplore
  * @since   2.2
  * @version 2.2
  *

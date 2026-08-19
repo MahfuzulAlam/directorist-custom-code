@@ -5,7 +5,7 @@
  *
  * Reads the values stored on the listing; it never calls the API itself.
  *
- * @author  wpWax
+ * @author  wpXplore
  * @since   3.0
  * @version 3.0
  *

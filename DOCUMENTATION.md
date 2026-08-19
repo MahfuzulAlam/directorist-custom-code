@@ -1,7 +1,11 @@
 # Directorist – Google Reviews · Technical Documentation
 
 Reference for developers and site owners maintaining this extension.
-For installation and setup, see [README.md](README.md).
+For installation and setup, see [README.md](README.md); for version history,
+see [CHANGELOG.md](CHANGELOG.md).
+
+**Product:** [wpxplore.com/tools/directorist-google-reviews](https://wpxplore.com/tools/directorist-google-reviews/)
+· **Author:** [wpXplore](https://wpxplore.com/)
 
 ---
 
@@ -348,6 +352,27 @@ FROM wp_dgr_google_reviews
 WHERE listing_id = 123
 ORDER BY sort_order;
 ```
+
+### Translations
+
+Text domain `directorist-google-reviews`, loaded from the `languages`
+directory on `init`. The template lives at
+`languages/directorist-google-reviews.pot`; regenerate it with
+`wp i18n make-pot . languages/directorist-google-reviews.pot --exclude=assets/img`.
+
+### Uninstall
+
+`uninstall.php` runs when the plugin is deleted from the Plugins screen. All
+stored data is a re-fetchable cache of Google data, so it is removed
+unconditionally (per site on multisite):
+
+- the `{prefix}dgr_google_reviews` table
+- the `_dgr_*` post meta keys and the `dgr_db_version` option
+- leftover `dgr_place_*` transients from 2.x releases
+
+The `_google_place` meta is deliberately **kept** — it is the place each owner
+selected on the Add Listing form, so reinstalling resumes without anyone
+re-entering their business.
 
 ---
 

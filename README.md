@@ -1,7 +1,9 @@
 
 # 📍 Directorist – Google Reviews Extension
 
-**Directorist – Google Reviews** is a third-party extension for the [Directorist](https://directorist.com) plugin that displays real user reviews from Google Places on the single listing page. Improve listing credibility and give users helpful insights from existing Google reviews.
+**Directorist – Google Reviews** is an extension for the [Directorist](https://directorist.com) plugin that displays real user reviews from Google Places on the single listing page. Improve listing credibility and give users helpful insights from existing Google reviews.
+
+**Product page:** [wpxplore.com/tools/directorist-google-reviews](https://wpxplore.com/tools/directorist-google-reviews/) · **Author:** [wpXplore](https://wpxplore.com/) · **Changelog:** [CHANGELOG.md](CHANGELOG.md)
 
 ---
 
@@ -32,12 +34,11 @@
 
 ### 🔄 Step 1: Download the Plugin
 
-1. Go to the [GitHub Repo](https://github.com/MahfuzulAlam/directorist-custom-code)
-2. Select the **`google/reviews`** branch
-3. Click **Code → Download ZIP**
-4. Unzip the downloaded file
+Download the latest release from the product page:
+**[wpxplore.com/tools/directorist-google-reviews](https://wpxplore.com/tools/directorist-google-reviews/)**
 
-Alternatively, clone the branch directly:
+Or grab it from the [GitHub repo](https://github.com/MahfuzulAlam/directorist-custom-code)
+(**`google/reviews`** branch → **Code → Download ZIP**), or clone the branch directly:
 
 ```bash
 git clone --branch google/reviews https://github.com/MahfuzulAlam/directorist-custom-code
@@ -249,11 +250,19 @@ See [DOCUMENTATION.md](DOCUMENTATION.md) for the full schema and refresh logic.
 
 ---
 
+## 🌍 Translations
+
+The plugin is translation ready — text domain `directorist-google-reviews`,
+template at `languages/directorist-google-reviews.pot`. Drop compiled `.mo`
+files into the `languages` folder or use a plugin such as Loco Translate.
+
+---
+
 ## 🛠 Support
 
-This is a **third-party plugin**. For support, please contact:
+For support and feature requests, visit the product page:
 
-📩 **Email:** asayeedalam@gmail.com
+🔗 **[wpxplore.com/tools/directorist-google-reviews](https://wpxplore.com/tools/directorist-google-reviews/)**
 
 ---
 
@@ -265,6 +274,7 @@ This extension is released under the [GPLv2 or later](https://www.gnu.org/licens
 
 ## 🤝 Credits
 
-Developed for use with the [Directorist](https://directorist.com) plugin by SovWare.
+Developed by [wpXplore](https://wpxplore.com/) for the [Directorist](https://directorist.com) plugin.
+Review data and attribution assets belong to Google; displaying them is subject to the Google Maps Platform terms.
 
 ---

@@ -6,7 +6,7 @@
  * The rating summary is a separate widget ("Google Rating"), so this template
  * renders only the review list.
  *
- * @author  wpWax
+ * @author  wpXplore
  * @since   2.0
  * @version 2.2
  *

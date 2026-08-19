@@ -6,22 +6,22 @@
 
 /**
  * Plugin Name:       Directorist - Google Reviews
- * Plugin URI:        https://wpwax.com
- * Description:       Best way to implement custom code for directorist plugin
- * Version:           3.2.0
+ * Plugin URI:        https://wpxplore.com/tools/directorist-google-reviews/
+ * Description:       Display Google ratings and reviews on Directorist listings — stored locally, refreshed automatically, with summary, stats, review cards and carousel fields.
+ * Version:           3.3.0
  * Requires at least: 5.2
- * Author:            wpWax
- * Author URI:        https://wpwax.com
+ * Requires PHP:      7.4
+ * Requires Plugins:  directorist
+ * Author:            wpXplore
+ * Author URI:        https://wpxplore.com/
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       directorist-google-reviews
  * Domain Path:       /languages
  */
 
-/* This is an extension for Directorist plugin. It helps using custom code and template overriding of Directorist plugin.*/
-
 /**
- * If this file is called directly, abrot!!!
+ * Exit if accessed directly.
  */
 if (!defined('ABSPATH')) {
     exit;                      // Exit if accessed
@@ -66,7 +66,7 @@ if (!class_exists('Directorist_Google_Reviews')) {
         public function define_constant()
         {
             if (!defined('DIRECTORIST_GOOGLE_REVIEWS_VERSION')) {
-                define('DIRECTORIST_GOOGLE_REVIEWS_VERSION', '3.2.0');
+                define('DIRECTORIST_GOOGLE_REVIEWS_VERSION', '3.3.0');
             }
 
             if (!defined('DIRECTORIST_GOOGLE_REVIEWS_URI')) {
@@ -126,7 +126,16 @@ if (!class_exists('Directorist_Google_Reviews')) {
          */
         public function hooks()
         {
+            add_action('init', array($this, 'load_textdomain'));
             add_filter('directorist_template', array($this, 'directorist_template'), 10, 2);
+        }
+
+        /**
+         * Load translations from the plugin's languages directory.
+         */
+        public function load_textdomain()
+        {
+            load_plugin_textdomain('directorist-google-reviews', false, dirname(plugin_basename(__FILE__)) . '/languages');
         }
 
         /**
