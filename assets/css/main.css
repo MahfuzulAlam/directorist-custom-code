@@ -1,68 +1,357 @@
-/* Add you custom css here */
-.google-reviews {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    padding: 2rem;
-    background-color: #f0f4f8;
-    border-radius: 1rem;
-    font-family: 'Helvetica Neue', sans-serif;
+/**
+ * Directorist - Google Reviews
+ *
+ * Tokens inherit from Directorist's own custom properties so the widget picks
+ * up the site's theme colours, with sane fallbacks when it is used elsewhere.
+ */
+
+.dgr-reviews {
+    --dgr-radius: var(--directorist-border-radius-md, 12px);
+    --dgr-radius-sm: var(--directorist-border-radius-xs, 8px);
+    --dgr-border: var(--directorist-color-border, #e9e9e9);
+    --dgr-surface: var(--directorist-color-white, #ffffff);
+    --dgr-heading: var(--directorist-color-dark, #1a1a1a);
+    --dgr-text: var(--directorist-color-body, #404040);
+    --dgr-muted: var(--directorist-color-light-gray, #808080);
+    --dgr-accent: var(--directorist-color-primary, #4285f4);
+    --dgr-star: var(--directorist-color-star, #fbbc04);
+    --dgr-star-track: rgba(0, 0, 0, .13);
+    --dgr-gap: 16px;
+
+    color: var(--dgr-text);
+    font-size: 15px;
+    line-height: 1.65;
 }
 
-.google-reviews .review {
-    flex: 1 1 300px;
-    background-color: #ffffff;
-    border-left: 4px solid #4CAF50;
-    border-radius: 0.5rem;
-    padding: 1.5rem;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    transition: box-shadow 0.3s ease;
+.dgr-reviews *,
+.dgr-reviews *::before,
+.dgr-reviews *::after {
+    box-sizing: border-box;
+}
+
+/* -------------------------------------------------- Star row */
+
+.dgr-stars {
+    position: relative;
+    display: inline-flex;
+    flex: 0 0 auto;
+    line-height: 0;
+    white-space: nowrap;
+}
+
+.dgr-stars__track,
+.dgr-stars__fill {
+    display: inline-flex;
+    gap: 2px;
+    line-height: 0;
+}
+
+/* The fill row is clipped by its container's width, so its stars must keep
+   their natural size instead of shrinking to fit. */
+.dgr-stars__track svg,
+.dgr-stars__fill svg {
+    flex: 0 0 auto;
+}
+
+.dgr-stars__track {
+    fill: var(--dgr-star-track);
+}
+
+.dgr-stars__fill {
+    position: absolute;
+    inset: 0;
+    width: var(--dgr-stars-fill, 0%);
+    overflow: hidden;
+    fill: var(--dgr-star);
+}
+
+/* -------------------------------------------------- Summary bar */
+
+.dgr-reviews__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--dgr-gap);
+    margin: 0 0 var(--dgr-gap);
+    padding: 16px 20px;
+    background: var(--dgr-surface);
+    border: 1px solid var(--dgr-border);
+    border-radius: var(--dgr-radius);
+}
+
+/* Used on its own as the "Google Rating" widget, with no list beneath it. */
+.dgr-reviews--summary-only .dgr-reviews__summary {
+    margin-bottom: 0;
+}
+
+.dgr-reviews__score {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+}
+
+.dgr-reviews__score-value {
+    font-size: 34px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -.02em;
+    color: var(--dgr-heading);
+}
+
+.dgr-reviews__score-meta {
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
 }
 
-.google-reviews .review:hover {
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+.dgr-reviews__score-count {
+    font-size: 13px;
+    line-height: 1.3;
+    color: var(--dgr-muted);
 }
 
-.review-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 0.75rem;
-    color: #222;
-    display: flex;
-    justify-content: space-between;
+.dgr-reviews__source {
+    display: inline-flex;
     align-items: center;
+    gap: 8px;
+    padding: 9px 15px;
+    font-size: 13px;
+    font-weight: var(--directorist-fw-medium, 500);
+    line-height: 1;
+    color: var(--dgr-heading);
+    text-decoration: none;
+    background: var(--dgr-surface);
+    border: 1px solid var(--dgr-border);
+    border-radius: 999px;
+    transition: border-color .2s ease, box-shadow .2s ease, color .2s ease;
 }
 
-.review-title strong {
-    color: #2c3e50;
+a.dgr-reviews__source:hover,
+a.dgr-reviews__source:focus-visible {
+    color: var(--dgr-heading);
+    text-decoration: none;
+    border-color: rgba(0, 0, 0, .2);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, .07);
 }
 
-.stars {
-    color: #FFD700;
-    /* gold color */
-    font-size: 1rem;
-    letter-spacing: 1px;
+.dgr-reviews__source--static {
+    background: transparent;
 }
 
-.review-description {
-    font-size: 0.95rem;
-    line-height: 1.6;
-    color: #444;
+.dgr-reviews__source-arrow {
+    color: var(--dgr-muted);
+    transition: transform .2s ease;
 }
 
-/* #google_place {
-    z-index: 9999;
+a.dgr-reviews__source:hover .dgr-reviews__source-arrow {
+    transform: translate(1px, -1px);
+}
+
+/* -------------------------------------------------- Review grid */
+
+.dgr-reviews__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 290px), 1fr));
+    gap: var(--dgr-gap);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.dgr-reviews__list > li::before,
+.dgr-reviews__list > li::marker {
+    content: none;
+}
+
+.dgr-review {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 0;
+    padding: 18px;
+    background: var(--dgr-surface);
+    border: 1px solid var(--dgr-border);
+    border-radius: var(--dgr-radius);
+    transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+
+.dgr-review:hover {
+    border-color: rgba(0, 0, 0, .04);
+    box-shadow: 0 10px 26px rgba(0, 0, 0, .07);
+    transform: translateY(-2px);
+}
+
+/* Star only ratings carry no body text, so centre the little content they have
+   instead of letting it sit at the top of a stretched grid cell. */
+.dgr-review--rating-only {
+    justify-content: center;
+}
+
+.dgr-review__head {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    width: 100%;
+    min-width: 0;
+}
+
+.dgr-review__avatar {
     position: relative;
-} */
-
-/* #google_place {
-    z-index: 9999 !important;
-    position: absolute !important;
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    overflow: hidden;
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1;
+    color: hsl(var(--dgr-avatar-hue, 210) 42% 34%);
+    background: hsl(var(--dgr-avatar-hue, 210) 62% 92%);
+    border-radius: 50%;
 }
 
+.dgr-review__avatar img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.dgr-review__identity {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.dgr-review__author {
+    overflow: hidden;
+    font-size: 15px;
+    font-weight: var(--directorist-fw-semiBold, 600);
+    line-height: 1.35;
+    color: var(--dgr-heading);
+    text-decoration: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+a.dgr-review__author:hover,
+a.dgr-review__author:focus-visible {
+    color: var(--dgr-accent);
+    text-decoration: none;
+}
+
+.dgr-review__time {
+    font-size: 12.5px;
+    line-height: 1.3;
+    color: var(--dgr-muted);
+}
+
+.dgr-review__text {
+    margin: 0;
+    font-size: 14.5px;
+    line-height: 1.7;
+    color: var(--dgr-text);
+    overflow-wrap: break-word;
+}
+
+.dgr-review__para {
+    display: block;
+}
+
+.dgr-review__para + .dgr-review__para {
+    margin-top: .6em;
+}
+
+/* Clamping only applies once the script has taken over the toggle, so a
+   no-JS visitor always gets the full review instead of a dead read-more. */
+.dgr-reviews--enhanced .dgr-review--clamped .dgr-review__text {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 5;
+    line-clamp: 5;
+    overflow: hidden;
+}
+
+.dgr-reviews--enhanced .dgr-review.is-expanded .dgr-review__text {
+    display: block;
+    -webkit-line-clamp: none;
+    line-clamp: none;
+    overflow: visible;
+}
+
+.dgr-review__toggle {
+    padding: 0;
+    font: inherit;
+    font-size: 13.5px;
+    font-weight: var(--directorist-fw-semiBold, 600);
+    line-height: 1.4;
+    color: var(--dgr-accent);
+    cursor: pointer;
+    background: none;
+    border: 0;
+    box-shadow: none;
+}
+
+.dgr-review__toggle:hover {
+    text-decoration: underline;
+}
+
+.dgr-review__toggle[hidden] {
+    display: none;
+}
+
+.dgr-review__translated {
+    font-size: 12px;
+    font-style: italic;
+    color: var(--dgr-muted);
+}
+
+.dgr-reviews :focus-visible {
+    outline: 2px solid var(--dgr-accent);
+    outline-offset: 2px;
+    border-radius: 3px;
+}
+
+/* -------------------------------------------------- Small screens */
+
+@media (max-width: 575px) {
+    .dgr-reviews__summary {
+        align-items: flex-start;
+        padding: 15px 16px;
+    }
+
+    .dgr-reviews__score-value {
+        font-size: 30px;
+    }
+
+    .dgr-review {
+        padding: 16px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dgr-reviews * {
+        transition: none !important;
+    }
+
+    .dgr-review:hover {
+        transform: none;
+    }
+}
+
+/* -------------------------------------------------- Add listing form */
+
+/* Google's autocomplete dropdown is appended to <body>, so it needs to clear
+   Directorist's sticky form chrome. */
 .pac-container {
-    z-index: 99999 !important;
-    display: absolute !important
-} */
+    z-index: 999999;
+}

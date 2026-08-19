@@ -8,7 +8,7 @@
  * Plugin Name:       Directorist - Google Reviews
  * Plugin URI:        https://wpwax.com
  * Description:       Best way to implement custom code for directorist plugin
- * Version:           2.0.0
+ * Version:           2.1.0
  * Requires at least: 5.2
  * Author:            wpWax
  * Author URI:        https://wpwax.com
@@ -64,6 +64,10 @@ if (!class_exists('Directorist_Google_Reviews')) {
          */
         public function define_constant()
         {
+            if (!defined('DIRECTORIST_GOOGLE_REVIEWS_VERSION')) {
+                define('DIRECTORIST_GOOGLE_REVIEWS_VERSION', '2.1.0');
+            }
+
             if (!defined('DIRECTORIST_GOOGLE_REVIEWS_URI')) {
                 define('DIRECTORIST_GOOGLE_REVIEWS_URI', plugin_dir_url(__FILE__));
             }
@@ -111,8 +115,15 @@ if (!class_exists('Directorist_Google_Reviews')) {
          */
         public function enqueue_scripts()
         {
-            // Replace 'your-plugin-name' with the actual name of your plugin's folder.
-            wp_enqueue_script('directorist-custom-script', DIRECTORIST_GOOGLE_REVIEWS_URI . 'assets/js/main.js', ['directorist-google-map'], '2.0', true);
+            // Places autocomplete for the add listing form — needs the Google Maps SDK.
+            wp_enqueue_script('directorist-custom-script', DIRECTORIST_GOOGLE_REVIEWS_URI . 'assets/js/main.js', ['directorist-google-map'], DIRECTORIST_GOOGLE_REVIEWS_VERSION, true);
+
+            // Review card behaviour. Deliberately dependency free: the single
+            // listing page does not always load the Google Maps SDK, and the
+            // read more toggle must work regardless.
+            if (! is_admin()) {
+                wp_enqueue_script('directorist-google-reviews', DIRECTORIST_GOOGLE_REVIEWS_URI . 'assets/js/reviews.js', [], DIRECTORIST_GOOGLE_REVIEWS_VERSION, true);
+            }
         }
 
         /**
@@ -120,8 +131,7 @@ if (!class_exists('Directorist_Google_Reviews')) {
          */
         public function enqueue_styles()
         {
-            // Replace 'your-plugin-name' with the actual name of your plugin's folder.
-            wp_enqueue_style('directorist-custom-style', DIRECTORIST_GOOGLE_REVIEWS_URI . 'assets/css/main.css', array(), '2.0');
+            wp_enqueue_style('directorist-custom-style', DIRECTORIST_GOOGLE_REVIEWS_URI . 'assets/css/main.css', array(), DIRECTORIST_GOOGLE_REVIEWS_VERSION);
         }
 
         /**
