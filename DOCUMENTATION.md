@@ -16,7 +16,7 @@ locally and refreshed on a schedule, so a page view is a database read.
 
 ![The three Google fields rendered on a single listing page](assets/img/doc/frontend_single_google-review-fields.png)
 
-Above: all three single listing fields on one page — the stat tiles
+Above: three of the single listing fields on one page — the stat tiles
 (*Google Rating & Total Reviews*), the summary bar (*Google Rating*) and the
 cards (*Google Reviews*). Each is placed independently in the layout builder.
 
@@ -228,13 +228,19 @@ $total  = (int)   get_post_meta( $listing_id, '_dgr_reviews_total', true );
 
 ## 8. Single listing fields
 
-Registered in `DGR_Custom_Field`. All three render from stored data.
+Registered in `DGR_Custom_Field`. All four render from stored data.
 
 | Field | Builder group | Template | Renders |
 | --- | --- | --- | --- |
 | **Google Rating** | Other Fields | `rating-summary.php` | Summary bar: score, stars, count, *View on Google* |
 | **Google Rating & Total Reviews** | Other Fields | `rating-stats.php` | Two compact stat tiles |
 | **Google Reviews** | Preset Fields | `single-listing.php` | The review cards |
+| **Google Review Carousel** | Other Fields | `review-carousel.php` | The same cards in a scroll-snap carousel |
+
+The carousel reuses the `.dgr-review` card design from the grid, so the two
+displays always stay visually in step. Carousel cards clamp long text with CSS
+alone (no *Read more* toggle) — a card that changes height mid-swipe would make
+the track jump.
 
 ![The three Google fields placed in a Single Page Layout section](assets/img/doc/directory-builder_single-listing_google-review-rating-fields.png)
 
@@ -243,9 +249,12 @@ Above: all three added to a *Single Page Layout* section under
 `allowMultiple` off, so once placed it disappears from the palette on the left.
 
 **Why two groups.** Directorist skips a *Preset Fields* widget when its
-submission-form value is empty. The rating fields are derived from meta rather
-than from a submitted value, so they are registered under *Other Fields*, where
-that rule does not apply, and read `_google_place` from post meta directly.
+submission-form value is empty. The rating and carousel fields are derived from
+stored data rather than from a submitted value, so they are registered under
+*Other Fields*, where that rule does not apply, and read `_google_place` from
+post meta directly.
+
+![Dragging the Google Review Carousel field into a section](assets/img/doc/builder_single_carousel.png)
 
 ### Template overrides
 
@@ -255,6 +264,7 @@ Copy any template into your theme:
 your-theme/directorist-google-reviews/single-listing.php
 your-theme/directorist-google-reviews/rating-summary.php
 your-theme/directorist-google-reviews/rating-stats.php
+your-theme/directorist-google-reviews/review-carousel.php
 your-theme/directorist-google-reviews/add-listing.php
 ```
 
@@ -285,8 +295,17 @@ silently breaks every field.
   because the single listing page does not always load the Google Maps SDK.
   Clamping is applied *by* the script, so with JavaScript disabled visitors get
   full review text instead of truncated text behind a dead button.
+- `assets/js/carousel.js` — arrows, dots and snap tracking for the review
+  carousel. Also dependency free: the track is native CSS scroll-snap, so with
+  JavaScript disabled it degrades to a plain scrollable row with its scrollbar
+  visible — the controls simply never appear.
 - `assets/js/main.js` — Places autocomplete for the Add Listing form. Depends on
   `directorist-google-map`.
+
+![The Google Review Carousel rendered on a single listing page](assets/img/doc/frontend_single_carousel.png)
+
+Above: the carousel in its enhanced state — arrows visible, scrollbar hidden.
+The previous arrow is dimmed because the track is at its start.
 
 ---
 
@@ -295,7 +314,8 @@ silently breaks every field.
 | Hook | Type | Default | Purpose |
 | --- | --- | --- | --- |
 | `dgr_reviews_store_limit` | filter | `6` | Reviews kept per listing |
-| `dgr_reviews_display_limit` | filter | `6` | Reviews rendered |
+| `dgr_reviews_display_limit` | filter | `6` | Reviews rendered in the grid |
+| `dgr_carousel_display_limit` | filter | `6` | Reviews shown in the carousel |
 | `dgr_refresh_interval` | filter | `7 * DAY_IN_SECONDS` | Freshness window |
 | `dgr_reviews_sort` | filter | `most_relevant` | Primary sort mode |
 | `dgr_merge_review_sorts` | filter | `true` | Request both sorts and merge |

@@ -355,6 +355,124 @@ a.dgr-review__author:focus-visible {
     border-radius: 3px;
 }
 
+/* -------------------------------------------------- Review carousel */
+
+.dgr-carousel__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 0 0 14px;
+}
+
+.dgr-carousel__nav {
+    display: inline-flex;
+    gap: 8px;
+}
+
+.dgr-carousel__arrow {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    color: var(--dgr-heading);
+    cursor: pointer;
+    background: var(--dgr-surface);
+    border: 1px solid var(--dgr-border);
+    border-radius: 50%;
+    transition: border-color .2s ease, box-shadow .2s ease, opacity .2s ease;
+}
+
+.dgr-carousel__arrow:hover:not(:disabled) {
+    border-color: rgba(0, 0, 0, .2);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, .07);
+}
+
+.dgr-carousel__arrow:disabled {
+    cursor: default;
+    opacity: .35;
+}
+
+.dgr-carousel__arrow[hidden] {
+    display: none;
+}
+
+/* Point the chevrons the other way when the page reads right to left. */
+[dir="rtl"] .dgr-carousel__arrow svg {
+    transform: scaleX(-1);
+}
+
+.dgr-carousel__track {
+    display: flex;
+    gap: var(--dgr-gap);
+    /* Bottom padding keeps card shadows inside the scroll box, where they
+       would otherwise be clipped or spawn a vertical scrollbar. */
+    padding: 0 0 14px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* The scrollbar is hidden only once the script has provided arrows and dots,
+   so a no-JS visitor keeps the native affordance. */
+.dgr-carousel--enhanced .dgr-carousel__track {
+    scrollbar-width: none;
+}
+
+.dgr-carousel--enhanced .dgr-carousel__track::-webkit-scrollbar {
+    display: none;
+}
+
+.dgr-carousel__slide {
+    flex: 0 0 min(85%, 320px);
+    scroll-snap-align: start;
+}
+
+/* No lift inside the scroll box — vertical overflow would show a scrollbar.
+   Border and shadow carry the hover instead. */
+.dgr-carousel__slide:hover {
+    transform: none;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, .06);
+}
+
+/* Carousel cards are a teaser format: clamp with CSS alone, no toggle. */
+.dgr-carousel__slide .dgr-review__text {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 5;
+    line-clamp: 5;
+    overflow: hidden;
+}
+
+.dgr-carousel__dots {
+    display: flex;
+    justify-content: center;
+    gap: 7px;
+    margin-top: 2px;
+}
+
+.dgr-carousel__dots[hidden] {
+    display: none;
+}
+
+.dgr-carousel__dot {
+    width: 7px;
+    height: 7px;
+    padding: 0;
+    cursor: pointer;
+    background: var(--dgr-star-track);
+    border: 0;
+    border-radius: 999px;
+    transition: width .25s ease, background-color .25s ease;
+}
+
+.dgr-carousel__dot.is-active {
+    width: 18px;
+    background: var(--dgr-accent);
+}
+
 /* -------------------------------------------------- Small screens */
 
 @media (max-width: 575px) {

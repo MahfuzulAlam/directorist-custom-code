@@ -14,7 +14,8 @@
 - **Changing the Google place on a listing resyncs everything immediately on save** — reviews table and post meta both
 - Stored data is cleaned up when a listing is deleted
 - Average rating and total review count stored in listing post meta
-- Three independent single-listing fields (summary bar, compact stats, review cards)
+- Four independent single-listing fields (summary bar, compact stats, review cards, review carousel)
+- Review carousel built on native CSS scroll-snap — swipeable, keyboard friendly, no third-party slider library
 - Responsive review cards with reviewer avatar, star rating, relative date and a *Read more* toggle
 - Reviews with written text shown first, then most recent
 - Star-only reviews (no written comment) render as compact rating cards rather than being dropped
@@ -88,7 +89,7 @@ else the plugin displays is derived from the place they pick here.
 
 ### 🧩 Single Page Layout
 
-The plugin adds **three independent fields**, so the rating, the stats and the
+The plugin adds **four independent fields**, so the rating, the stats and the
 reviews can each be placed wherever you want them:
 
 | Field | Group in the builder | Renders |
@@ -96,19 +97,24 @@ reviews can each be placed wherever you want them:
 | **Google Rating** | Other Fields | Summary bar — average score, stars, review count, *View on Google* |
 | **Google Rating & Total Reviews** | Other Fields | Two compact stat tiles: average rating and total review count |
 | **Google Reviews** | Preset Fields | The review cards |
+| **Google Review Carousel** | Other Fields | The same cards in a horizontally scrolling carousel with arrows and dots |
 
-All three read from local storage — none of them call the Google API directly.
+All four read from local storage — none of them call the Google API directly.
 
 1. Go to: **Directorist → Directory Builder → Single Page Layout**
 2. Create a new section (the example below uses one called *Google Reviews*)
-3. Drag in any combination of the three fields
+3. Drag in any combination of the four fields
 4. Save changes
 
 ![The three Google fields placed in a Single Page Layout section](assets/img/doc/directory-builder_single-listing_google-review-rating-fields.png)
 
-> 💡 **Google Reviews** sits under *Preset Fields*; the two rating fields sit
-> under *Other Fields*. See [DOCUMENTATION.md § 8](DOCUMENTATION.md#8-single-listing-fields)
+> 💡 **Google Reviews** sits under *Preset Fields*; the rating fields and the
+> carousel sit under *Other Fields*. See [DOCUMENTATION.md § 8](DOCUMENTATION.md#8-single-listing-fields)
 > for why they are in different groups.
+
+The carousel field is dragged in from *Other Fields* like the rating fields:
+
+![Dragging the Google Review Carousel field into a section](assets/img/doc/builder_single_carousel.png)
 
 ---
 
@@ -128,6 +134,12 @@ review cards:
 Star colour follows your theme: it inherits `--directorist-color-star`, which is
 why the stars above are orange rather than Google yellow. Override
 `--dgr-star` to change it independently.
+
+### Review Carousel:
+The **Google Review Carousel** field renders the same cards in a scroll-snap
+track — the arrows and dots appear once JavaScript loads:
+
+![The Google Review Carousel rendered on a single listing page](assets/img/doc/frontend_single_carousel.png)
 
 ---
 
@@ -168,6 +180,11 @@ The full class list:
 .dgr-review__toggle {}           /* Read more / Show less */
 .dgr-review__translated {}
 .dgr-stars {}                    /* star row, fractional fill supported */
+.dgr-carousel {}                 /* carousel wrapper */
+.dgr-carousel__track {}          /* scroll-snap track */
+.dgr-carousel__slide {}          /* one card in the carousel */
+.dgr-carousel__arrow {}          /* prev / next buttons */
+.dgr-carousel__dot {}            /* pagination dots */
 ```
 
 Add your styles via `Appearance → Customize → Additional CSS` or your theme's `style.css`.
@@ -182,6 +199,9 @@ add_filter( 'dgr_reviews_store_limit', function() { return 4; } );
 
 // Reviews rendered on the page. Default: 6
 add_filter( 'dgr_reviews_display_limit', function() { return 3; } );
+
+// Reviews shown in the carousel. Default: 6
+add_filter( 'dgr_carousel_display_limit', function() { return 4; } );
 
 // How long stored data stays fresh, in seconds. Default: 7 days
 add_filter( 'dgr_refresh_interval', function() { return WEEK_IN_SECONDS * 2; } );

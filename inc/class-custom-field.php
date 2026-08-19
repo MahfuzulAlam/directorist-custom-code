@@ -138,6 +138,19 @@ if (! class_exists('DGR_Custom_Field')):
                 ],
             ];
 
+            $widgets['google_review_carousel'] = [
+                'type'    => 'widget',
+                'label'   => __('Google Review Carousel', 'directorist-google-reviews'),
+                'icon'    => 'la la-images',
+                'options' => [
+                    'icon' => [
+                        'type'  => 'icon',
+                        'label' => __('Icon', 'directorist-google-reviews'),
+                        'value' => 'la la-images',
+                    ],
+                ],
+            ];
+
             return $widgets;
         }
 
@@ -165,9 +178,10 @@ if (! class_exists('DGR_Custom_Field')):
             $widget = isset($field_data['widget_name']) ? $field_data['widget_name'] : '';
 
             $templates = [
-                'google_place'        => 'single-listing',
-                'google_rating'       => 'rating-summary',
-                'google_rating_stats' => 'rating-stats',
+                'google_place'           => 'single-listing',
+                'google_rating'          => 'rating-summary',
+                'google_rating_stats'    => 'rating-stats',
+                'google_review_carousel' => 'review-carousel',
             ];
 
             if (! isset($templates[$widget])) {

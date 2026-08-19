@@ -8,7 +8,7 @@
  * Plugin Name:       Directorist - Google Reviews
  * Plugin URI:        https://wpwax.com
  * Description:       Best way to implement custom code for directorist plugin
- * Version:           3.1.0
+ * Version:           3.2.0
  * Requires at least: 5.2
  * Author:            wpWax
  * Author URI:        https://wpwax.com
@@ -66,7 +66,7 @@ if (!class_exists('Directorist_Google_Reviews')) {
         public function define_constant()
         {
             if (!defined('DIRECTORIST_GOOGLE_REVIEWS_VERSION')) {
-                define('DIRECTORIST_GOOGLE_REVIEWS_VERSION', '3.1.0');
+                define('DIRECTORIST_GOOGLE_REVIEWS_VERSION', '3.2.0');
             }
 
             if (!defined('DIRECTORIST_GOOGLE_REVIEWS_URI')) {
@@ -142,6 +142,7 @@ if (!class_exists('Directorist_Google_Reviews')) {
             // read more toggle must work regardless.
             if (! is_admin()) {
                 wp_enqueue_script('directorist-google-reviews', DIRECTORIST_GOOGLE_REVIEWS_URI . 'assets/js/reviews.js', [], DIRECTORIST_GOOGLE_REVIEWS_VERSION, true);
+                wp_enqueue_script('directorist-google-reviews-carousel', DIRECTORIST_GOOGLE_REVIEWS_URI . 'assets/js/carousel.js', [], DIRECTORIST_GOOGLE_REVIEWS_VERSION, true);
             }
         }
 
