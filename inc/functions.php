@@ -1,10 +1,8 @@
 <?php
 /**
- * Custom extension hooks and helpers.
+ * Extension hooks and helpers.
  *
- * Add project-specific PHP code here.
- *
- * @package Directorist_Custom_Code
+ * @package Directorist_Reorder_Types
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
