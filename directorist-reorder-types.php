@@ -1,12 +1,12 @@
 <?php
 /**
  * Plugin Name:       Directorist - Reorder Types
- * Plugin URI:        https://wpxplore.com
+ * Plugin URI:        https://wpxplore.com/tools/directorist-reorder-types/
  * Description:       Reorder Directorist directory types with a drag-and-drop admin interface.
  * Version:           3.0.0
  * Requires at least: 5.2
  * Author:            wpXplore
- * Author URI:        https://wpxplore.com
+ * Author URI:        https://wpxplore.com/
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       directorist-reorder-types
